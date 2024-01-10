@@ -1,12 +1,20 @@
-import { getLocalStorageDb, saveLocalStorageDb } from './mock'
+import { getLocalStorageDb, saveToDb } from './mock'
+import { verifyAccessToken } from './auth.mock'
 
-export const changeUsernameEndpoint = (email: string, username: string) => {
-  const db = getLocalStorageDb()
-  const users = db.users
+export const changeUsernameEndpoint = async (accessToken: string, username: string) => {
+  const { user_id } = await verifyAccessToken(accessToken) || {}
 
-  const index = users.findIndex(({ email: dbEmail }: { email: string }) => dbEmail === email)
-  users[index].username = username
+  saveToDb('users', user_id as string, { username })
 
-  const newDb = { ...db, users }
-  saveLocalStorageDb(newDb)
+  return { statusCode: 200, message: 'Username updated.' }
+}
+
+export const getUsernameEndpoint = async (accessToken: string) => {
+  const { user_id } = await verifyAccessToken(accessToken) || {}
+  if (!user_id) return { statusCode: 400, message: 'Invalid token.'  }
+
+  const { users } = getLocalStorageDb()
+  const { username } = users[user_id as string]
+
+  return { statusCode: 200, message: 'Username retrieved.', username  }
 }

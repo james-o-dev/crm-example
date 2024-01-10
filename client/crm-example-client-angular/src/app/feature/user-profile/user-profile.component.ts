@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatButtonModule } from '@angular/material/button'
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { UserProfileService } from './user-profile.service'
 
 @Component({
   selector: 'app-user-profile',
@@ -32,14 +33,22 @@ export class UserProfileComponent implements OnInit {
     confirmPassword: ['', Validators.required],
   })
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private userProfileService: UserProfileService,
+    private formBuilder: FormBuilder,
+  ) { }
 
   ngOnInit() {
     this.changePasswordForm.disable()
+
+    this.userProfileService.getUsername()
+      .subscribe(data => {
+        this.changeUserNameForm.patchValue({ username: data.username })
+      })
   }
 
   onChangeUsername() {
-    console.log('test')
+    this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
   }
 
   onChangePassword() {
