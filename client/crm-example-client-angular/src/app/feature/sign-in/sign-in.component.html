@@ -1,4 +1,4 @@
-<div class="sign-up-container">
+<div class="sign-in-container">
   <h1>CRM Example</h1>
 
   <form [formGroup]="form">
@@ -14,15 +14,9 @@
       <mat-error>Required</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Confirm Password (Skip for dev)</mat-label>
-      <input matInput type="password" formControlName="confirmPassword">
-      <mat-error>Required</mat-error>
-    </mat-form-field>
-
-    <button mat-raised-button type="submit" color="primary" class="w-full" [disabled]="form.invalid" (click)="onSubmit()">Sign Up</button>
+    <button mat-raised-button type="submit" color="primary" class="w-full" [disabled]="form.invalid" (click)="onSubmit()">Sign In</button>
   </form>
 
-  <button mat-stroked-button color="primary" routerLink="/sign-in">Or Sign In</button>
+  <button mat-stroked-button color="primary" routerLink="/sign-up">Or Sign Up</button>
 
 </div>

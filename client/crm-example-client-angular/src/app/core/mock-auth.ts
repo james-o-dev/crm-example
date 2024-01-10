@@ -12,6 +12,18 @@ export const signUpEndpoint = async (email: string) => {
   // Else 'save',
   db.users.push({user_id, email})
   saveLocalStorageDb(db)
-  // 'Respond'.
+  // 'Respond'
   return { status: 201, message: 'User created', data: { user_id } }
+}
+
+export const signInEndpoint = async (email: string) => {
+  const db = getLocalStorageDb()
+
+  // Find if user already exists.
+  const normalEmail = email.toLowerCase().trim()
+  const userFound = db.users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
+
+  if (userFound) return { status: 200, message: 'Sign-in successful.' }
+  // 'Respond'
+  return { status: 400, message: 'Invalid sign-in.' }
 }

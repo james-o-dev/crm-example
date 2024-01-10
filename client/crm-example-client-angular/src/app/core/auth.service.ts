@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { signUpEndpoint } from './mock-auth'
+import { signInEndpoint, signUpEndpoint } from './mock-auth'
 import { from } from 'rxjs'
 
 @Injectable({
@@ -11,5 +11,9 @@ export class AuthService {
 
   signUp(email: string) {
     return from(signUpEndpoint(email))
+  }
+
+  signIn(email: string) {
+    return from(signInEndpoint(email))
   }
 }

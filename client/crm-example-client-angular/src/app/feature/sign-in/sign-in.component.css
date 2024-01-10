@@ -1,0 +1,10 @@
+.sign-in-container {
+  margin: 1em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 1em;
+  /* height: 100vh; */
+}

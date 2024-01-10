@@ -1,14 +1,13 @@
-import { AuthService } from './../../core/auth.service'
-import { Component, OnInit } from '@angular/core'
-
+import { Component } from '@angular/core'
+import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { MatButtonModule } from '@angular/material/button'
-import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
+import { AuthService } from '../../core/auth.service'
 import { RouterLink } from '@angular/router'
 
 @Component({
-  selector: 'app-sign-up',
+  selector: 'app-sign-in',
   standalone: true,
   imports: [
     FormsModule,
@@ -18,10 +17,10 @@ import { RouterLink } from '@angular/router'
     MatButtonModule,
     RouterLink,
   ],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css',
+  templateUrl: './sign-in.component.html',
+  styleUrl: './sign-in.component.css',
 })
-export class SignUpComponent implements OnInit {
+export class SignInComponent {
 
   form: UntypedFormGroup = new UntypedFormGroup({})
 
@@ -35,20 +34,17 @@ export class SignUpComponent implements OnInit {
     this.form = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['' /**Validators.required */], // Disabled for now.
-      confirmPassword: ['' /**Validators.required */], // Disabled for now.
     })
 
     // Dev purposes, password is not required.
     this.form.get('password')?.disable()
-    this.form.get('confirmPassword')?.disable()
   }
 
   onSubmit() {
-    this.authService.signUp(this.form.value.email)
+    this.authService.signIn(this.form.value.email)
       .subscribe({
         next: (response) => {
-          console.log('response :>> ', response)
-          if (response.status === 201) {
+          if (response.status === 200) {
             // TODO redirect.
           } else {
             alert(response.message) // TODO Replace.
