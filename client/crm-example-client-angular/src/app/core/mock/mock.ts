@@ -2,9 +2,9 @@
  * Default empty mock DB.
  */
 const newDbSchema = JSON.stringify({
-  users: [],
-  contacts: [],
-  tasks: [],
+  users: {},
+  contacts: {},
+  tasks: {},
 })
 
 /**

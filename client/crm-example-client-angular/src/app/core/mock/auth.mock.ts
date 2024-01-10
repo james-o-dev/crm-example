@@ -1,6 +1,11 @@
 import { getLocalStorageDb, saveLocalStorageDb } from './mock'
 import { JWTPayload, SignJWT, jwtVerify } from 'jose'
 
+interface IUser {
+  user_id: string;
+  email: string;
+}
+
 const getRandomString = () => Math.random().toString()
 
 const tempAccessTokenSecret = new TextEncoder().encode('local development only 9279Y!5e#8%YupZ4%DZJ1*hy$iQM!M')
@@ -26,7 +31,7 @@ const signToken = async (payload: object, secret: Uint8Array) => {
   }
 }
 
-const verifyAccessToken = (accessToken: string) => verifyToken(accessToken, tempAccessTokenSecret)
+export const verifyAccessToken = (accessToken: string) => verifyToken(accessToken, tempAccessTokenSecret)
 const signAccessToken = (payload: object) => signToken(payload, tempAccessTokenSecret)
 
 export const signUpEndpoint = async (email: string) => {
@@ -35,11 +40,12 @@ export const signUpEndpoint = async (email: string) => {
 
   // Find if user already exists.
   const normalEmail = email.toLowerCase().trim()
-  const userFound = db.users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
+  const users = Object.values(db.users) as IUser[]
+  const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
   if (userFound) return { status: 409, message: 'User already exists' }
 
   // Else 'save',
-  db.users.push({user_id, email})
+  db.users[user_id] = {user_id, email}
   saveLocalStorageDb(db)
   // 'Respond'
   const accessToken = await signAccessToken({ user_id, email })
@@ -51,11 +57,11 @@ export const signInEndpoint = async (email: string) => {
 
   // Find if user already exists.
   const normalEmail = email.toLowerCase().trim()
-  const userFound = db.users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
+  const users = Object.values(db.users) as IUser[]
+  const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
 
   if (userFound) {
     const accessToken = await signAccessToken({ user_id: userFound.user_id, email })
-
     return { status: 200, message: 'Sign-in successful.', data: { accessToken }  }
   }
   // 'Respond'
@@ -63,6 +69,14 @@ export const signInEndpoint = async (email: string) => {
 }
 
 export const isAuthenticatedEndpoint = async (accessToken: string) => {
-  const verified = await verifyAccessToken(accessToken)
+  const verified = await verifyAccessToken(accessToken) || {}
+
+  // Check 'database'.
+  if (verified['user_id']) {
+    const { users } = getLocalStorageDb()
+    const userId = verified['user_id'] as string
+    if (!users[userId]) return false
+  }
+
   return !!verified
 }
