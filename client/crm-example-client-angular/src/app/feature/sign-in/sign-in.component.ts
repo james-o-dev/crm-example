@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { AuthService } from '../../core/auth.service'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-sign-in',
@@ -27,6 +27,7 @@ export class SignInComponent {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
+    private router: Router,
   ) {
   }
 
@@ -45,7 +46,7 @@ export class SignInComponent {
       .subscribe({
         next: (response) => {
           if (response.status === 200) {
-            // TODO redirect.
+            this.router.navigate(['/home'])
           } else {
             alert(response.message) // TODO Replace.
           }

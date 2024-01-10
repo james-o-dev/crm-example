@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-sign-up',
@@ -28,6 +28,7 @@ export class SignUpComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
+    private router: Router,
   ) {
   }
 
@@ -49,7 +50,7 @@ export class SignUpComponent implements OnInit {
         next: (response) => {
           console.log('response :>> ', response)
           if (response.status === 201) {
-            // TODO redirect.
+            this.router.navigate(['/home'])
           } else {
             alert(response.message) // TODO Replace.
           }
