@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core'
-import { signInEndpoint, signUpEndpoint } from './mock/auth.mock'
-import { from } from 'rxjs'
+import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './mock/auth.mock'
+import { from, tap } from 'rxjs'
+import { Router } from '@angular/router'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(private router: Router) { }
+
+  get accessToken() {
+    return localStorage.getItem('accessToken') || ''
+  }
+  set accessToken(accessToken: string) {
+    localStorage.setItem('accessToken', accessToken)
+  }
 
   /**
    * Request to sign up a user.
@@ -18,6 +26,11 @@ export class AuthService {
   signUp(email: string) {
     // From mock DB.
     return from(signUpEndpoint(email))
+      .pipe(
+        tap(data => {
+          this.accessToken = data.data?.accessToken as string
+        }),
+      )
     // API Endpoint.
     // TODO
   }
@@ -31,7 +44,25 @@ export class AuthService {
   signIn(email: string) {
     // From mock DB.
     return from(signInEndpoint(email))
+    .pipe(
+      tap(data => {
+        this.accessToken = data.data?.accessToken as string
+      }),
+    )
     // API Endpoint.
     // TODO
+  }
+
+  isAuthenticated() {
+    // Mock.
+    return from(isAuthenticatedEndpoint(this.accessToken))
+
+    // API.
+    // TODO
+  }
+
+  signOut() {
+    localStorage.removeItem('accessToken')
+    this.router.navigate(['/sign-in'])
   }
 }

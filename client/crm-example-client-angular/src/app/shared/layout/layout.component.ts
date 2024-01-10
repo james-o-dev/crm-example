@@ -5,6 +5,8 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatDividerModule } from '@angular/material/divider'
+import { RouterLink } from '@angular/router'
+import { AuthService } from '../../core/auth.service'
 
 @Component({
   selector: 'app-layout',
@@ -23,4 +25,10 @@ import { MatDividerModule } from '@angular/material/divider'
   styleUrl: './layout.component.css',
 })
 export class LayoutComponent {
+
+  constructor(private authService: AuthService) {}
+
+  onSignOut() {
+    this.authService.signOut()
+  }
 }
