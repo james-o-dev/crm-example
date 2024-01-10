@@ -13,14 +13,14 @@ export const getRandomString = () => Math.random().toString()
 
 export const saveToDb = (table: string, key: string, payload: object) => {
   const db = getLocalStorageDb()
-  db[table][key] = payload
+  db[table][key] = { ...db[table][key], ...payload}
   saveLocalStorageDb(db)
 }
 
 export const newToDb = (table: string, payload: object) => {
   const key = getRandomString()
   const db = getLocalStorageDb()
-  db[table][key] = { ...payload, id: key }
+  db[table][key] = { ...payload, key }
   saveLocalStorageDb(db)
   return key
 }

@@ -45,7 +45,7 @@ export class SignInComponent {
     this.authService.signIn(this.form.value.email)
       .subscribe({
         next: (response) => {
-          if (response.status === 200) {
+          if (response.statusCode === 200) {
             this.router.navigate(['/home'])
           } else {
             alert(response.message) // TODO Replace.

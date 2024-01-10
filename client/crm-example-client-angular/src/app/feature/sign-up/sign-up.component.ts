@@ -48,8 +48,7 @@ export class SignUpComponent implements OnInit {
     this.authService.signUp(this.form.value.email)
       .subscribe({
         next: (response) => {
-          console.log('response :>> ', response)
-          if (response.status === 201) {
+          if (response.statusCode === 201) {
             this.router.navigate(['/home'])
           } else {
             alert(response.message) // TODO Replace.

@@ -1,8 +1,8 @@
 import { getLocalStorageDb, newToDb } from './mock'
 import { JWTPayload, SignJWT, jwtVerify } from 'jose'
 
-interface IUser {
-  user_id: string;
+export interface IUser {
+  key: string;
   email: string;
 }
 
@@ -39,14 +39,14 @@ export const signUpEndpoint = async (email: string) => {
   const normalEmail = email.toLowerCase().trim()
   const users = Object.values(db.users) as IUser[]
   const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
-  if (userFound) return { status: 409, message: 'User already exists' }
+  if (userFound) return { statusCode: 409, ok: false, message: 'User already exists' }
 
   // Else 'save',
-  const user_id = newToDb('users', { email })
+  const key = newToDb('users', { email })
 
   // 'Respond'
-  const accessToken = await signAccessToken({ user_id, email })
-  return { status: 201, message: 'User created', data: { accessToken } }
+  const accessToken = await signAccessToken({ user_id: key, email })
+  return { statusCode: 201, ok: true, message: 'User created', accessToken }
 }
 
 export const signInEndpoint = async (email: string) => {
@@ -58,22 +58,29 @@ export const signInEndpoint = async (email: string) => {
   const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
 
   if (userFound) {
-    const accessToken = await signAccessToken({ user_id: userFound.user_id, email })
-    return { status: 200, message: 'Sign-in successful.', data: { accessToken }  }
+    const accessToken = await signAccessToken({ user_id: userFound.key, email })
+    return { statusCode: 200, ok: true, message: 'Sign-in successful.', accessToken  }
   }
   // 'Respond'
-  return { status: 400, message: 'Invalid sign-in.' }
+  return { statusCode: 400, ok: false, message: 'Invalid sign-in.' }
 }
 
 export const isAuthenticatedEndpoint = async (accessToken: string) => {
-  const verified = await verifyAccessToken(accessToken) || {}
+  try {
+    const verified = await verifyAccessToken(accessToken) || {}
 
-  // Check 'database'.
-  if (verified['user_id']) {
-    const { users } = getLocalStorageDb()
-    const userId = verified['id'] as string
-    if (!users[userId]) return false
+    if (!verified || !verified['user_id']) return { ok: false, statusCode: 400, message: 'Invalid token.' }
+
+    // Check 'database'.
+    if (verified['user_id']) {
+      const { users } = getLocalStorageDb()
+      const userId = verified['user_id'] as string
+      if (!users[userId]) return { ok: false, statusCode: 400, message: 'Invalid token.' }
+    }
+
+    return { ok: true, statusCode: 200, message: 'Access token verified.' }
+  } catch (error) {
+    console.error('isAuthenticatedEndpoint ', error)
+    return { ok: false, statusCode: 400, message: 'Invalid token.' }
   }
-
-  return !!verified
 }

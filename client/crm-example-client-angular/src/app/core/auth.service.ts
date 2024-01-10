@@ -28,7 +28,7 @@ export class AuthService {
     return from(signUpEndpoint(email))
       .pipe(
         tap(data => {
-          this.accessToken = data.data?.accessToken as string
+          this.accessToken = data.accessToken as string
         }),
       )
     // API Endpoint.
@@ -46,7 +46,7 @@ export class AuthService {
     return from(signInEndpoint(email))
     .pipe(
       tap(data => {
-        this.accessToken = data.data?.accessToken as string
+        this.accessToken = data.accessToken as string
       }),
     )
     // API Endpoint.
