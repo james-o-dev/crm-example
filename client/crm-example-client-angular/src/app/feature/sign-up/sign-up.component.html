@@ -1,7 +1,7 @@
 <div class="sign-up-container">
   <h1>CRM Example</h1>
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" (submit)="onSubmit()">
     <mat-form-field class="w-full">
       <mat-label>Email</mat-label>
       <input matInput type="email" formControlName="email">
@@ -20,7 +20,7 @@
       <mat-error>Required</mat-error>
     </mat-form-field>
 
-    <button mat-raised-button type="submit" color="primary" class="w-full" [disabled]="form.invalid" (click)="onSubmit()">Sign Up</button>
+    <button mat-raised-button type="submit" color="primary" class="w-full" [disabled]="form.invalid">Sign Up</button>
   </form>
 
   <button mat-stroked-button color="primary" routerLink="/sign-in">Or Sign In</button>
