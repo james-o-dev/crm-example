@@ -1,0 +1,28 @@
+<div class="sign-up-container">
+  <h1>CRM Example</h1>
+
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email">
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password">
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword">
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button type="submit" color="primary" class="w-full" [disabled]="form.invalid">Sign Up</button>
+  </form>
+
+  <button mat-stroked-button color="primary">Or Sign In</button>
+
+</div>
