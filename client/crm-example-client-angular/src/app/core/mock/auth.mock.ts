@@ -1,12 +1,10 @@
-import { getLocalStorageDb, saveLocalStorageDb } from './mock'
+import { getLocalStorageDb, newToDb } from './mock'
 import { JWTPayload, SignJWT, jwtVerify } from 'jose'
 
 interface IUser {
   user_id: string;
   email: string;
 }
-
-const getRandomString = () => Math.random().toString()
 
 const tempAccessTokenSecret = new TextEncoder().encode('local development only 9279Y!5e#8%YupZ4%DZJ1*hy$iQM!M')
 // const tempRefreshTokenSecret = new TextEncoder().encode(getRandomString())
@@ -35,7 +33,6 @@ export const verifyAccessToken = (accessToken: string) => verifyToken(accessToke
 const signAccessToken = (payload: object) => signToken(payload, tempAccessTokenSecret)
 
 export const signUpEndpoint = async (email: string) => {
-  const user_id = getRandomString() // Should be a UUID from the server/database.
   const db = getLocalStorageDb()
 
   // Find if user already exists.
@@ -45,8 +42,8 @@ export const signUpEndpoint = async (email: string) => {
   if (userFound) return { status: 409, message: 'User already exists' }
 
   // Else 'save',
-  db.users[user_id] = {user_id, email}
-  saveLocalStorageDb(db)
+  const user_id = newToDb('users', { email })
+
   // 'Respond'
   const accessToken = await signAccessToken({ user_id, email })
   return { status: 201, message: 'User created', data: { accessToken } }
@@ -74,7 +71,7 @@ export const isAuthenticatedEndpoint = async (accessToken: string) => {
   // Check 'database'.
   if (verified['user_id']) {
     const { users } = getLocalStorageDb()
-    const userId = verified['user_id'] as string
+    const userId = verified['id'] as string
     if (!users[userId]) return false
   }
 
