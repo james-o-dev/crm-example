@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { signInEndpoint, signUpEndpoint } from './auth.mock'
+import { signInEndpoint, signUpEndpoint } from './mock/auth.mock'
 import { from } from 'rxjs'
 
 @Injectable({
