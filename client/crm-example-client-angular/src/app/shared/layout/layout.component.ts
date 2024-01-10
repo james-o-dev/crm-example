@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider'
     MatListModule,
     MatIconModule,
     MatDividerModule,
+    RouterLink,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
