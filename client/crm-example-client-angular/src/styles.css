@@ -28,3 +28,7 @@ body {
 .mx-1 {
   margin: 0 1em;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
