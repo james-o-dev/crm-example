@@ -1,3 +1,4 @@
+import { AuthService } from './../../core/auth.service'
 import { Component, OnInit } from '@angular/core'
 
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -22,7 +23,10 @@ export class SignUpComponent implements OnInit {
 
   form: UntypedFormGroup = new UntypedFormGroup({})
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+  ) {
   }
 
   ngOnInit() {
@@ -35,6 +39,15 @@ export class SignUpComponent implements OnInit {
     // Dev purposes, password is not required.
     this.form.get('password')?.disable()
     this.form.get('confirmPassword')?.disable()
+  }
 
+  onSubmit() {
+    this.authService.signUp(this.form.value.email)
+      .subscribe({
+        next: (response) => {
+          console.log('response :>> ', response)
+          // TODO redirect.
+        },
+      })
   }
 }
