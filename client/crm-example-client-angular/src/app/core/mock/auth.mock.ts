@@ -6,6 +6,11 @@ export interface IUser {
   email: string;
 }
 
+// Any object. This is probably a bad idea.
+interface AnyObject {
+  [key: string]: string;
+}
+
 /**
  * Valid units are: "sec", "secs", "second", "seconds", "s", "minute", "minutes", "min", "mins", "m", "hour", "hours", "hr", "hrs", "h", "day", "days", "d", "week", "weeks", "w", "year", "years", "yr", "yrs", and "y". It is not possible to specify months. 365.25 days is used as an alias for a year.
  *
@@ -18,8 +23,16 @@ const tempAccessTokenSecret = new TextEncoder().encode('local development only 9
 
 const verifyToken = async (token: string, secret: Uint8Array) => {
   try {
+    // Verify the JWT token.
     const { payload } = await jwtVerify(token, secret)
-    return payload || null
+    if (!payload) return null
+
+    // Currently does not exist in the database.
+    const checkedWithDb = await checkTokenWithDb(payload as AnyObject)
+    if (!checkedWithDb) return null
+
+    // Valid - return the verified decoded JWT.
+    return payload
   } catch (error) {
     return null
   }
@@ -37,7 +50,20 @@ const signToken = async (payload: object, secret: Uint8Array) => {
   }
 }
 
-export const verifyAccessToken = (accessToken: string) => verifyToken(accessToken, tempAccessTokenSecret)
+const checkTokenWithDb = async (tokenPayload: AnyObject) => {
+  const userId = tokenPayload['user_id']
+
+  // Check 'database'.
+  if (userId) {
+    const { users } = getLocalStorageDb()
+    if (!users[userId]) return false
+    // TODO check if token is expired from the DB.
+    return true
+  }
+  return false
+}
+
+export const verifyAccessToken = async (accessToken: string) => verifyToken(accessToken, tempAccessTokenSecret)
 const signAccessToken = (payload: object) => signToken(payload, tempAccessTokenSecret)
 
 export const signUpEndpoint = async (email: string) => {
@@ -67,7 +93,7 @@ export const signInEndpoint = async (email: string) => {
 
   if (userFound) {
     const accessToken = await signAccessToken({ user_id: userFound.key, email })
-    return { statusCode: 200, ok: true, message: 'Sign-in successful.', accessToken  }
+    return { statusCode: 200, ok: true, message: 'Sign-in successful.', accessToken }
   }
   // 'Respond'
   return { statusCode: 400, ok: false, message: 'Invalid sign-in.' }
@@ -78,13 +104,6 @@ export const isAuthenticatedEndpoint = async (accessToken: string) => {
     const verified = await verifyAccessToken(accessToken) || {}
 
     if (!verified || !verified['user_id']) return { ok: false, statusCode: 400, message: 'Invalid token.' }
-
-    // Check 'database'.
-    if (verified['user_id']) {
-      const { users } = getLocalStorageDb()
-      const userId = verified['user_id'] as string
-      if (!users[userId]) return { ok: false, statusCode: 400, message: 'Invalid token.' }
-    }
 
     return { ok: true, statusCode: 200, message: 'Access token verified.' }
   } catch (error) {
