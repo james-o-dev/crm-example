@@ -1,0 +1,26 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>For Contact</mat-label>
+    <input matInput type="text" formControlName="contact_id">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput type="text" formControlName="title">
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Due Date</mat-label>
+    <input matInput type="text" [matDatepicker]="picker" formControlName="due_date">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Notes</mat-label>
+    <textarea matInput rows="5"></textarea>
+  </mat-form-field>
+
+  <div>
+    <button type="button" mat-stroked-button color="primary" (click)="onReset()">Reset</button>
+  </div>
+</form>

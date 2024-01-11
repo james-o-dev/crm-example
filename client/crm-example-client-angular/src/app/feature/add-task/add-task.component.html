@@ -1,0 +1,17 @@
+<app-layout>
+  <div class="text-center">
+    <h1>Add Task</h1>
+  </div>
+
+  <div class="mx-1">
+    <app-task-form #taskForm />
+  </div>
+
+  <div class="bottom-fab-absolute right">
+    <div class="bottom-fab-fixed">
+      <button mat-fab color="primary" [disabled]="taskForm.form.invalid" (click)="onSubmit()">
+        <mat-icon>assignment_add</mat-icon>
+      </button>
+    </div>
+  </div>
+</app-layout>
