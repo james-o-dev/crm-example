@@ -10,7 +10,7 @@ interface IContact {
   notes?: string;
 }
 
-interface IContactDB {
+export interface IContactDB {
   key?: string;
   name: string;
   user_id: string;
