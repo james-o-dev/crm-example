@@ -9,7 +9,7 @@ const MOCK_DB_NEW = JSON.stringify({
   tasks: {},
 })
 
-export const getRandomString = () => Math.random().toString()
+export const getRandomString = () => Math.random().toString().replace('.', '')
 
 export const saveToDb = (table: string, key: string, payload: object) => {
   payload = {
