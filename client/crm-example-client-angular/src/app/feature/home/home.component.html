@@ -1,5 +1,26 @@
 <app-layout>
-  <div class="text-center">
-    <h1>Home</h1>
+  <div class="mx-1">
+    <div class="text-center">
+      <h1>Home</h1>
+    </div>
+
+    <div class="bottom-fab-absolute right">
+      <div class="bottom-fab-fixed">
+        <button mat-fab color="primary" [matMenuTriggerFor]="menu">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>person_add</mat-icon>
+        <span>New Contact</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>assignment_add</mat-icon>
+        <span>New Task</span>
+      </button>
+    </mat-menu>
   </div>
 </app-layout>

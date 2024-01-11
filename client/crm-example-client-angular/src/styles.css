@@ -32,3 +32,23 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+
+/* Bottom FAB styles; See HomeComponent for example usage. */
+
+.bottom-fab-absolute {
+  position: absolute;
+}
+.bottom-fab-absolute.right {
+  right: 56px;
+  margin-right: 1em;
+}
+.bottom-fab-absolute.left {
+  left: 0;
+  margin-left: 1em;
+}
+
+.bottom-fab-fixed {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 1em;
+}
