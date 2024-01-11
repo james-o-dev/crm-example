@@ -1,0 +1,27 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" formControlName="name">
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email">
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Phone</mat-label>
+    <input matInput type="text" formControlName="phone">
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Notes</mat-label>
+    <textarea matInput rows="5" formControlName="notes">
+    </textarea>
+    <mat-error>Invalid</mat-error>
+  </mat-form-field>
+
+</form>

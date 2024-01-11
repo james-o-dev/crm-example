@@ -8,6 +8,7 @@ export const routes: Routes = [
   // Auth.
   { path: 'home', canActivate: [authGuard], loadComponent: () => import('./feature/home/home.component').then(m => m.HomeComponent) },
   { path: 'user-profile', canActivate: [authGuard], loadComponent: () => import('./feature/user-profile/user-profile.component').then(m => m.UserProfileComponent) },
+  { path: 'add-contact', canActivate: [authGuard], loadComponent: () => import('./feature/add-contact/add-contact.component').then(m => m.AddContactComponent ) },
   // Default route; Will redirect to here if a path is not found.
   { path: '**', redirectTo: 'home'  },
 ]
