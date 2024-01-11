@@ -28,7 +28,7 @@ export class AuthService {
     return from(signUpEndpoint(email))
       .pipe(
         tap(data => {
-          this.accessToken = data.accessToken as string
+          if (data.statusCode === 201) this.accessToken = data.accessToken as string
         }),
       )
     // API Endpoint.
@@ -44,11 +44,11 @@ export class AuthService {
   signIn(email: string) {
     // From mock DB.
     return from(signInEndpoint(email))
-    .pipe(
-      tap(data => {
-        this.accessToken = data.accessToken as string
-      }),
-    )
+      .pipe(
+        tap(data => {
+          if (data.statusCode === 200) this.accessToken = data.accessToken as string
+        }),
+      )
     // API Endpoint.
     // TODO
   }
