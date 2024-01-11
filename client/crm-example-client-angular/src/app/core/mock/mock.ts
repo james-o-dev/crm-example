@@ -12,15 +12,24 @@ const MOCK_DB_NEW = JSON.stringify({
 export const getRandomString = () => Math.random().toString()
 
 export const saveToDb = (table: string, key: string, payload: object) => {
+  payload = {
+    ...payload,
+    date_modified: Date.now(),
+  }
   const db = getLocalStorageDb()
-  db[table][key] = { ...db[table][key], ...payload}
+  db[table][key] = { ...db[table][key], ...payload }
   saveLocalStorageDb(db)
 }
 
 export const newToDb = (table: string, payload: object) => {
   const key = getRandomString()
   const db = getLocalStorageDb()
-  db[table][key] = { ...payload, key }
+  db[table][key] = {
+    ...payload,
+    key,
+    date_created: Date.now(),
+    date_modified: Date.now(),
+  }
   saveLocalStorageDb(db)
   return key
 }
