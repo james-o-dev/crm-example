@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component, ViewChild, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatIconModule } from '@angular/material/icon'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
@@ -18,19 +18,25 @@ import { TasksService } from '../../core/tasks.service'
   styleUrl: './add-task.component.css',
 })
 export class AddTaskComponent {
-  @ViewChild('taskForm') taskForm = {} as TaskFormComponent
+  private tasksService = inject(TasksService)
 
-  constructor(
-    private tasksService: TasksService,
-  ) {}
+  @ViewChild('taskForm') taskForm = {} as TaskFormComponent
 
   onSubmit() {
     if (this.taskForm.form.invalid) return
 
-    this.tasksService.addTask(this.taskForm.form.value)
+    const formValue = this.taskForm.form.value
+
+    const payload = {
+      title: formValue.title,
+      due_date: formValue.due_date,
+      notes: formValue.notes,
+      contact_id: formValue.autoContact?.value,
+    }
+
+    this.tasksService.addTask(payload)
       .subscribe({
         next: (res) => {
-          console.log('res :>> ', res)
           if (res.statusCode === 201) {
             alert('Task added.') // TODO
             this.taskForm.onReset()

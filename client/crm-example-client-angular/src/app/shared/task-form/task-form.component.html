@@ -1,13 +1,23 @@
 <form [formGroup]="form">
   <mat-form-field>
     <mat-label>For Contact</mat-label>
-    <input matInput type="text" formControlName="contact_id">
+    <input matInput type="text" formControlName="autoContact" [matAutocomplete]="auto">
+    <mat-icon matSuffix>search</mat-icon>
+
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="autoDisplayFn">
+      @for (option of autoContacts | async; track option.value) {
+        <mat-option [value]="option">{{option.text}}</mat-option>
+      }
+    </mat-autocomplete>
+
   </mat-form-field>
+
   <mat-form-field>
     <mat-label>Title</mat-label>
     <input matInput type="text" formControlName="title">
     <mat-error>Invalid</mat-error>
   </mat-form-field>
+
   <mat-form-field>
     <mat-label>Due Date</mat-label>
     <input matInput type="text" [matDatepicker]="picker" formControlName="due_date">
@@ -15,6 +25,7 @@
     <mat-datepicker #picker></mat-datepicker>
     <mat-error>Invalid</mat-error>
   </mat-form-field>
+
   <mat-form-field>
     <mat-label>Notes</mat-label>
     <textarea matInput rows="5"></textarea>
