@@ -1,5 +1,5 @@
 import { AuthService } from './../../core/auth.service'
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, inject } from '@angular/core'
 
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -12,27 +12,23 @@ import { Router, RouterLink } from '@angular/router'
   standalone: true,
   imports: [
     FormsModule,
-    ReactiveFormsModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    ReactiveFormsModule,
     RouterLink,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css',
 })
 export class SignUpComponent implements OnInit {
+  private authService = inject(AuthService)
+  private formBuilder = inject(FormBuilder)
+  private router = inject(Router)
 
-  form: UntypedFormGroup = new UntypedFormGroup({})
+  protected form: UntypedFormGroup = new UntypedFormGroup({})
 
-  constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-  ) {
-  }
-
-  ngOnInit() {
+  public ngOnInit() {
     this.form = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['' /**Validators.required */], // Disabled for now.
@@ -44,7 +40,7 @@ export class SignUpComponent implements OnInit {
     this.form.get('confirmPassword')?.disable()
   }
 
-  onSubmit() {
+  protected onSubmit() {
     this.authService.signUp(this.form.value.email)
       .subscribe({
         next: (response) => {

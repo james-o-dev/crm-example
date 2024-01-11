@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -25,25 +25,27 @@ import { MatIconModule } from '@angular/material/icon'
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
-  editModeUsername = false
-  username = ''
+  private userProfileService = inject(UserProfileService)
+  private formBuilder = inject(FormBuilder)
 
-  changeUserNameForm = this.formBuilder.group({
+  protected editModeUsername = false
+  protected username = ''
+
+  protected changeUserNameForm = this.formBuilder.group({
     username: [''],
   })
 
-  changePasswordForm = this.formBuilder.group({
+  protected changePasswordForm = this.formBuilder.group({
     oldPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
     confirmPassword: ['', Validators.required],
   })
 
   constructor(
-    private userProfileService: UserProfileService,
-    private formBuilder: FormBuilder,
+
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.changePasswordForm.disable()
 
     this.userProfileService.getUsername()
@@ -53,7 +55,7 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
-  onChangeUsername() {
+  protected onChangeUsername() {
     this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
       .subscribe(() => {
         this.username = this.changeUserNameForm.value.username as string
@@ -61,7 +63,7 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
-  onChangePassword() {
+  protected onChangePassword() {
     // TODO.
   }
 }

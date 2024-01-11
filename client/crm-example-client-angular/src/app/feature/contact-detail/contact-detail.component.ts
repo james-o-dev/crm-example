@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -28,16 +28,14 @@ import { MatDividerModule } from '@angular/material/divider'
 export class ContactDetailComponent implements OnInit {
   @ViewChild(ContactFormComponent) contactForm: ContactFormComponent = {} as ContactFormComponent
 
-  contactId = ''
-  contact: IContact = {} as IContact
-  editMode = false
+  private activatedRoute = inject(ActivatedRoute)
+  private contactService = inject(ContactService)
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private contactService: ContactService,
-  ) { }
+  private contactId = ''
+  protected contact: IContact = {} as IContact
+  protected editMode = false
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.contactId = this.activatedRoute.snapshot.params['contactId']
 
     if (!this.contactId) return
@@ -45,7 +43,7 @@ export class ContactDetailComponent implements OnInit {
     this.getContact().subscribe()
   }
 
-  onSave() {
+  protected onSave() {
     this.contactService.updateContact({ ...this.contactForm.form.value, key: this.contactId } as IContact)
       .pipe(switchMap(() => this.getContact()))
       .subscribe({
@@ -53,7 +51,7 @@ export class ContactDetailComponent implements OnInit {
       })
   }
 
-  getContact() {
+  private getContact() {
     return this.contactService.getContact(this.contactId)
       .pipe(tap(data => this.contact = data.contact))
   }

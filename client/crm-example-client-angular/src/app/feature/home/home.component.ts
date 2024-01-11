@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router'
   standalone: true,
   imports: [
     LayoutComponent,
-    MatIconModule,
     MatButtonModule,
+    MatIconModule,
     MatMenuModule,
     RouterLink,
   ],

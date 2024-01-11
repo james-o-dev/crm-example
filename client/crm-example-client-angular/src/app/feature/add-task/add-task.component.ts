@@ -22,7 +22,7 @@ export class AddTaskComponent {
 
   @ViewChild('taskForm') taskForm = {} as TaskFormComponent
 
-  onSubmit() {
+  protected onSubmit() {
     if (this.taskForm.form.invalid) return
 
     const formValue = this.taskForm.form.value

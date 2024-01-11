@@ -48,7 +48,7 @@ export class TaskFormComponent implements OnInit {
     notes: '',
   })
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // Get contacts for the auto-complete.
     this.contactService.getContacts()
       .subscribe(data => {
@@ -67,11 +67,11 @@ export class TaskFormComponent implements OnInit {
     )
   }
 
-  onReset() {
+  public onReset() {
     this.form.reset(undefined)
   }
 
-  autoDisplayFn(option: IOption): string {
+  protected autoDisplayFn(option: IOption): string {
     return option && option.text ? option.text : ''
   }
 }

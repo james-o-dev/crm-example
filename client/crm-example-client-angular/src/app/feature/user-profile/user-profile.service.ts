@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { changeUsernameEndpoint, getUsernameEndpoint } from '../../core/mock/user-profile.mock'
 import { AuthService } from '../../core/auth.service'
 import { from } from 'rxjs'
@@ -7,14 +7,13 @@ import { from } from 'rxjs'
   providedIn: 'root',
 })
 export class UserProfileService {
+  private authService = inject(AuthService)
 
-  constructor(private authService: AuthService) { }
-
-  getUsername() {
+  public getUsername() {
     return from(getUsernameEndpoint(this.authService.accessToken))
   }
 
-  setUsername(username: string) {
+  public setUsername(username: string) {
     return from(changeUsernameEndpoint(this.authService.accessToken, username))
   }
 }

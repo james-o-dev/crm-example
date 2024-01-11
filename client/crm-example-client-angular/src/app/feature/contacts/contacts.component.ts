@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, inject } from '@angular/core'
 import { ContactService } from '../../core/contacts.service'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatTableModule } from '@angular/material/table'
@@ -11,28 +11,26 @@ import { RouterLink } from '@angular/router'
   standalone: true,
   imports: [
     LayoutComponent,
-    MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatTableModule,
     RouterLink,
   ],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.css',
 })
 export class ContactsComponent implements OnInit {
-  readonly COLUMNS = ['name', 'contact-details', 'tasks']
+  private contactService = inject(ContactService)
 
-  dataSource = [] as object[]
+  protected readonly COLUMNS = ['name', 'contact-details', 'tasks']
 
-  constructor(
-    private contactService: ContactService,
-  ) { }
+  protected dataSource = [] as object[]
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.loadData()
   }
 
-  loadData() {
+  private loadData() {
     this.contactService.getContacts()
       .subscribe(data => {
         this.dataSource = data.contacts as object[]

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component, ViewChild, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { MatIconModule } from '@angular/material/icon'
@@ -10,23 +10,20 @@ import { Router } from '@angular/router'
   selector: 'app-add-contact',
   standalone: true,
   imports: [
-    LayoutComponent,
     ContactFormComponent,
-    MatIconModule,
+    LayoutComponent,
     MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './add-contact.component.html',
   styleUrl: './add-contact.component.css',
 })
 export class AddContactComponent {
   @ViewChild('contactForm') contactForm: ContactFormComponent = {} as ContactFormComponent
+  private contactService = inject(ContactService)
+  private router = inject(Router)
 
-  constructor(
-    private contactService: ContactService,
-    private router: Router,
-  ) {}
-
-  onSubmit() {
+  protected onSubmit() {
     if (this.contactForm.form.invalid) return
 
     this.contactService.newContact({

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -11,27 +11,23 @@ import { Router, RouterLink } from '@angular/router'
   standalone: true,
   imports: [
     FormsModule,
-    ReactiveFormsModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    ReactiveFormsModule,
     RouterLink,
   ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css',
 })
 export class SignInComponent {
+  private authService = inject(AuthService)
+  private formBuilder = inject(FormBuilder)
+  private router = inject(Router)
 
-  form: UntypedFormGroup = new UntypedFormGroup({})
+  protected form: UntypedFormGroup = new UntypedFormGroup({})
 
-  constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-  ) {
-  }
-
-  ngOnInit() {
+  public ngOnInit() {
     this.form = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['' /**Validators.required */], // Disabled for now.
@@ -41,7 +37,7 @@ export class SignInComponent {
     this.form.get('password')?.disable()
   }
 
-  onSubmit() {
+  protected onSubmit() {
     this.authService.signIn(this.form.value.email)
       .subscribe({
         next: (response) => {

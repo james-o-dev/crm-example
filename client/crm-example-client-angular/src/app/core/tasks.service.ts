@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
 import { addTaskEndpoint } from './mock/tasks.mock'
 import { AuthService } from './auth.service'
@@ -7,10 +7,7 @@ import { AuthService } from './auth.service'
   providedIn: 'root',
 })
 export class TasksService {
-
-  constructor(
-    private authService: AuthService,
-  ) { }
+  private authService = inject(AuthService)
 
   addTask(payload: object) {
     return from(addTaskEndpoint(this.authService.accessToken, payload))

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './mock/auth.mock'
 import { from, tap } from 'rxjs'
 import { Router } from '@angular/router'
@@ -7,8 +7,7 @@ import { Router } from '@angular/router'
   providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private router: Router) { }
+  private router = inject(Router)
 
   get accessToken() {
     return localStorage.getItem('accessToken') || ''

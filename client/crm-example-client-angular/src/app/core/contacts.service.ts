@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactEndpoint } from './mock/contacts.mock'
 import { AuthService } from './auth.service'
@@ -20,10 +20,7 @@ export interface IContact {
   providedIn: 'root',
 })
 export class ContactService {
-
-  constructor(
-    private authService: AuthService,
-  ) { }
+  private authService = inject(AuthService)
 
   getContact(contactId: string) {
     return from(getContactEndpoint(this.authService.accessToken, contactId))
