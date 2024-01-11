@@ -29,7 +29,7 @@ export const addTaskEndpoint = async (accessToken: string, payload: object) => {
   return { statusCode: 201, ok: true, message: 'Task created.', taskId }
 }
 
-export const getTasksEndpoint = async (accessToken: string) => {
+export const getTasksEndpoint = async (accessToken: string, contactId?: string) => {
   const verifiedToken = await verifyAccessToken(accessToken) || {}
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -37,6 +37,11 @@ export const getTasksEndpoint = async (accessToken: string) => {
   const contacts = db.contacts
   const tasks = (Object.values(db['tasks'] || {}) as ITaskDB[])
     .filter((task: ITaskDB) => task.user_id === verifiedToken['user_id'])
+    .filter((task: ITaskDB) => {
+      if (!contactId) return true
+      if (contactId === task.contact_id) return true
+      return false
+    })
     .map((task: ITaskResponse) => {
       if (task.contact_id) {
         task.contact = contacts[task.contact_id]

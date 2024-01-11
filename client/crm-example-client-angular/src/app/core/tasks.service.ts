@@ -21,7 +21,7 @@ export class TasksService {
 
   }
 
-  getTasks() {
-    return from(getTasksEndpoint(this.authService.accessToken))
+  getTasks(contactId?: string) {
+    return from(getTasksEndpoint(this.authService.accessToken, contactId))
   }
 }

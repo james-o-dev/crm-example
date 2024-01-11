@@ -9,6 +9,7 @@ import { ContactFormComponent } from '../../shared/contact-form/contact-form.com
 import { switchMap, tap } from 'rxjs'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
 import { MatDividerModule } from '@angular/material/divider'
+import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.component'
 
 @Component({
   selector: 'app-contact-detail',
@@ -21,6 +22,7 @@ import { MatDividerModule } from '@angular/material/divider'
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    TasksTableComponent,
   ],
   templateUrl: './contact-detail.component.html',
   styleUrl: './contact-detail.component.css',
@@ -31,7 +33,7 @@ export class ContactDetailComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
 
-  private contactId = ''
+  protected contactId = ''
   protected contact: IContact = {} as IContact
   protected editMode = false
 

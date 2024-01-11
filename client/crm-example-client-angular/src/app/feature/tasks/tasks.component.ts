@@ -1,41 +1,23 @@
-import { Component, inject } from '@angular/core'
+import { Component } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { MatTableModule } from '@angular/material/table'
 import { RouterLink } from '@angular/router'
-import { TasksService } from '../../core/tasks.service'
-import { DatePipe } from '@angular/common'
+import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.component'
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
   imports: [
-    DatePipe,
     LayoutComponent,
     MatButtonModule,
     MatIconModule,
-    MatTableModule,
     RouterLink,
+    TasksTableComponent,
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
 export class TasksComponent {
-  private tasksService = inject(TasksService)
 
-  protected readonly COLUMNS = ['title', 'due_date', 'contact']
-
-  protected dataSource = [] as object[]
-
-  public ngOnInit(): void {
-    this.loadData()
-  }
-
-  private loadData() {
-    this.tasksService.getTasks()
-      .subscribe(data => {
-        this.dataSource = data.tasks as object[]
-      })
-  }
 }
