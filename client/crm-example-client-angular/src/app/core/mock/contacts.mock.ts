@@ -1,8 +1,17 @@
 import { verifyAccessToken } from './auth.mock'
-import { getLocalStorageDb, newToDb } from './mock'
+import { getLocalStorageDb, newToDb, saveToDb } from './mock'
 
 interface IContact {
-  key: string;
+  key?: string;
+  name: string;
+  user_id?: string;
+  email?: string;
+  phone?: string;
+  notes?: string;
+}
+
+interface IContactDB {
+  key?: string;
   name: string;
   user_id: string;
   date_created: string;
@@ -21,7 +30,7 @@ export const newContactEndpoint = async (accessToken: string, payload: object) =
     user_id: verifiedToken['user_id'],
   })
 
-  return { statusCode: 200, ok: true, message: 'Contact created.', contactId  }
+  return { statusCode: 200, ok: true, message: 'Contact created.', contactId }
 }
 
 export const getContactsEndpoint = async (accessToken: string) => {
@@ -29,9 +38,37 @@ export const getContactsEndpoint = async (accessToken: string) => {
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
   const db = getLocalStorageDb()
-  const contacts = (Object.values(db['contacts'] || {}) as IContact[])
-    .filter((contact: IContact) => contact.user_id === verifiedToken['user_id'])
+  const contacts = (Object.values(db['contacts'] || {}) as IContactDB[])
+    .filter((contact: IContactDB) => contact.user_id === verifiedToken['user_id'])
     .sort((a, b) => a.date_modified < b.date_modified ? -1 : 1)
 
-  return { statusCode: 200, ok: true, contacts  }
+  return { statusCode: 200, ok: true, contacts }
+}
+
+export const getContactEndpoint = async (accessToken: string, contactId: string) => {
+  const verifiedToken = await verifyAccessToken(accessToken)
+  if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
+
+  const { contacts } = getLocalStorageDb()
+  const contact = contacts[contactId]
+
+  if (contact.user_id !== verifiedToken['user_id']) return { statusCode: 403, ok: false, message: 'Forbidden.' }
+
+  return { statusCode: 200, ok: true, contact }
+}
+
+export const updateContactEndpoint = async (accessToken: string, payload: IContact) => {
+  const verifiedToken = await verifyAccessToken(accessToken)
+  if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
+
+  const contactId = payload.key || ''
+
+  const { contacts } = getLocalStorageDb()
+  const contact = contacts[contactId]
+  if (contact.user_id !== verifiedToken['user_id']) return { statusCode: 403, ok: false, message: 'Forbidden.' }
+
+  saveToDb('contacts', contactId, payload)
+
+  return { statusCode: 200, ok: true, message: 'Contact updated.' }
+
 }

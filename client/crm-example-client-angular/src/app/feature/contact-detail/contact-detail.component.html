@@ -1,0 +1,69 @@
+<app-layout>
+
+  <div class="mx-1">
+
+    @if (!editMode) {
+      <div class="subtitle">
+        <div>Created {{contact.date_created | date:'short'}}</div>
+        <div>Updated {{contact.date_modified | date:'short'}}</div>
+      </div>
+
+      <div class="text-center">
+        <h2>{{contact.name || 'Loading...'}}</h2>
+      </div>
+
+      @if (contact.email) { <div><span class="subtitle">E:</span> {{contact.email}}</div> }
+      @if (contact.phone) { <div><span class="subtitle">P:</span> {{contact.phone}}</div> }
+
+      @if (contact.notes) {
+        <br>
+        <div class="subtitle">Notes:</div>
+        <div [innerHTML]="(contact.notes || '') | lineBreak"></div>
+      }
+
+      <br>
+      <mat-divider />
+
+      <div class="text-center">
+        <h2>Tasks</h2>
+      </div>
+
+      <br>
+      <pre>[TODO Task List]</pre>
+
+      <div class="bottom-fab-absolute right">
+        <div class="bottom-fab-fixed">
+          <button mat-fab color="primary" (click)="editMode = true">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    } @else {
+      <div class="text-center">
+        <h1>Edit Contact</h1>
+      </div>
+
+      <app-contact-form [existingContact]="contact" />
+
+      <div class="bottom-fab-absolute left">
+        <div class="bottom-fab-fixed">
+          <button mat-mini-fab color="none" (click)="editMode = false">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-fab-absolute right">
+        <div class="bottom-fab-fixed">
+          <button mat-fab color="primary" (click)="onSave()">
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+
+
+</app-layout>
