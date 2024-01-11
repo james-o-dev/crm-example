@@ -37,8 +37,6 @@ export class ContactFormComponent implements OnInit {
   }
 
   onReset() {
-    if (this.existingContact) {
-      this.form.reset(this.existingContact)
-    }
+    this.form.reset(this.existingContact || undefined)
   }
 }
