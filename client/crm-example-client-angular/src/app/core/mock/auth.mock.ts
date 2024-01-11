@@ -6,6 +6,13 @@ export interface IUser {
   email: string;
 }
 
+/**
+ * Valid units are: "sec", "secs", "second", "seconds", "s", "minute", "minutes", "min", "mins", "m", "hour", "hours", "hr", "hrs", "h", "day", "days", "d", "week", "weeks", "w", "year", "years", "yr", "yrs", and "y". It is not possible to specify months. 365.25 days is used as an alias for a year.
+ *
+ * If the string is suffixed with "ago", or prefixed with a "-", the resulting time span gets subtracted from the current unix timestamp. A "from now" suffix can also be used for readability when adding to the current unix timestamp.
+ */
+const accessTokenExpiry = '1h'
+
 const tempAccessTokenSecret = new TextEncoder().encode('local development only 9279Y!5e#8%YupZ4%DZJ1*hy$iQM!M')
 // const tempRefreshTokenSecret = new TextEncoder().encode(getRandomString())
 
@@ -21,6 +28,7 @@ const signToken = async (payload: object, secret: Uint8Array) => {
   try {
     const jwt = await new SignJWT(payload as JWTPayload)
       .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime(accessTokenExpiry)
       .setIssuedAt()
       .sign(secret)
     return jwt
