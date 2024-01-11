@@ -6,23 +6,28 @@ import { MatDividerModule } from '@angular/material/divider'
 import { MatButtonModule } from '@angular/material/button'
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { UserProfileService } from './user-profile.service'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    LayoutComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDividerModule,
-    MatButtonModule,
-    ReactiveFormsModule,
     FormsModule,
+    LayoutComponent,
+    MatButtonModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
+  editModeUsername = false
+  username = ''
+
   changeUserNameForm = this.formBuilder.group({
     username: [''],
   })
@@ -43,12 +48,17 @@ export class UserProfileComponent implements OnInit {
 
     this.userProfileService.getUsername()
       .subscribe(data => {
-        this.changeUserNameForm.patchValue({ username: data.username })
+        this.username = data.username
+        this.changeUserNameForm.patchValue({ username: this.username })
       })
   }
 
   onChangeUsername() {
     this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
+      .subscribe(() => {
+        this.username = this.changeUserNameForm.value.username as string
+        this.editModeUsername = false
+      })
   }
 
   onChangePassword() {
