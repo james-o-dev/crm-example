@@ -1,0 +1,43 @@
+<app-layout>
+  <div class="text-center">
+    <h1>Contacts</h1>
+  </div>
+
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="contact-details">
+      <th mat-header-cell *matHeaderCellDef>Contact Details</th>
+      <td mat-cell *matCellDef="let element">
+        <div>
+          @if (element.email) {
+            <div>E: {{element.email}}</div>
+          }
+          @if (element.phone) {
+            <div>P: {{element.phone}}</div>
+          }
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tasks">
+      <th mat-header-cell *matHeaderCellDef>Tasks</th>
+      <td mat-cell *matCellDef="let element">TODO </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="COLUMNS"></tr>
+    <tr mat-row *matRowDef="let row; columns: COLUMNS;"></tr>
+  </table>
+
+  <div class="bottom-fab-absolute right">
+    <div class="bottom-fab-fixed">
+      <button mat-fab color="primary" routerLink="/add-contact">
+        <mat-icon>person_add</mat-icon>
+      </button>
+    </div>
+  </div>
+</app-layout>

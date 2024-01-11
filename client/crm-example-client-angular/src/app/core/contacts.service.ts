@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { from } from 'rxjs'
-import { newContactEndpoint } from './mock/contacts.mock'
+import { getContactsEndpoint, newContactEndpoint } from './mock/contacts.mock'
 import { AuthService } from './auth.service'
 
 export interface IContact {
@@ -21,6 +21,10 @@ export class ContactService {
 
   getContact() {
     // TODO
+  }
+
+  getContacts() {
+    return from(getContactsEndpoint(this.authService.accessToken))
   }
 
   setContact() {

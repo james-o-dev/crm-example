@@ -4,6 +4,7 @@ import { ContactFormComponent } from '../../shared/contact-form/contact-form.com
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { ContactService } from '../../core/contacts.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-add-contact',
@@ -22,6 +23,7 @@ export class AddContactComponent {
 
   constructor(
     private contactService: ContactService,
+    private router: Router,
   ) {}
 
   onSubmit() {
@@ -34,8 +36,10 @@ export class AddContactComponent {
       notes: this.contactForm.form.value.notes as string,
     }).subscribe({
       next: () => {
-        alert('New contact added!') // TODO
         this.contactForm.form.reset()
+        if (confirm('New contact added! Would you like to go to your existing contacts?')) {
+          this.router.navigate(['/contacts'])
+        }
       },
       error: (err) => {
         console.error(err)
