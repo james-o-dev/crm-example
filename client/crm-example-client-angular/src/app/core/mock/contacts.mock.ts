@@ -30,7 +30,7 @@ export const newContactEndpoint = async (accessToken: string, payload: object) =
     user_id: verifiedToken['user_id'],
   })
 
-  return { statusCode: 200, ok: true, message: 'Contact created.', contactId }
+  return { statusCode: 201, ok: true, message: 'Contact created.', contactId }
 }
 
 export const getContactsEndpoint = async (accessToken: string) => {
