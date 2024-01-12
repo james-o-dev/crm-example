@@ -8,15 +8,21 @@ export interface ITask {
   contact_name?: string
   date_created: number
   date_modified: number
-  due_date?: string
+  due_date?: number
   key: string
   notes?: string
   title: string
   user_id: string
 }
 
+export interface ITaskAdd {
+  due_date?: number
+  notes?: string
+  title: string
+}
+
 export interface ITaskUpdate {
-  due_date?: string
+  due_date?: number
   key: string
   notes?: string
   title: string
@@ -28,11 +34,19 @@ export interface ITaskUpdate {
 export class TasksService {
   private authService = inject(AuthService)
 
-  addTask(payload: object) {
+  addTask(payload: ITaskAdd) {
+    if (typeof payload?.due_date === 'string') {
+      payload.due_date = new Date(payload.due_date).getTime()
+    }
+
     return from(addTaskEndpoint(this.authService.accessToken, payload))
   }
 
   updateTask(payload: ITaskUpdate) {
+    if (typeof payload?.due_date === 'string') {
+      payload.due_date = new Date(payload.due_date).getTime()
+    }
+
     return from(updateTaskEndpoint(this.authService.accessToken, payload))
   }
 

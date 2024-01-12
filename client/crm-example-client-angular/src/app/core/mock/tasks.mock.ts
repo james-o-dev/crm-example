@@ -3,7 +3,7 @@ import { IContactDB } from './contacts.mock'
 import { getLocalStorageDb, newToDb, saveToDb } from './mock'
 
 interface ITask {
-  due_date?: string
+  due_date?: number
   key: string
   notes?: string
   title: string
@@ -13,7 +13,7 @@ export interface ITaskDB {
   contact_id?: string
   date_created: number
   date_modified: number
-  due_date?: string
+  due_date?: number
   key: string
   notes?: string
   title: string
@@ -49,7 +49,11 @@ export const getTasksEndpoint = async (accessToken: string, contactId?: string) 
       if (contactId === task.contact_id) return true
       return false
     })
-    .sort((a, b) => a.date_modified < b.date_modified ? -1 : 1)
+    .sort((a, b) => {
+      const dueDateSort = (a.due_date || 0) < (b.due_date || 0)
+      const dateModifiedSort = (a.date_modified || 0) < (b.date_modified || 0)
+      return dueDateSort || dateModifiedSort ? -1 : 1
+    })
     .map((task: ITaskResponse) => {
       return {
         contact_id: (contacts[task.contact_id || ''])?.key,
