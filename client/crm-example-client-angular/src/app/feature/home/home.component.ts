@@ -1,9 +1,11 @@
-import { Component } from '@angular/core'
+import { Component, OnInit, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { RouterLink } from '@angular/router'
+import { MatCardModule } from '@angular/material/card'
+import { HomeService, IHomeMetadata } from './home.service'
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,7 @@ import { RouterLink } from '@angular/router'
   imports: [
     LayoutComponent,
     MatButtonModule,
+    MatCardModule,
     MatIconModule,
     MatMenuModule,
     RouterLink,
@@ -18,6 +21,13 @@ import { RouterLink } from '@angular/router'
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private homeService = inject(HomeService)
 
+  protected data: IHomeMetadata = {} as IHomeMetadata
+
+  ngOnInit(): void {
+    this.homeService.getHomeMetadata()
+      .subscribe(response => this.data = response.data as IHomeMetadata)
+  }
 }

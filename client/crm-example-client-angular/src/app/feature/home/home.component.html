@@ -4,6 +4,23 @@
       <h1>Home</h1>
     </div>
 
+    <div class="cards">
+      <mat-card routerLink="/contacts">
+        <div>Contacts</div>
+        <h2>{{ data.contacts || 0 }}</h2>
+      </mat-card>
+
+      <mat-card routerLink="/tasks">
+        <div>Tasks</div>
+        <h2>{{ data.tasks || 0 }}</h2>
+      </mat-card>
+
+      <mat-card routerLink="/tasks">
+        <div>Tasks (overdue)</div>
+        <h2>{{ data.tasks_overdue || 0 }}</h2>
+      </mat-card>
+    </div>
+
     <div class="bottom-fab-absolute right">
       <div class="bottom-fab-fixed">
         <button mat-fab color="primary" [matMenuTriggerFor]="menu">
