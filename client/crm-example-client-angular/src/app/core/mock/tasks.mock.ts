@@ -42,14 +42,16 @@ export const getTasksEndpoint = async (accessToken: string, contactId?: string) 
       if (contactId === task.contact_id) return true
       return false
     })
-    .map((task: ITaskResponse) => {
-      if (task.contact_id) {
-        task.contact = contacts[task.contact_id]
-      }
-
-      return task
-    })
     .sort((a, b) => a.date_modified < b.date_modified ? -1 : 1)
+    .map((task: ITaskResponse) => {
+      return {
+        contact_id: (contacts[task.contact_id || ''])?.key,
+        contact_name: (contacts[task.contact_id || ''])?.name,
+        title: task.title,
+        due_date: task.due_date,
+        key: task.key,
+      }
+    })
 
   return { statusCode: 200, ok: true, tasks }
 }

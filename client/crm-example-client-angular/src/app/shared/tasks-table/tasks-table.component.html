@@ -16,8 +16,8 @@
   <ng-container matColumnDef="contact">
     <th mat-header-cell *matHeaderCellDef>Contact</th>
     <td mat-cell *matCellDef="let element">
-      @if (element.contact) {
-        <a [routerLink]="['/contact-detail', element.contact.key]">{{element.contact.name}}</a>
+      @if (element.contact_id) {
+        <a [routerLink]="['/contact-detail', element.contact_id]">{{element.contact_name}}</a>
       }
     </td>
   </ng-container>
