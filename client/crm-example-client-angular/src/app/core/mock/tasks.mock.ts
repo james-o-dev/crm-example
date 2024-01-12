@@ -2,7 +2,7 @@ import { verifyAccessToken } from './auth.mock'
 import { IContactDB } from './contacts.mock'
 import { getLocalStorageDb, newToDb } from './mock'
 
-interface ITaskDB {
+export interface ITaskDB {
   contact_id?: string
   date_created: number
   date_modified: number

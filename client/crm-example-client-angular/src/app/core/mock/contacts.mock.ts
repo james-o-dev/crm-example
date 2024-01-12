@@ -1,5 +1,6 @@
 import { verifyAccessToken } from './auth.mock'
 import { getLocalStorageDb, newToDb, saveToDb } from './mock'
+import { ITaskDB } from './tasks.mock'
 
 interface IContact {
   key?: string;
@@ -38,9 +39,18 @@ export const getContactsEndpoint = async (accessToken: string) => {
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
   const db = getLocalStorageDb()
+  const tasks = Object.values(db.tasks as ITaskDB[])
   const contacts = (Object.values(db['contacts'] || {}) as IContactDB[])
     .filter((contact: IContactDB) => contact.user_id === verifiedToken['user_id'])
     .sort((a, b) => a.date_modified < b.date_modified ? -1 : 1)
+    .map((contact: IContactDB) => {
+      const contactTasks: ITaskDB[] = tasks.filter((t: ITaskDB) => t.contact_id === contact.key)
+
+      return {
+        ...contact,
+        num_tasks: Object.keys(contactTasks).length,
+      }
+    })
 
   return { statusCode: 200, ok: true, contacts }
 }
