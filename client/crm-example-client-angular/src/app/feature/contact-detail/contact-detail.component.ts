@@ -10,6 +10,8 @@ import { switchMap, tap } from 'rxjs'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
 import { MatDividerModule } from '@angular/material/divider'
 import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.component'
+import { TaskFormComponent } from '../../shared/task-form/task-form.component'
+import { TasksService } from '../../core/tasks.service'
 
 @Component({
   selector: 'app-contact-detail',
@@ -22,6 +24,7 @@ import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.compon
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    TaskFormComponent,
     TasksTableComponent,
   ],
   templateUrl: './contact-detail.component.html',
@@ -29,13 +32,17 @@ import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.compon
 })
 export class ContactDetailComponent implements OnInit {
   @ViewChild(ContactFormComponent) contactForm: ContactFormComponent = {} as ContactFormComponent
+  @ViewChild('taskForm') taskForm: TaskFormComponent = {} as TaskFormComponent
+  @ViewChild(TasksTableComponent) taskTable: TasksTableComponent = {} as TasksTableComponent
 
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
+  private tasksService = inject(TasksService)
 
   protected contactId = ''
   protected contact: IContact = {} as IContact
   protected editMode = false
+  protected addTaskMode = false
 
   public ngOnInit(): void {
     this.contactId = this.activatedRoute.snapshot.params['contactId']
@@ -50,6 +57,19 @@ export class ContactDetailComponent implements OnInit {
       .pipe(switchMap(() => this.getContact()))
       .subscribe({
         next: () => this.editMode = false,
+      })
+  }
+
+  protected onAddTask() {
+    if (this.taskForm.form.invalid) return
+
+    this.tasksService.addTask({ ...this.taskForm.form.value, contact_id: this.contactId })
+      .subscribe({
+        next: (response) => {
+          if (response.statusCode === 201) {
+            this.addTaskMode = false
+          }
+        },
       })
   }
 

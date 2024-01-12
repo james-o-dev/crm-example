@@ -12,18 +12,19 @@
         <h2>{{contact.name || 'Loading...'}}</h2>
       </div>
 
-      @if (contact.email) { <div><span class="subtitle">E:</span> {{contact.email}}</div> }
-      @if (contact.phone) { <div><span class="subtitle">P:</span> {{contact.phone}}</div> }
+    @if (contact.email) { <div><span class="subtitle">E:</span> {{contact.email}}</div> }
+    @if (contact.phone) { <div><span class="subtitle">P:</span> {{contact.phone}}</div> }
 
-      @if (contact.notes) {
-        <br>
-        <div class="subtitle">Notes:</div>
-        <div [innerHTML]="(contact.notes || '') | lineBreak"></div>
+    @if (contact.notes) {
+      <br>
+      <div class="subtitle">Notes:</div>
+      <div [innerHTML]="(contact.notes || '') | lineBreak"></div>
       }
 
       <br>
       <mat-divider />
 
+    @if (!addTaskMode) {
       <div class="text-center">
         <h2>Tasks</h2>
       </div>
@@ -32,6 +33,12 @@
 
       <app-tasks-table [contactId]="contactId" />
 
+      <br>
+      <button mat-stroked-button color="primary" (click)="addTaskMode = true">
+        <mat-icon>assignment_add</mat-icon>
+        Add Task
+      </button>
+
       <div class="bottom-fab-absolute right">
         <div class="bottom-fab-fixed">
           <button mat-fab color="primary" (click)="editMode = true">
@@ -39,6 +46,31 @@
           </button>
         </div>
       </div>
+    } @else {
+      <div class="text-center">
+        <h2>Add Task</h2>
+      </div>
+
+      <br>
+
+      <app-task-form #taskForm [noContact]="true" />
+
+      <div class="bottom-fab-absolute left">
+        <div class="bottom-fab-fixed">
+          <button mat-mini-fab color="none" (click)="addTaskMode = false">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-fab-absolute right">
+        <div class="bottom-fab-fixed">
+          <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+            <mat-icon>assignment_add</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
 
     } @else {
       <div class="text-center">

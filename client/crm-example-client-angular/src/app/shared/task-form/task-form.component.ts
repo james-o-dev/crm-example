@@ -42,6 +42,7 @@ export class TaskFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder)
 
   @Input() existingTask: ITask = {} as ITask
+  @Input() noContact = false
 
   private contacts: IOption[] = []
   protected autoContacts: Observable<IOption[]> = of([])
