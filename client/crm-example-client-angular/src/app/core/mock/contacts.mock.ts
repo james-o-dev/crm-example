@@ -15,8 +15,8 @@ export interface IContactDB {
   key?: string;
   name: string;
   user_id: string;
-  date_created: string;
-  date_modified: string;
+  date_created: number;
+  date_modified: number;
   email?: string;
   phone?: string;
   notes?: string;
