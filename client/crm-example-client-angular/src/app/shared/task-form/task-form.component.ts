@@ -83,7 +83,15 @@ export class TaskFormComponent implements OnInit {
   }
 
   public onReset() {
-    this.form.reset(this.existingTask || undefined)
+    let resetTask = {}
+    if (this.existingTask) {
+      const due_date = this.existingTask.due_date ? new Date(this.existingTask.due_date as number) : null
+      resetTask = {
+        ...this.existingTask,
+        due_date,
+      }
+    }
+    this.form.reset(resetTask)
   }
 
   protected autoDisplayFn(option: IOption): string {

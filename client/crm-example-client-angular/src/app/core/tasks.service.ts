@@ -35,15 +35,14 @@ export class TasksService {
   private authService = inject(AuthService)
 
   addTask(payload: ITaskAdd) {
-    if (typeof payload?.due_date === 'string') {
+    if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
       payload.due_date = new Date(payload.due_date).getTime()
     }
-
     return from(addTaskEndpoint(this.authService.accessToken, payload))
   }
 
   updateTask(payload: ITaskUpdate) {
-    if (typeof payload?.due_date === 'string') {
+    if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
       payload.due_date = new Date(payload.due_date).getTime()
     }
 
