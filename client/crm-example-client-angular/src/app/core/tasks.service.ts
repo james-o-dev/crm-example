@@ -1,7 +1,26 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { addTaskEndpoint, getTasksEndpoint } from './mock/tasks.mock'
+import { addTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './mock/tasks.mock'
 import { AuthService } from './auth.service'
+
+export interface ITask {
+  contact_id?: string
+  contact_name?: string
+  date_created: number
+  date_modified: number
+  due_date?: string
+  key: string
+  notes?: string
+  title: string
+  user_id: string
+}
+
+export interface ITaskUpdate {
+  due_date?: string
+  key: string
+  notes?: string
+  title: string
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +32,12 @@ export class TasksService {
     return from(addTaskEndpoint(this.authService.accessToken, payload))
   }
 
-  updateTask() {
-
+  updateTask(payload: ITaskUpdate) {
+    return from(updateTaskEndpoint(this.authService.accessToken, payload))
   }
 
-  getTask() {
-
+  getTask(taskId: string) {
+    return from(getTaskEndpoint(this.authService.accessToken, taskId))
   }
 
   getTasks(contactId?: string) {

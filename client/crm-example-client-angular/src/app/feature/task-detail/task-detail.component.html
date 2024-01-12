@@ -1,0 +1,67 @@
+<app-layout>
+
+  <div class="mx-1">
+    @if (!editMode) {
+      <div class="subtitle">
+        <div>Created {{task.date_created | date:'short'}}</div>
+        <div>Updated {{task.date_modified | date:'short'}}</div>
+      </div>
+
+      <div class="text-center">
+        <h2>{{task.title || 'Loading...'}}</h2>
+      </div>
+
+      @if (task.contact_id) {
+        <div>
+          <span class="subtitle">Contact:&nbsp;</span>
+          <a [routerLink]="['/contact-detail', task.contact_id]">{{task.contact_name}}</a>
+        </div>
+      }
+
+      @if (task.due_date) {
+        <div>
+          <span class="subtitle">Due date:&nbsp;</span>
+          {{task.due_date | date:'shortDate'}}
+        </div>
+      }
+
+      @if (task.notes) {
+        <br>
+        <div class="subtitle">Notes:</div>
+        <div [innerHTML]="(task.notes || '') | lineBreak"></div>
+      }
+
+      <div class="bottom-fab-absolute right">
+        <div class="bottom-fab-fixed">
+          <button mat-fab color="primary" (click)="editMode = true">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+
+    } @else {
+      <div class="text-center">
+        <h2>Edit Task</h2>
+      </div>
+
+      <app-task-form [existingTask]="task" />
+
+      <div class="bottom-fab-absolute left">
+        <div class="bottom-fab-fixed">
+          <button mat-mini-fab color="none" (click)="editMode = false">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-fab-absolute right">
+        <div class="bottom-fab-fixed">
+          <button mat-fab color="primary" (click)="onSave()">
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+</app-layout>

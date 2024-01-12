@@ -80,5 +80,4 @@ export const updateContactEndpoint = async (accessToken: string, payload: IConta
   saveToDb('contacts', contactId, payload)
 
   return { statusCode: 200, ok: true, message: 'Contact updated.' }
-
 }
