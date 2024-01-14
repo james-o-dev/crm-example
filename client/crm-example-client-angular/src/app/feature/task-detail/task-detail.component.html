@@ -31,6 +31,12 @@
         <div [innerHTML]="(task.notes || '') | lineBreak"></div>
       }
 
+      <br>
+      <button mat-stroked-button color="warn" (click)="deleteTask()">
+        <mat-icon>delete</mat-icon>
+        Delete Task
+      </button>
+
       <div class="bottom-fab-absolute right">
         <div class="bottom-fab-fixed">
           <button mat-fab color="primary" (click)="editMode = true">

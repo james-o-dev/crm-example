@@ -34,6 +34,13 @@ export const newToDb = (table: string, payload: object) => {
   return key
 }
 
+export const removeFromDb = (table: string, key: string) => {
+  const db = getLocalStorageDb()
+  delete db[table][key]
+  saveLocalStorageDb(db)
+  return key
+}
+
 /**
  * Get the mock DB.
  */

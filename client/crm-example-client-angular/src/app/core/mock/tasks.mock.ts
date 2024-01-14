@@ -1,6 +1,6 @@
 import { verifyAccessToken } from './auth.mock'
 import { IContactDB } from './contacts.mock'
-import { getLocalStorageDb, newToDb, saveToDb } from './mock'
+import { getLocalStorageDb, newToDb, removeFromDb, saveToDb } from './mock'
 
 interface ITask {
   due_date?: number
@@ -100,5 +100,18 @@ export const updateTaskEndpoint = async (accessToken: string, payload: ITask) =>
 
   saveToDb('tasks', taskId, payload)
 
-  return { statusCode: 200, ok: true, message: 'Contact updated.' }
+  return { statusCode: 200, ok: true, message: 'Task updated.' }
+}
+
+export const deleteTaskEndpoint = async (accessToken: string, taskId: string) => {
+  const verifiedToken = await verifyAccessToken(accessToken)
+  if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
+
+  const { tasks } = getLocalStorageDb()
+  const task = tasks[taskId]
+  if (task.user_id !== verifiedToken['user_id']) return { statusCode: 403, ok: false, message: 'Forbidden.' }
+
+  removeFromDb('tasks', taskId)
+
+  return { statusCode: 200, ok: true, message: 'Task deleted.' }
 }

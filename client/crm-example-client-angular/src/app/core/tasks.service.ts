@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { addTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './mock/tasks.mock'
+import { addTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './mock/tasks.mock'
 import { AuthService } from './auth.service'
 
 export interface ITask {
@@ -55,5 +55,9 @@ export class TasksService {
 
   getTasks(contactId?: string) {
     return from(getTasksEndpoint(this.authService.accessToken, contactId))
+  }
+
+  deleteTask(taskId: string) {
+    return from(deleteTaskEndpoint(this.authService.accessToken, taskId))
   }
 }

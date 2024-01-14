@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
-import { ActivatedRoute, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { switchMap, tap } from 'rxjs'
 
@@ -28,6 +28,7 @@ import { switchMap, tap } from 'rxjs'
 })
 export class TaskDetailComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute)
+  private router = inject(Router)
   private tasksService = inject(TasksService)
 
   @ViewChild(TaskFormComponent) taskForm: TaskFormComponent = {} as TaskFormComponent
@@ -64,5 +65,12 @@ export class TaskDetailComponent implements OnInit {
   private getTask() {
     return this.tasksService.getTask(this.taskId)
       .pipe(tap((response) => this.task = response.task as ITask))
+  }
+
+  protected deleteTask() {
+    if (!confirm('Are you sure you want to delete this task?\n This is irreversible.')) return
+
+    this.tasksService.deleteTask(this.taskId)
+      .subscribe(() => this.router.navigate(['/tasks']))
   }
 }
