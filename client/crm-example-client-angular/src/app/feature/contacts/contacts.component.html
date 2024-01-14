@@ -3,6 +3,12 @@
     <h1>Contacts</h1>
   </div>
 
+  <div class="text-center">
+    <mat-slide-toggle [checked]="activeToggle" color="primary" (toggleChange)="onActiveToggleChange()">
+      {{activeToggle ? 'Active' : 'Archived'}}
+    </mat-slide-toggle>
+  </div>
+
   <table mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="name">

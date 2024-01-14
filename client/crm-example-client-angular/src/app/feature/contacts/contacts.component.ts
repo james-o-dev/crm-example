@@ -5,6 +5,7 @@ import { MatTableModule } from '@angular/material/table'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { RouterLink } from '@angular/router'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
 @Component({
   selector: 'app-contacts',
@@ -13,6 +14,7 @@ import { RouterLink } from '@angular/router'
     LayoutComponent,
     MatButtonModule,
     MatIconModule,
+    MatSlideToggleModule,
     MatTableModule,
     RouterLink,
   ],
@@ -24,6 +26,7 @@ export class ContactsComponent implements OnInit {
 
   protected readonly COLUMNS = ['name', 'contact-details', 'tasks']
 
+  protected activeToggle = true
   protected dataSource = [] as object[]
 
   public ngOnInit(): void {
@@ -31,9 +34,14 @@ export class ContactsComponent implements OnInit {
   }
 
   private loadData() {
-    this.contactService.getContacts()
+    this.contactService.getContacts(this.activeToggle)
       .subscribe(data => {
         this.dataSource = data.contacts as object[]
       })
+  }
+
+  protected onActiveToggleChange() {
+    this.activeToggle = !this.activeToggle
+    this.loadData()
   }
 }

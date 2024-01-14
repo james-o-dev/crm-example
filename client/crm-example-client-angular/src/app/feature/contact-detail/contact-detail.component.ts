@@ -3,7 +3,7 @@ import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { ContactService, IContact } from '../../core/contacts.service'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { DatePipe } from '@angular/common'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { switchMap, tap } from 'rxjs'
@@ -37,6 +37,7 @@ export class ContactDetailComponent implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
+  private router = inject(Router)
   private tasksService = inject(TasksService)
 
   protected contactId = ''
@@ -76,5 +77,15 @@ export class ContactDetailComponent implements OnInit {
   private getContact() {
     return this.contactService.getContact(this.contactId)
       .pipe(tap(data => this.contact = data.contact))
+  }
+
+  protected archiveContact() {
+    this.contactService.archiveContact(this.contactId)
+      .subscribe(() => this.router.navigate(['/contacts']))
+  }
+
+  protected restoreContact() {
+    this.contactService.restoreContact(this.contactId)
+      .subscribe(() => this.router.navigate(['/contacts']))
   }
 }

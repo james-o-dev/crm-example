@@ -19,10 +19,28 @@
       <br>
       <div class="subtitle">Notes:</div>
       <div [innerHTML]="(contact.notes || '') | lineBreak"></div>
-      }
+    }
 
-      <br>
-      <mat-divider />
+    <br>
+
+    @if (contact.archived) {
+      <div>
+        <strong>This contact has been archived.</strong>
+      </div>
+      <button mat-flat-button color="primary" (click)="restoreContact()">
+        <mat-icon>unarchive</mat-icon>
+        Restore Contact
+      </button>
+    } @else {
+      <button mat-stroked-button color="warn" (click)="archiveContact()">
+        <mat-icon>archive</mat-icon>
+        Archive Contact
+      </button>
+    }
+
+
+    <br>
+    <mat-divider />
 
     @if (!addTaskMode) {
       <div class="text-center">
