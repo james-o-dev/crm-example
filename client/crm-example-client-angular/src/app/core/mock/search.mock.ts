@@ -48,7 +48,7 @@ export const searchEndpoint = async (accessToken: string, q: string) => {
       task.title,
       task.notes,
     ]
-      .map(s => stringNormalize(s))
+      .map(s => stringNormalize(s || ''))
       .join()
 
     if (search.includes(qNormal)) {
