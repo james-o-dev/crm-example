@@ -23,3 +23,7 @@ mat-toolbar {
 mat-drawer-container {
   margin-top: 64px;
 }
+
+.empty-space {
+  flex: 1 1 auto;
+}

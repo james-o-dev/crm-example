@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'add-task', canActivate: [authGuard], loadComponent: () => import('./feature/add-task/add-task.component').then(m => m.AddTaskComponent) },
   { path: 'tasks', canActivate: [authGuard], loadComponent: () => import('./feature/tasks/tasks.component').then(m => m.TasksComponent) },
   { path: 'task-detail/:taskId', canActivate: [authGuard], loadComponent: () => import('./feature/task-detail/task-detail.component').then(m => m.TaskDetailComponent) },
+  { path: 'search', canActivate: [authGuard], loadComponent: () => import('./feature/search/search.component').then(m => m.SearchComponent) },
   // Default route; Will redirect to here if a path is not found.
   { path: '**', redirectTo: 'home' },
 ]
