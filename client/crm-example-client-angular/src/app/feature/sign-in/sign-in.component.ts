@@ -5,6 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { AuthService } from '../../core/auth.service'
 import { Router, RouterLink } from '@angular/router'
+import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   selector: 'app-sign-in',
@@ -22,6 +24,7 @@ import { Router, RouterLink } from '@angular/router'
 })
 export class SignInComponent {
   private authService = inject(AuthService)
+  private dialog = inject(MatDialog)
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
 
@@ -44,7 +47,12 @@ export class SignInComponent {
           if (response.statusCode === 200) {
             this.router.navigate(['/home'])
           } else {
-            alert(response.message) // TODO Replace.
+            const data = {
+              contents: [response.message],
+              actions: [{ text: 'Dismiss' }],
+            } as IDialogData
+
+            this.dialog.open(DialogComponent, { data })
           }
         },
       })

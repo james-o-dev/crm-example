@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  @for (line of data.contents; track $index) {
+    <div>{{line}}</div>
+  }
+</div>
+<div mat-dialog-actions>
+  @for (action of data.actions; track $index) {
+    <button mat-button [mat-dialog-close]="action.value" color="primary">{{action.text}}</button>
+  }
+</div>
