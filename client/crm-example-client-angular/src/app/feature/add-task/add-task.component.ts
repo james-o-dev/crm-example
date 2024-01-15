@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { TasksService } from '../../core/tasks.service'
 import { MatDialog } from '@angular/material/dialog'
 import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-add-task',
@@ -21,6 +22,7 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
 })
 export class AddTaskComponent {
   private dialog = inject(MatDialog)
+  private router = inject(Router)
   private tasksService = inject(TasksService)
 
   @ViewChild('taskForm') taskForm = {} as TaskFormComponent
@@ -44,9 +46,16 @@ export class AddTaskComponent {
             this.dialog.open(DialogComponent, {
               data: {
                 title: 'Task added',
-                actions: [{ text: 'Confirm' }],
+                contents: ['Would you like to go to the Tasks list?'],
+                actions: [
+                  { value: true, text: 'Yes, take me to the Tasks list' },
+                  { text: 'No, stay on this form' },
+                ],
               } as IDialogData,
-            }).afterClosed().subscribe(() => this.taskForm.onReset())
+            }).afterClosed().subscribe(confirmRedirect => {
+              if (confirmRedirect) this.router.navigate(['/tasks'])
+              else this.taskForm.onReset()
+            })
 
           } else {
             this.dialog.open(DialogComponent, {
