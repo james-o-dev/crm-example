@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { Component, OnDestroy, OnInit, inject } from '@angular/core'
 import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -26,10 +26,12 @@ import { MatButtonModule } from '@angular/material/button'
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
   private searchService = inject(SearchService)
+
+  private readonly SESSION_STORAGE_SAVE = 'savedSearch'
 
   protected COLUMNS = [
     'name',
@@ -47,6 +49,18 @@ export class SearchComponent implements OnInit {
         debounceTime(300),
       )
       .subscribe(() => this.loadSearchList())
+
+    if (sessionStorage.getItem(this.SESSION_STORAGE_SAVE)) {
+      this.form.controls.q.setValue(sessionStorage.getItem(this.SESSION_STORAGE_SAVE))
+      sessionStorage.removeItem(this.SESSION_STORAGE_SAVE)
+    }
+  }
+
+  public ngOnDestroy(): void {
+    const q = this.form.controls.q.value
+    if (q) {
+      sessionStorage.setItem(this.SESSION_STORAGE_SAVE, q)
+    }
   }
 
   private loadSearchList() {
