@@ -6,10 +6,11 @@ interface IContactImportExport {
   email: string
   phone: string
   notes: string
+  archived: boolean
 
   // Other values can be ignored.
   user_id?: string
-  [k: string]: string | undefined
+  [k: string]: string | undefined | boolean
 }
 
 export const exportContactsJsonEndpoint = async (accessToken: string) => {
@@ -25,6 +26,7 @@ export const exportContactsJsonEndpoint = async (accessToken: string) => {
       email: contact.email,
       phone: contact.phone,
       notes: contact.notes,
+      archived: contact.archived,
     } as IContactImportExport
   })
 
