@@ -1,0 +1,23 @@
+<app-layout>
+  <div class="text-center">
+    <h1>Import</h1>
+
+    <button mat-raised-button color="primary" (click)="jsonImportInput.click()">
+      <mat-icon>upload</mat-icon>
+      Import Contacts From JSON File
+    </button>
+  </div>
+  <input hidden (change)="onImportJsonFileInput($event)" #jsonImportInput type="file">
+
+  <mat-divider />
+
+  <div class="text-center">
+    <h1>Export</h1>
+
+    <button mat-raised-button color="primary" (click)="onExportJson()">
+      <mat-icon>download_offline</mat-icon>
+      Export Contacts To JSON File
+    </button>
+  </div>
+
+</app-layout>
