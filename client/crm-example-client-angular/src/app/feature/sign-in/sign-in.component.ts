@@ -47,12 +47,12 @@ export class SignInComponent {
           if (response.statusCode === 200) {
             this.router.navigate(['/home'])
           } else {
-            const data = {
-              contents: [response.message],
-              actions: [{ text: 'Dismiss' }],
-            } as IDialogData
-
-            this.dialog.open(DialogComponent, { data })
+            this.dialog.open(DialogComponent, {
+              data: {
+                contents: [response.message],
+                actions: [{ text: 'Confirm' }],
+              } as IDialogData,
+            })
           }
         },
       })

@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
 
 @Component({
   selector: 'app-sign-up',
@@ -23,6 +25,7 @@ import { Router, RouterLink } from '@angular/router'
 })
 export class SignUpComponent implements OnInit {
   private authService = inject(AuthService)
+  private dialog = inject(MatDialog)
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
 
@@ -47,7 +50,12 @@ export class SignUpComponent implements OnInit {
           if (response.statusCode === 201) {
             this.router.navigate(['/home'])
           } else {
-            alert(response.message) // TODO Replace.
+            this.dialog.open(DialogComponent, {
+              data: {
+                contents: [response.message],
+                actions: [{ text: 'Confirm' }],
+              } as IDialogData,
+            })
           }
         },
       })

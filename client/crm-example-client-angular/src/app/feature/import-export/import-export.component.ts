@@ -6,6 +6,8 @@ import { ImportExportService } from './import-export.service'
 import { MatIconModule } from '@angular/material/icon'
 import { from, switchMap } from 'rxjs'
 import { Router } from '@angular/router'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
 
 @Component({
   selector: 'app-import-export',
@@ -20,12 +22,9 @@ import { Router } from '@angular/router'
   styleUrl: './import-export.component.css',
 })
 export class ImportExportComponent {
+  private dialog = inject(MatDialog)
   private importExportService = inject(ImportExportService)
   private router = inject(Router)
-
-  protected onImportJsonButton() {
-
-  }
 
   protected onImportJsonFileInput(event: Event) {
     const target = event.target as HTMLInputElement
@@ -42,8 +41,19 @@ export class ImportExportComponent {
       )
       .subscribe(response => {
         if (response.statusCode === 200) {
-          alert(response.message) // TODO.
-          this.router.navigate(['/contacts'])
+          this.dialog.open(DialogComponent, {
+            data: {
+              contents: [response.message],
+              actions: [{ text: 'Confirm' }],
+            } as IDialogData,
+          }).afterClosed().subscribe(() => this.router.navigate(['/contacts']))
+        } else {
+          this.dialog.open(DialogComponent, {
+            data: {
+              contents: [response.message],
+              actions: [{ text: 'Confirm' }],
+            } as IDialogData,
+          })
         }
       })
   }

@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { MatButtonModule } from '@angular/material/button'
 import { TasksService } from '../../core/tasks.service'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
 
 @Component({
   selector: 'app-add-task',
@@ -18,6 +20,7 @@ import { TasksService } from '../../core/tasks.service'
   styleUrl: './add-task.component.css',
 })
 export class AddTaskComponent {
+  private dialog = inject(MatDialog)
   private tasksService = inject(TasksService)
 
   @ViewChild('taskForm') taskForm = {} as TaskFormComponent
@@ -38,10 +41,21 @@ export class AddTaskComponent {
       .subscribe({
         next: (res) => {
           if (res.statusCode === 201) {
-            alert('Task added.') // TODO
-            this.taskForm.onReset()
+            this.dialog.open(DialogComponent, {
+              data: {
+                title: 'Task added',
+                actions: [{ text: 'Confirm' }],
+              } as IDialogData,
+            }).afterClosed().subscribe(() => this.taskForm.onReset())
+
           } else {
-            // TODO: Was not successful.
+            this.dialog.open(DialogComponent, {
+              data: {
+                title: 'Error / invalid',
+                contents: [res.message],
+                actions: [{ text: 'Confirm' }],
+              } as IDialogData,
+            })
           }
         },
       })
