@@ -1,15 +1,5 @@
-import { getLocalStorageDb, newToDb } from './mock'
-import { JWTPayload, SignJWT, jwtVerify } from 'jose'
-
-export interface IUser {
-  key: string;
-  email: string;
-}
-
-// Any object. This is probably a bad idea.
-interface AnyObject {
-  [key: string]: string;
-}
+import { getLocalStorageDb, newToDb } from './mock.js'
+import { SignJWT, jwtVerify } from 'jose'
 
 /**
  * Valid units are: "sec", "secs", "second", "seconds", "s", "minute", "minutes", "min", "mins", "m", "hour", "hours", "hr", "hrs", "h", "day", "days", "d", "week", "weeks", "w", "year", "years", "yr", "yrs", and "y". It is not possible to specify months. 365.25 days is used as an alias for a year.
@@ -21,14 +11,14 @@ const accessTokenExpiry = '1h'
 const tempAccessTokenSecret = new TextEncoder().encode('local development only 9279Y!5e#8%YupZ4%DZJ1*hy$iQM!M')
 // const tempRefreshTokenSecret = new TextEncoder().encode(getRandomString())
 
-const verifyToken = async (token: string, secret: Uint8Array) => {
+const verifyToken = async (token, secret) => {
   try {
     // Verify the JWT token.
     const { payload } = await jwtVerify(token, secret)
     if (!payload) return null
 
     // Currently does not exist in the database.
-    const checkedWithDb = await checkTokenWithDb(payload as AnyObject)
+    const checkedWithDb = await checkTokenWithDb(payload)
     if (!checkedWithDb) return null
 
     // Valid - return the verified decoded JWT.
@@ -37,9 +27,9 @@ const verifyToken = async (token: string, secret: Uint8Array) => {
     return null
   }
 }
-const signToken = async (payload: object, secret: Uint8Array) => {
+const signToken = async (payload, secret) => {
   try {
-    const jwt = await new SignJWT(payload as JWTPayload)
+    const jwt = await new SignJWT(payload)
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime(accessTokenExpiry)
       .setIssuedAt()
@@ -50,7 +40,7 @@ const signToken = async (payload: object, secret: Uint8Array) => {
   }
 }
 
-const checkTokenWithDb = async (tokenPayload: AnyObject) => {
+const checkTokenWithDb = async (tokenPayload) => {
   const userId = tokenPayload['user_id']
 
   // Check 'database'.
@@ -63,16 +53,16 @@ const checkTokenWithDb = async (tokenPayload: AnyObject) => {
   return false
 }
 
-export const verifyAccessToken = async (accessToken: string) => verifyToken(accessToken, tempAccessTokenSecret)
-const signAccessToken = (payload: object) => signToken(payload, tempAccessTokenSecret)
+export const verifyAccessToken = async (accessToken) => verifyToken(accessToken, tempAccessTokenSecret)
+const signAccessToken = (payload) => signToken(payload, tempAccessTokenSecret)
 
-export const signUpEndpoint = async (email: string) => {
+export const signUpEndpoint = async (email) => {
   const db = getLocalStorageDb()
 
   // Find if user already exists.
   const normalEmail = email.toLowerCase().trim()
-  const users = Object.values(db.users) as IUser[]
-  const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
+  const users = Object.values(db.users)
+  const userFound = users.find(({ email: dbEmail }) => dbEmail.toLowerCase().trim() === normalEmail)
   if (userFound) return { statusCode: 409, ok: false, message: 'User already exists' }
 
   // Else 'save',
@@ -83,13 +73,13 @@ export const signUpEndpoint = async (email: string) => {
   return { statusCode: 201, ok: true, message: 'User created', accessToken }
 }
 
-export const signInEndpoint = async (email: string) => {
+export const signInEndpoint = async (email) => {
   const db = getLocalStorageDb()
 
   // Find if user already exists.
   const normalEmail = email.toLowerCase().trim()
-  const users = Object.values(db.users) as IUser[]
-  const userFound = users.find(({ email: dbEmail }: { email: string }) => dbEmail.toLowerCase().trim() === normalEmail)
+  const users = Object.values(db.users)
+  const userFound = users.find(({ email: dbEmail }) => dbEmail.toLowerCase().trim() === normalEmail)
 
   if (userFound) {
     const accessToken = await signAccessToken({ user_id: userFound.key, email })
@@ -99,7 +89,7 @@ export const signInEndpoint = async (email: string) => {
   return { statusCode: 400, ok: false, message: 'Invalid sign-in.' }
 }
 
-export const isAuthenticatedEndpoint = async (accessToken: string) => {
+export const isAuthenticatedEndpoint = async (accessToken) => {
   try {
     const verified = await verifyAccessToken(accessToken) || {}
 

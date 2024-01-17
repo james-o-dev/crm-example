@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
-import { changeUsernameEndpoint, getUsernameEndpoint } from '../../core/mock/user-profile.mock'
 import { AuthService } from '../../core/auth.service'
 import { from } from 'rxjs'
+import { getUsernameEndpoint, changeUsernameEndpoint } from '../../../assets/js/mock/user-profile.mock'
 
 @Injectable({
   providedIn: 'root',

@@ -1,29 +1,7 @@
 import { verifyAccessToken } from './auth.mock'
 import { getLocalStorageDb, newToDb, saveToDb } from './mock'
-import { ITaskDB } from './tasks.mock'
 
-interface IContact {
-  key?: string;
-  name: string;
-  user_id?: string;
-  email?: string;
-  phone?: string;
-  notes?: string;
-}
-
-export interface IContactDB {
-  key?: string;
-  name: string;
-  user_id: string;
-  date_created: number;
-  date_modified: number;
-  email?: string;
-  phone?: string;
-  notes?: string;
-  archived?: boolean;
-}
-
-export const newContactEndpoint = async (accessToken: string, payload: object) => {
+export const newContactEndpoint = async (accessToken, payload) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -35,20 +13,16 @@ export const newContactEndpoint = async (accessToken: string, payload: object) =
   return { statusCode: 201, ok: true, message: 'Contact created.', contactId }
 }
 
-interface IGetContactsFilters {
-  archived?: boolean
-}
-
-export const getContactsEndpoint = async (accessToken: string, filters: IGetContactsFilters = {}) => {
+export const getContactsEndpoint = async (accessToken, filters = {}) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
   const db = getLocalStorageDb()
-  const tasks = Object.values(db.tasks as ITaskDB[])
-  const contacts = (Object.values(db['contacts'] || {}) as IContactDB[])
+  const tasks = Object.values(db.tasks)
+  const contacts = Object.values(db['contacts'] || {})
     // Only return the user's contacts.
-    .filter((contact: IContactDB) => contact.user_id === verifiedToken['user_id'])
+    .filter((contact) => contact.user_id === verifiedToken['user_id'])
     // Apply filters.
-    .filter((contact: IContactDB) => {
+    .filter((contact) => {
 
       // Exclude archived, unless the filter is all.
       if (!filters.archived && contact.archived) return false
@@ -59,8 +33,8 @@ export const getContactsEndpoint = async (accessToken: string, filters: IGetCont
       return true
     })
     .sort((a, b) => a.date_modified < b.date_modified ? -1 : 1)
-    .map((contact: IContactDB) => {
-      const contactTasks: ITaskDB[] = tasks.filter((t: ITaskDB) => t.contact_id === contact.key)
+    .map((contact) => {
+      const contactTasks = tasks.filter((t) => t.contact_id === contact.key)
 
       return {
         ...contact,
@@ -71,7 +45,7 @@ export const getContactsEndpoint = async (accessToken: string, filters: IGetCont
   return { statusCode: 200, ok: true, contacts }
 }
 
-export const getContactEndpoint = async (accessToken: string, contactId: string) => {
+export const getContactEndpoint = async (accessToken, contactId) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -83,7 +57,7 @@ export const getContactEndpoint = async (accessToken: string, contactId: string)
   return { statusCode: 200, ok: true, contact }
 }
 
-export const updateContactEndpoint = async (accessToken: string, payload: IContact) => {
+export const updateContactEndpoint = async (accessToken, payload) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -98,7 +72,7 @@ export const updateContactEndpoint = async (accessToken: string, payload: IConta
   return { statusCode: 200, ok: true, message: 'Contact updated.' }
 }
 
-const manageContactArchive = async (accessToken: string, contactId: string, archive: boolean) => {
+const manageContactArchive = async (accessToken, contactId, archive) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -112,10 +86,10 @@ const manageContactArchive = async (accessToken: string, contactId: string, arch
   return { statusCode: 200, ok: true, message: archive ? 'Contact archived.' : 'Contact restored.' }
 }
 
-export const archiveContactEndpoint = async (accessToken: string, contactId: string) => {
+export const archiveContactEndpoint = async (accessToken, contactId) => {
   return manageContactArchive(accessToken, contactId, true)
 }
 
-export const restoreContactEndpoint = async (accessToken: string, contactId: string) => {
+export const restoreContactEndpoint = async (accessToken, contactId) => {
   return manageContactArchive(accessToken, contactId, false)
 }

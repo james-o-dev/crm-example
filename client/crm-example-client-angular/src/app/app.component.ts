@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterOutlet } from '@angular/router'
-import { clearLocalStorageDb } from './core/mock/mock'
+import { clearLocalStorageDb } from '../assets/js/mock/mock.js'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
 

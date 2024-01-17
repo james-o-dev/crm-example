@@ -1,4 +1,4 @@
-import { getHomeMetadataEndpoint } from './../../core/mock/meta.mock'
+import { getHomeMetadataEndpoint } from '../../../assets/js/mock/meta.mock'
 import { Injectable, inject } from '@angular/core'
 import { AuthService } from '../../core/auth.service'
 import { from } from 'rxjs'

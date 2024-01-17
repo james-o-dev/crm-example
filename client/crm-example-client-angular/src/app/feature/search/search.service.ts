@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { searchEndpoint } from '../../core/mock/search.mock'
+import { searchEndpoint } from '../../../assets/js/mock/search.mock'
 import { AuthService } from '../../core/auth.service'
 
 export interface ISearchResponse {

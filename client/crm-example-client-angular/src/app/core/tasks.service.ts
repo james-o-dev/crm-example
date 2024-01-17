@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { addTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './mock/tasks.mock'
+import { addTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
 import { AuthService } from './auth.service'
 
 export interface ITask {

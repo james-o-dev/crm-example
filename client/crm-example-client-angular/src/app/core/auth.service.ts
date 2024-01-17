@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core'
-import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './mock/auth.mock'
+import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from '../../assets/js/mock/auth.mock'
 import { from, tap } from 'rxjs'
 import { Router } from '@angular/router'
 

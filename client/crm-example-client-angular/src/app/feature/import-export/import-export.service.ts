@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from '../../core/mock/import-export.mock'
+import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from '../../../assets/js/mock/import-export.mock'
 import { AuthService } from '../../core/auth.service'
 
 @Injectable({

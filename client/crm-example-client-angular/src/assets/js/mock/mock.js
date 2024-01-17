@@ -9,9 +9,9 @@ const MOCK_DB_NEW = JSON.stringify({
   tasks: {},
 })
 
-export const getRandomString = () => Math.random().toString().replace('.', '')
+const getRandomString = () => Math.random().toString().replace('.', '')
 
-export const saveToDb = (table: string, key: string, payload: object) => {
+export const saveToDb = (table, key, payload) => {
   payload = {
     ...payload,
     date_modified: Date.now(),
@@ -21,7 +21,7 @@ export const saveToDb = (table: string, key: string, payload: object) => {
   saveLocalStorageDb(db)
 }
 
-export const newToDb = (table: string, payload: object) => {
+export const newToDb = (table, payload) => {
   const key = getRandomString()
   const db = getLocalStorageDb()
   db[table][key] = {
@@ -34,7 +34,7 @@ export const newToDb = (table: string, payload: object) => {
   return key
 }
 
-export const removeFromDb = (table: string, key: string) => {
+export const removeFromDb = (table, key) => {
   const db = getLocalStorageDb()
   delete db[table][key]
   saveLocalStorageDb(db)
@@ -53,7 +53,7 @@ export const getLocalStorageDb = () => {
  *
  * @param {object} newDb
  */
-export const saveLocalStorageDb = (newDb: object) => {
+export const saveLocalStorageDb = (newDb) => {
   localStorage.setItem(MOCK_DB_NAME, JSON.stringify(newDb))
 }
 

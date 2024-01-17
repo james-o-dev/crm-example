@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { archiveContactEndpoint, getContactEndpoint, getContactsEndpoint, newContactEndpoint, restoreContactEndpoint, updateContactEndpoint } from './mock/contacts.mock'
+import { archiveContactEndpoint, getContactEndpoint, getContactsEndpoint, newContactEndpoint, restoreContactEndpoint, updateContactEndpoint } from '../../assets/js/mock/contacts.mock'
 import { AuthService } from './auth.service'
 
 export interface IContact {

@@ -1,24 +1,12 @@
-import { verifyAccessToken } from './auth.mock'
-import { getLocalStorageDb, newToDb } from './mock'
+import { verifyAccessToken } from './auth.mock.js'
+import { getLocalStorageDb, newToDb } from './mock.js'
 
-interface IContactImportExport {
-  name: string
-  email: string
-  phone: string
-  notes: string
-  archived: boolean
-
-  // Other values can be ignored.
-  user_id?: string
-  [k: string]: string | undefined | boolean
-}
-
-export const exportContactsJsonEndpoint = async (accessToken: string) => {
+export const exportContactsJsonEndpoint = async (accessToken) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
   const { contacts } = getLocalStorageDb()
-  const contactsReduced = Object.values<IContactImportExport>(contacts)
+  const contactsReduced = Object.values(contacts)
   .filter((contact) => contact.user_id === verifiedToken['user_id'])
   .map((contact) => {
     return {
@@ -27,7 +15,7 @@ export const exportContactsJsonEndpoint = async (accessToken: string) => {
       phone: contact.phone,
       notes: contact.notes,
       archived: contact.archived,
-    } as IContactImportExport
+    }
   })
 
   const json = JSON.stringify(contactsReduced)
@@ -36,17 +24,17 @@ export const exportContactsJsonEndpoint = async (accessToken: string) => {
   return { statusCode: 200, ok: true, json }
 }
 
-export const importContactsJsonEndpoint = async (accessToken: string, payload: string) => {
+export const importContactsJsonEndpoint = async (accessToken, payload) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
   try {
     // Ideally the input file would be uploaded to a file storage service separately and the server would read it separately.
-    const importing = JSON.parse(payload) as IContactImportExport[]
+    const importing = JSON.parse(payload)
 
     importing
       .forEach((contact) => {
-        contact.user_id = verifiedToken['user_id'] as string
+        contact.user_id = verifiedToken['user_id']
         newToDb('contacts', contact)
       })
 

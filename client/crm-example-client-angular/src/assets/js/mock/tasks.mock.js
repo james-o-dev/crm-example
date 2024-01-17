@@ -1,30 +1,7 @@
-import { verifyAccessToken } from './auth.mock'
-import { IContactDB } from './contacts.mock'
-import { getLocalStorageDb, newToDb, removeFromDb, saveToDb } from './mock'
+import { verifyAccessToken } from './auth.mock.js'
+import { getLocalStorageDb, newToDb, removeFromDb, saveToDb } from './mock.js'
 
-interface ITask {
-  due_date?: number
-  key: string
-  notes?: string
-  title: string
-}
-
-export interface ITaskDB {
-  contact_id?: string
-  date_created: number
-  date_modified: number
-  due_date?: number
-  key: string
-  notes?: string
-  title: string
-  user_id: string
-}
-
-interface ITaskResponse extends ITaskDB {
-  contact?: IContactDB
-}
-
-export const addTaskEndpoint = async (accessToken: string, payload: object) => {
+export const addTaskEndpoint = async (accessToken, payload) => {
   const verifiedToken = await verifyAccessToken(accessToken) || {}
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -36,15 +13,15 @@ export const addTaskEndpoint = async (accessToken: string, payload: object) => {
   return { statusCode: 201, ok: true, message: 'Task created.', taskId }
 }
 
-export const getTasksEndpoint = async (accessToken: string, contactId?: string) => {
+export const getTasksEndpoint = async (accessToken, contactId) => {
   const verifiedToken = await verifyAccessToken(accessToken) || {}
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
   const db = getLocalStorageDb()
   const contacts = db.contacts
-  const tasks = (Object.values(db['tasks'] || {}) as ITaskDB[])
-    .filter((task: ITaskDB) => task.user_id === verifiedToken['user_id'])
-    .filter((task: ITaskDB) => {
+  const tasks = Object.values(db['tasks'] || {})
+    .filter(task => task.user_id === verifiedToken['user_id'])
+    .filter(task => {
       if (!contactId) return true
       if (contactId === task.contact_id) return true
       return false
@@ -54,7 +31,7 @@ export const getTasksEndpoint = async (accessToken: string, contactId?: string) 
       const dateModifiedSort = (a.date_modified || 0) < (b.date_modified || 0)
       return dueDateSort || dateModifiedSort ? -1 : 1
     })
-    .map((task: ITaskResponse) => {
+    .map(task => {
       return {
         contact_id: (contacts[task.contact_id || ''])?.key,
         contact_name: (contacts[task.contact_id || ''])?.name,
@@ -67,7 +44,7 @@ export const getTasksEndpoint = async (accessToken: string, contactId?: string) 
   return { statusCode: 200, ok: true, tasks }
 }
 
-export const getTaskEndpoint = async (accessToken: string, taskId: string) => {
+export const getTaskEndpoint = async (accessToken, taskId) => {
   const verifiedToken = await verifyAccessToken(accessToken) || {}
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -88,7 +65,7 @@ export const getTaskEndpoint = async (accessToken: string, taskId: string) => {
   return { statusCode: 200, ok: true, task }
 }
 
-export const updateTaskEndpoint = async (accessToken: string, payload: ITask) => {
+export const updateTaskEndpoint = async (accessToken, payload) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -103,7 +80,7 @@ export const updateTaskEndpoint = async (accessToken: string, payload: ITask) =>
   return { statusCode: 200, ok: true, message: 'Task updated.' }
 }
 
-export const deleteTaskEndpoint = async (accessToken: string, taskId: string) => {
+export const deleteTaskEndpoint = async (accessToken, taskId) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 

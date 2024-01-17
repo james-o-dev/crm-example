@@ -1,15 +1,7 @@
-import { verifyAccessToken } from './auth.mock'
-import { IContactDB } from './contacts.mock'
-import { getLocalStorageDb } from './mock'
-import { ITaskDB } from './tasks.mock'
+import { verifyAccessToken } from './auth.mock.js'
+import { getLocalStorageDb } from './mock.js'
 
-interface ISearchResponse {
-  name: string
-  key: string
-  type: string
-}
-
-export const searchEndpoint = async (accessToken: string, q: string) => {
+export const searchEndpoint = async (accessToken, q) => {
   const verifiedToken = await verifyAccessToken(accessToken)
   if (!verifiedToken || !verifiedToken['user_id']) return { statusCode: 400, ok: false, message: 'Unauthorized.' }
 
@@ -17,14 +9,14 @@ export const searchEndpoint = async (accessToken: string, q: string) => {
 
   const stringNormalize = (s = '') => s.toLowerCase().replace(/\s*/g, '')
 
-  let found: ISearchResponse[] = []
+  let found = []
   const qNormal = stringNormalize(q)
 
   const db = getLocalStorageDb()
-  const contacts = Object.values<IContactDB>(db.contacts)
-  const tasks = Object.values<ITaskDB>(db.tasks)
+  const contacts = Object.values(db.contacts)
+  const tasks = Object.values(db.tasks)
 
-  contacts.forEach((contact: IContactDB) => {
+  contacts.forEach((contact) => {
     const search = [
       contact.name,
       contact.email,
@@ -39,11 +31,11 @@ export const searchEndpoint = async (accessToken: string, q: string) => {
         type: 'contact',
         key: contact.key,
         name: contact.name,
-      } as ISearchResponse)
+      })
     }
   })
 
-  tasks.forEach((task: ITaskDB) => {
+  tasks.forEach((task) => {
     const search = [
       task.title,
       task.notes,
@@ -56,7 +48,7 @@ export const searchEndpoint = async (accessToken: string, q: string) => {
         type: 'task',
         key: task.key,
         name: task.title,
-      } as ISearchResponse)
+      })
     }
   })
 
