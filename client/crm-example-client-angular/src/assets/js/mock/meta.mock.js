@@ -15,7 +15,7 @@ export const getHomeMetadataEndpoint = async (accessToken) => {
 
   // Number of active contacts.
   const contacts = Object.values(db.contacts)
-    .filter((contact) => contact.user_id === verifiedToken['user_id'])
+    .filter((contact) => contact.user_id === verifiedToken['user_id'] && !contact.archived)
     .length
 
   // Users tasks.
