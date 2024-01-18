@@ -19,6 +19,7 @@ const guardedRoutes: Routes = [
   { path: 'task-detail/:taskId', loadComponent: () => import('./feature/task-detail/task-detail.component').then(m => m.TaskDetailComponent) },
   { path: 'search', loadComponent: () => import('./feature/search/search.component').then(m => m.SearchComponent) },
   { path: 'import-export', loadComponent: () => import('./feature/import-export/import-export.component').then(m => m.ImportExportComponent) },
+  { path: 'notifications', loadComponent: () => import('./feature/notifications/notifications.component').then(m => m.NotificationsComponent) },
 ].map((r: Route) => {
   // Guarded routes require the AuthGuard service.
   r.canActivate = [authGuard]

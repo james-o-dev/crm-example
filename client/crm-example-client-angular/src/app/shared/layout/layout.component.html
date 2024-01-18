@@ -6,6 +6,10 @@
 
   <span class="empty-space"></span>
 
+  <button mat-icon-button routerLink="/notifications" >
+    <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true">notifications</mat-icon>
+  </button>
+
   <button mat-icon-button routerLink="/search">
     <mat-icon>search</mat-icon>
   </button>
