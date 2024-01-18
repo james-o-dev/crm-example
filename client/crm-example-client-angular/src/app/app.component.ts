@@ -76,6 +76,10 @@ export class AppComponent implements OnInit {
     this.getNotificationCount()
   }
 
+  /**
+   * Fetches the notification count.
+   * * Call it again to update
+   */
   private getNotificationCount() {
     this.notificationNumber$ = of('')
 

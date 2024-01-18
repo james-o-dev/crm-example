@@ -74,8 +74,8 @@ export class AuthService {
   }
 
   signOut() {
+    this.hasAuthenticated.set(false)
     localStorage.removeItem('accessToken')
     this.router.navigate(['/sign-in'])
-    this.hasAuthenticated.set(false)
   }
 }
