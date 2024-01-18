@@ -19,13 +19,13 @@
 
       <span class="empty-space"></span>
 
-      <button mat-icon-button routerLink="/notifications" (click)="drawer.toggle()">
+      <button mat-icon-button routerLink="/notifications" (click)="drawer.close()">
         <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true" aria-hidden="false">
           notifications
         </mat-icon>
       </button>
 
-      <button mat-icon-button routerLink="/search" (click)="drawer.toggle()">
+      <button mat-icon-button routerLink="/search" (click)="drawer.close()">
         <mat-icon>search</mat-icon>
       </button>
     </mat-toolbar>
