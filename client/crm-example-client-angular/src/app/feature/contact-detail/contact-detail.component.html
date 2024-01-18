@@ -4,8 +4,8 @@
 
     @if (!editMode) {
       <div class="subtitle">
-        <div>Created {{contact.date_created | date:'short'}}</div>
-        <div>Updated {{contact.date_modified | date:'short'}}</div>
+        <div>Created {{contact.date_created | dateFns}}</div>
+        <div>Updated {{contact.date_modified | dateFns}}</div>
       </div>
 
       <div class="text-center">

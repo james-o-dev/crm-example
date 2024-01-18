@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { Component, Input, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -6,12 +5,13 @@ import { MatTableModule } from '@angular/material/table'
 import { RouterLink } from '@angular/router'
 import { LayoutComponent } from '../layout/layout.component'
 import { TasksService } from '../../core/tasks.service'
+import { DateFnsPipe } from '../date-fns.pipe'
 
 @Component({
   selector: 'app-tasks-table',
   standalone: true,
   imports: [
-    DatePipe,
+    DateFnsPipe,
     LayoutComponent,
     MatButtonModule,
     MatIconModule,

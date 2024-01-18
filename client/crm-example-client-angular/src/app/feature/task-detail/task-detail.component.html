@@ -3,8 +3,8 @@
   <div class="mx-1">
     @if (!editMode) {
       <div class="subtitle">
-        <div>Created {{task.date_created | date:'short'}}</div>
-        <div>Updated {{task.date_modified | date:'short'}}</div>
+        <div>Created {{task.date_created | dateFns}}</div>
+        <div>Updated {{task.date_modified | dateFns}}</div>
       </div>
 
       <div class="text-center">
@@ -21,7 +21,7 @@
       @if (task.due_date) {
         <div>
           <span class="subtitle">Due date:&nbsp;</span>
-          {{task.due_date | date:'shortDate'}}
+          {{task.due_date | dateFns:'P'}}
         </div>
       }
 

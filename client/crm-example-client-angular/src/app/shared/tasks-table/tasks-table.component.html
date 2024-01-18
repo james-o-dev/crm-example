@@ -11,7 +11,7 @@
     <th mat-header-cell *matHeaderCellDef>Due Date</th>
     <td mat-cell *matCellDef="let element">
       @if (element.due_date !== 0) {
-        {{element.due_date | date:'short'}}
+        {{element.due_date | dateFns:'P'}}
       }
     </td>
   </ng-container>

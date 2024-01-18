@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { ContactService, IContact } from '../../core/contacts.service'
 import { ActivatedRoute, Router } from '@angular/router'
-import { DatePipe } from '@angular/common'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { switchMap, tap } from 'rxjs'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
@@ -12,13 +11,14 @@ import { MatDividerModule } from '@angular/material/divider'
 import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.component'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { TasksService } from '../../core/tasks.service'
+import { DateFnsPipe } from '../../shared/date-fns.pipe'
 
 @Component({
   selector: 'app-contact-detail',
   standalone: true,
   imports: [
     ContactFormComponent,
-    DatePipe,
+    DateFnsPipe,
     LayoutComponent,
     LineBreakPipe,
     MatButtonModule,

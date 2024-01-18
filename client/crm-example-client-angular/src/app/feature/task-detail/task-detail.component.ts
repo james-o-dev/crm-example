@@ -1,5 +1,4 @@
 import { ITask, ITaskUpdate, TasksService } from './../../core/tasks.service'
-import { DatePipe } from '@angular/common'
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
@@ -11,12 +10,13 @@ import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { of, switchMap, tap } from 'rxjs'
 import { MatDialog } from '@angular/material/dialog'
 import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { DateFnsPipe } from '../../shared/date-fns.pipe'
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
   imports: [
-    DatePipe,
+    DateFnsPipe,
     LayoutComponent,
     LineBreakPipe,
     MatButtonModule,
