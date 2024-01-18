@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable, inject, signal } from '@angular/core'
 import { AuthService } from './auth.service'
 import { from } from 'rxjs'
 import { getNotificationsEndpoint } from '../../assets/js/mock/notifications.mock'
@@ -16,6 +16,11 @@ export interface INotificationDetail {
 export class NotificationsService {
   private authService = inject(AuthService)
 
+  /**
+   * This is the Angular signal to trigger updating the notification number in the top bar.
+   */
+  public updateNotificationNumberSignal = signal(true)
+
   constructor() { }
 
   /**
@@ -30,5 +35,12 @@ export class NotificationsService {
    */
   public getNotificationsNumberOnly() {
     return from(getNotificationsEndpoint(this.authService.accessToken, true))
+  }
+
+  /**
+   * It updates the Angular signal in order to trigger updating the notification number in the top bar.
+   */
+  public triggerNumberUpdateEvent() {
+    this.updateNotificationNumberSignal.update(v => !v)
   }
 }

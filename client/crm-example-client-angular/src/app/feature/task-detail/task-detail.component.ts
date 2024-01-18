@@ -10,6 +10,7 @@ import { of, switchMap, tap } from 'rxjs'
 import { MatDialog } from '@angular/material/dialog'
 import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
 import { DateFnsPipe } from '../../shared/date-fns.pipe'
+import { NotificationsService } from '../../core/notifications.service'
 
 @Component({
   selector: 'app-task-detail',
@@ -29,6 +30,7 @@ import { DateFnsPipe } from '../../shared/date-fns.pipe'
 export class TaskDetailComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute)
   private dialog = inject(MatDialog)
+  private notificationsService = inject(NotificationsService)
   private router = inject(Router)
   private tasksService = inject(TasksService)
 
@@ -59,7 +61,10 @@ export class TaskDetailComponent implements OnInit {
         switchMap(() => this.getTask()),
       )
       .subscribe({
-        next: () => this.editMode = false,
+        next: () => {
+          this.notificationsService.triggerNumberUpdateEvent()
+          this.editMode = false
+        },
       })
   }
 
@@ -85,7 +90,9 @@ export class TaskDetailComponent implements OnInit {
     .pipe(
       switchMap(confirmed => confirmed ? this.tasksService.deleteTask(this.taskId) : of(null)),
       switchMap(response => {
-        if (response) {
+        if (response?.statusCode === 200) {
+          this.notificationsService.triggerNumberUpdateEvent()
+
           return this.dialog.open(DialogComponent, { data: {
             title: 'Task Deleted',
             actions: [{ value: true, text: 'Confirm' }],

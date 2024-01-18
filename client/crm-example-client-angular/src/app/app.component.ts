@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, OnInit, effect, inject } from '@angular/core'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { clearLocalStorageDb } from '../assets/js/mock/mock.js'
@@ -15,7 +15,7 @@ import { MatListModule } from '@angular/material/list'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { AuthService } from './core/auth.service.js'
 
-import { map } from 'rxjs'
+import { Observable, map, of } from 'rxjs'
 import { NotificationsService } from './core/notifications.service'
 
 @Component({
@@ -46,7 +46,7 @@ import { NotificationsService } from './core/notifications.service'
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private authService = inject(AuthService)
   private notificationsService = inject(NotificationsService)
 
@@ -57,10 +57,34 @@ export class AppComponent {
   protected hasAuthenticatedSignal = this.authService.hasAuthenticated
 
   // Define the notification number Observable.
-  protected notificationNumber$ = this.notificationsService.getNotificationsNumberOnly()
-    .pipe(
-      map(response => response?.number),
-    )
+  protected notificationNumber$: Observable<string> = of('')
+
+  constructor() {
+    /**
+     * Using Angular Signals and effects.
+     * * effect() must be in constructor
+     * * Within the effect function, the signal must be present
+     * * The new signal value must be different from the fold one.
+     */
+    effect(() => {
+      this.notificationsService.updateNotificationNumberSignal()
+      this.getNotificationCount()
+    })
+  }
+
+  public ngOnInit(): void {
+    this.getNotificationCount()
+  }
+
+  private getNotificationCount() {
+    this.notificationNumber$ = of('')
+
+    // Define the notification number Observable.
+    this.notificationNumber$ = this.notificationsService.getNotificationsNumberOnly()
+      .pipe(
+        map(response => response?.number || ''),
+      )
+  }
 
   protected onSignOut() {
     this.authService.signOut()

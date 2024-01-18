@@ -64,7 +64,7 @@ export class AuthService {
     // Mock.
     return from(isAuthenticatedEndpoint(this.accessToken))
       .pipe(tap(data => {
-        if (data.ok && data.statusCode === 200 && this.hasAuthenticated() !== true) {
+        if (data.ok && data.statusCode === 200) {
           this.hasAuthenticated.set(true)
         }
       }))
