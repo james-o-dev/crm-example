@@ -9,7 +9,7 @@
     <div class="text-center-responsive">
       <h2>
         {{contact.name || 'Loading...'}}
-        <span class="desktop-fab">
+        <span class="fab-desktop">
           <button mat-mini-fab color="primary" (click)="editMode = true">
             <mat-icon>edit</mat-icon>
           </button>
@@ -79,7 +79,7 @@
 
     <app-task-form #taskForm [noContact]="true" />
 
-    <div class="desktop-fab">
+    <div class="fab-desktop">
       <br>
       <div>
         <button mat-mini-fab color="none" (click)="addTaskMode = false">
@@ -116,7 +116,7 @@
 
     <app-contact-form [existingContact]="contact" />
 
-    <div class="desktop-fab">
+    <div class="fab-desktop">
       <br>
       <div>
         <button mat-mini-fab color="none" (click)="editMode = false">
