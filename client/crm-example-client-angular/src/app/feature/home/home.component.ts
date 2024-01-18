@@ -1,31 +1,31 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { RouterLink } from '@angular/router'
 import { MatCardModule } from '@angular/material/card'
 import { HomeService, IHomeMetadata } from './home.service'
+import { map } from 'rxjs'
+import { AsyncPipe, NgIf } from '@angular/common'
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
+    AsyncPipe,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatMenuModule,
+    NgIf,
     RouterLink,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   private homeService = inject(HomeService)
 
-  protected data: IHomeMetadata = {} as IHomeMetadata
-
-  ngOnInit(): void {
-    this.homeService.getHomeMetadata()
-      .subscribe(response => this.data = response.data as IHomeMetadata)
-  }
+  protected data$ = this.homeService.getHomeMetadata()
+    .pipe(map(response => response.data as IHomeMetadata))
 }

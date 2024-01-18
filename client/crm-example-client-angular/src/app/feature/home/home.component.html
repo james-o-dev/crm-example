@@ -3,7 +3,7 @@
     <h1>Home</h1>
   </div>
 
-  <div class="cards">
+  <div class="cards" *ngIf="data$ | async as data">
     <mat-card routerLink="/contacts">
       <div>Contacts</div>
       <h2>{{ data.contacts || 0 }}</h2>
