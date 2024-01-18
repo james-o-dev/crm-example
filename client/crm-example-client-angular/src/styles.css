@@ -16,16 +16,16 @@ body {
 }
 
 /* Used as a placeholder during development. */
-.container-xs {
-  max-width: var(--breakpoint-xs);
+.container-sm {
+  max-width: 320px;
   margin: 0 auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 100vh;
 }
 
 /* Used as a placeholder during development. */
-.container-sm {
-  max-width: var(--breakpoint-sm);
+.container-md {
+  max-width: 768px;
   margin: 0 auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 100vh;
