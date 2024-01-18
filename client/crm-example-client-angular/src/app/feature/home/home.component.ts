@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
@@ -11,7 +10,6 @@ import { HomeService, IHomeMetadata } from './home.service'
   selector: 'app-home',
   standalone: true,
   imports: [
-    LayoutComponent,
     MatButtonModule,
     MatCardModule,
     MatIconModule,

@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatDividerModule } from '@angular/material/divider'
@@ -13,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon'
   standalone: true,
   imports: [
     FormsModule,
-    LayoutComponent,
     MatButtonModule,
     MatDividerModule,
     MatFormFieldModule,

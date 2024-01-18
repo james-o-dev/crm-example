@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'
 import { RouterLink } from '@angular/router'
-import { LayoutComponent } from '../layout/layout.component'
 import { TasksService } from '../../core/tasks.service'
 import { DateFnsPipe } from '../date-fns.pipe'
 
@@ -12,7 +11,6 @@ import { DateFnsPipe } from '../date-fns.pipe'
   standalone: true,
   imports: [
     DateFnsPipe,
-    LayoutComponent,
     MatButtonModule,
     MatIconModule,
     MatTableModule,

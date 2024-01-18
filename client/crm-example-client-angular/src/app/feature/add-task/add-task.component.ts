@@ -1,5 +1,4 @@
 import { Component, ViewChild, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatIconModule } from '@angular/material/icon'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { MatButtonModule } from '@angular/material/button'
@@ -7,12 +6,12 @@ import { TasksService } from '../../core/tasks.service'
 import { MatDialog } from '@angular/material/dialog'
 import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
 import { Router } from '@angular/router'
+import { NotificationsService } from '../../core/notifications.service'
 
 @Component({
   selector: 'app-add-task',
   standalone: true,
   imports: [
-    LayoutComponent,
     MatButtonModule,
     MatIconModule,
     TaskFormComponent,
@@ -22,6 +21,7 @@ import { Router } from '@angular/router'
 })
 export class AddTaskComponent {
   private dialog = inject(MatDialog)
+  private notificationsService = inject(NotificationsService)
   private router = inject(Router)
   private tasksService = inject(TasksService)
 
@@ -53,6 +53,7 @@ export class AddTaskComponent {
                 ],
               } as IDialogData,
             }).afterClosed().subscribe(confirmRedirect => {
+              this.notificationsService.triggerNumberUpdateEvent()
               if (confirmRedirect) this.router.navigate(['/tasks'])
               else this.taskForm.onReset()
             })

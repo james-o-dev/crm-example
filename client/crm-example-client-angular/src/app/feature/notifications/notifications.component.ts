@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatTableModule } from '@angular/material/table'
 import { INotificationDetail, NotificationsService } from '../../core/notifications.service'
 import { map } from 'rxjs/operators'
@@ -10,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button'
   selector: 'app-notifications',
   standalone: true,
   imports: [
-    LayoutComponent,
     MatButtonModule,
     MatTableModule,
   ],

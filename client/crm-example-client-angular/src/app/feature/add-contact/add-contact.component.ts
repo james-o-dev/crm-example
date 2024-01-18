@@ -1,5 +1,4 @@
 import { Component, ViewChild, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
@@ -13,7 +12,6 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
   standalone: true,
   imports: [
     ContactFormComponent,
-    LayoutComponent,
     MatButtonModule,
     MatIconModule,
   ],

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { ContactService, IContact } from '../../core/contacts.service'
@@ -12,6 +11,7 @@ import { TasksTableComponent } from '../../shared/tasks-table/tasks-table.compon
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { TasksService } from '../../core/tasks.service'
 import { DateFnsPipe } from '../../shared/date-fns.pipe'
+import { NotificationsService } from '../../core/notifications.service'
 
 @Component({
   selector: 'app-contact-detail',
@@ -19,7 +19,6 @@ import { DateFnsPipe } from '../../shared/date-fns.pipe'
   imports: [
     ContactFormComponent,
     DateFnsPipe,
-    LayoutComponent,
     LineBreakPipe,
     MatButtonModule,
     MatDividerModule,
@@ -37,6 +36,7 @@ export class ContactDetailComponent implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
+  private notificationsService = inject(NotificationsService)
   private router = inject(Router)
   private tasksService = inject(TasksService)
 
@@ -68,6 +68,7 @@ export class ContactDetailComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.statusCode === 201) {
+            this.notificationsService.triggerNumberUpdateEvent()
             this.addTaskMode = false
           }
         },
