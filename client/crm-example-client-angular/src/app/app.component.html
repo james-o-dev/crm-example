@@ -20,7 +20,9 @@
       <span class="empty-space"></span>
 
       <button mat-icon-button routerLink="/notifications" (click)="drawer.toggle()">
-        <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true">notifications</mat-icon>
+        <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true" aria-hidden="false">
+          notifications
+        </mat-icon>
       </button>
 
       <button mat-icon-button routerLink="/search" (click)="drawer.toggle()">
