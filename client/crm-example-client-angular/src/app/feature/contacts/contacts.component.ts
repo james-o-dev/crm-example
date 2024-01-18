@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core'
 import { ContactService } from '../../core/contacts.service'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatTableModule } from '@angular/material/table'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -11,7 +10,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
   selector: 'app-contacts',
   standalone: true,
   imports: [
-    LayoutComponent,
     MatButtonModule,
     MatIconModule,
     MatSlideToggleModule,

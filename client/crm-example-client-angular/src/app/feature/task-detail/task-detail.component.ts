@@ -3,7 +3,6 @@ import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
@@ -17,7 +16,6 @@ import { DateFnsPipe } from '../../shared/date-fns.pipe'
   standalone: true,
   imports: [
     DateFnsPipe,
-    LayoutComponent,
     LineBreakPipe,
     MatButtonModule,
     MatDividerModule,

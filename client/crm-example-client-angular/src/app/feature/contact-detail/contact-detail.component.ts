@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { ContactService, IContact } from '../../core/contacts.service'
@@ -19,7 +18,6 @@ import { DateFnsPipe } from '../../shared/date-fns.pipe'
   imports: [
     ContactFormComponent,
     DateFnsPipe,
-    LayoutComponent,
     LineBreakPipe,
     MatButtonModule,
     MatDividerModule,

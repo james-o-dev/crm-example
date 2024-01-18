@@ -10,5 +10,60 @@
     </ul>
   </div>
 
-  <router-outlet></router-outlet>
+  @if (hasAuthenticatedSignal()) {
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="cursor-pointer" routerLink="/home">CRM Example</span>
+
+      <span class="empty-space"></span>
+
+      <button mat-icon-button routerLink="/notifications" >
+        <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true">notifications</mat-icon>
+      </button>
+
+      <button mat-icon-button routerLink="/search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-drawer-container>
+      <mat-drawer #drawer mode="over">
+        <mat-nav-list>
+          <a mat-list-item (click)="drawer.close()" routerLink="/home">
+            <mat-icon matListItemIcon>home</mat-icon>
+            Home
+          </a>
+          <a mat-list-item (click)="drawer.close()" routerLink="/contacts">
+            <mat-icon matListItemIcon>group</mat-icon>
+            Contacts
+          </a>
+          <a mat-list-item (click)="drawer.close()" routerLink="/tasks">
+            <mat-icon matListItemIcon>assignment</mat-icon>
+            Tasks
+          </a>
+          <a mat-list-item (click)="drawer.close()" routerLink="/import-export">
+            <mat-icon matListItemIcon>backup</mat-icon>
+            Import / Export
+          </a>
+          <mat-divider></mat-divider>
+          <a mat-list-item (click)="drawer.close()" routerLink="/user-profile">
+            <mat-icon matListItemIcon>account_circle</mat-icon>
+            Profile
+          </a>
+          <a mat-list-item (click)="onSignOut()">
+            <mat-icon matListItemIcon>logout</mat-icon>
+            Sign Out
+          </a>
+        </mat-nav-list>
+      </mat-drawer>
+
+      <router-outlet></router-outlet>
+
+    </mat-drawer-container>
+  } @else {
+    <router-outlet></router-outlet>
+  }
+
 </div>

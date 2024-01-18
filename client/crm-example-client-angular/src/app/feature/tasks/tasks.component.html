@@ -1,16 +1,13 @@
-<app-layout>
-  <div class="text-center">
-    <h1>Tasks</h1>
+<div class="text-center">
+  <h1>Tasks</h1>
+</div>
+
+<app-tasks-table />
+
+<div class="bottom-fab-absolute right">
+  <div class="bottom-fab-fixed">
+    <button mat-fab color="primary" routerLink="/add-task">
+      <mat-icon>assignment_add</mat-icon>
+    </button>
   </div>
-
-  <app-tasks-table />
-
-  <div class="bottom-fab-absolute right">
-    <div class="bottom-fab-fixed">
-      <button mat-fab color="primary" routerLink="/add-task">
-        <mat-icon>assignment_add</mat-icon>
-      </button>
-    </div>
-  </div>
-
-</app-layout>
+</div>

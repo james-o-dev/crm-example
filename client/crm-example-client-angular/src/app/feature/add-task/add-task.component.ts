@@ -1,5 +1,4 @@
 import { Component, ViewChild, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatIconModule } from '@angular/material/icon'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { MatButtonModule } from '@angular/material/button'
@@ -12,7 +11,6 @@ import { Router } from '@angular/router'
   selector: 'app-add-task',
   standalone: true,
   imports: [
-    LayoutComponent,
     MatButtonModule,
     MatIconModule,
     TaskFormComponent,

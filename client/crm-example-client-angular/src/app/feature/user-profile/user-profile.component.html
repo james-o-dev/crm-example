@@ -1,57 +1,55 @@
-<app-layout>
-  <div class="mx-1">
-    <div class="text-center">
-      <h1>Profile</h1>
-    </div>
-
-    <p>If no username is specified, we will identify you with your email address, throughout the app.</p>
-
-    @if (!editModeUsername) {
-      <div>
-        Username: {{username}}
-        <button mat-icon-button color="primary" (click)="editModeUsername = true">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-    } @else {
-      <form [formGroup]="changeUserNameForm" (submit)="onChangeUsername()">
-        <mat-form-field>
-          <mat-label>Username</mat-label>
-          <input matInput type="text" formControlName="username">
-        </mat-form-field>
-
-        <button type="submit" mat-raised-button color="primary">Confirm</button>
-        &nbsp;
-        <button type="button" mat-stroked-button color="primary" (click)="editModeUsername = false">Cancel</button>
-      </form>
-    }
-
-    <br>
-    <mat-divider />
-
-    <div class="text-center">
-      <h2>Change Password</h2>
-    </div>
-
-    <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
-      <mat-form-field>
-        <mat-label>Old Password</mat-label>
-        <input matInput type="password" formControlName="oldPassword">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>New Password</mat-label>
-        <input matInput type="password" formControlName="newPassword">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Confirm New Password</mat-label>
-        <input matInput type="password" formControlName="confirmPassword">
-      </mat-form-field>
-
-      <button type="submit" mat-raised-button color="primary">Change Password</button>
-    </form>
-
-
+<div class="mx-1">
+  <div class="text-center">
+    <h1>Profile</h1>
   </div>
-</app-layout>
+
+  <p>If no username is specified, we will identify you with your email address, throughout the app.</p>
+
+  @if (!editModeUsername) {
+    <div>
+      Username: {{username}}
+      <button mat-icon-button color="primary" (click)="editModeUsername = true">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+  } @else {
+    <form [formGroup]="changeUserNameForm" (submit)="onChangeUsername()">
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username">
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="primary">Confirm</button>
+      &nbsp;
+      <button type="button" mat-stroked-button color="primary" (click)="editModeUsername = false">Cancel</button>
+    </form>
+  }
+
+  <br>
+  <mat-divider />
+
+  <div class="text-center">
+    <h2>Change Password</h2>
+  </div>
+
+  <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
+    <mat-form-field>
+      <mat-label>Old Password</mat-label>
+      <input matInput type="password" formControlName="oldPassword">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>New Password</mat-label>
+      <input matInput type="password" formControlName="newPassword">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Confirm New Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword">
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="primary">Change Password</button>
+  </form>
+
+
+</div>

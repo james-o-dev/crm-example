@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core'
-import { LayoutComponent } from '../../shared/layout/layout.component'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
 import { ImportExportService } from './import-export.service'
@@ -15,7 +14,6 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
   imports: [
     MatDividerModule,
     MatIconModule,
-    LayoutComponent,
     MatButtonModule,
   ],
   templateUrl: './import-export.component.html',
