@@ -15,15 +15,15 @@
       <button mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="cursor-pointer" routerLink="/home">CRM Example</span>
+      <span class="cursor-pointer" routerLink="/home" (click)="drawer.close()">CRM Example</span>
 
       <span class="empty-space"></span>
 
-      <button mat-icon-button routerLink="/notifications" >
+      <button mat-icon-button routerLink="/notifications" (click)="drawer.toggle()">
         <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true">notifications</mat-icon>
       </button>
 
-      <button mat-icon-button routerLink="/search">
+      <button mat-icon-button routerLink="/search" (click)="drawer.toggle()">
         <mat-icon>search</mat-icon>
       </button>
     </mat-toolbar>
