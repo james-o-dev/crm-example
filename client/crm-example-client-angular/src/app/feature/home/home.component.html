@@ -1,6 +1,13 @@
 <div class="mx-1">
-  <div class="text-center">
-    <h1>Home</h1>
+  <div class="text-center-responsive">
+    <h1>
+      Home
+      <div class="fab-desktop">
+        <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </h1>
   </div>
 
   <div class="cards" *ngIf="data$ | async as data">
@@ -20,8 +27,8 @@
     </mat-card>
   </div>
 
-  <div class="bottom-fab-absolute right">
-    <div class="bottom-fab-fixed">
+  <div class="bottom-fab-mobile-absolute right">
+    <div class="bottom-fab-mobile-fixed">
       <button mat-fab color="primary" [matMenuTriggerFor]="menu">
         <mat-icon>add</mat-icon>
       </button>

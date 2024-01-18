@@ -21,14 +21,11 @@ a[mat-item-list] {
 mat-toolbar {
   position: fixed;
   top: 0;
-  /* left: 0; */
   box-sizing: border-box;
   z-index: 10;
 
   /* Future: */
-  /* width: 100%; */
-  /* Temp: */
-  width: 320px;
+  width: 100%;
 }
 
 mat-drawer-container {
@@ -37,4 +34,17 @@ mat-drawer-container {
 
 .empty-space {
   flex: 1 1 auto;
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+  /* Hide the sidenav toggle button */
+  .sidenav-toggle {
+    display: none;
+  }
+
+  /* Fix the drawer position. */
+  mat-drawer {
+    position: fixed;
+  }
 }

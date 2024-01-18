@@ -1,4 +1,5 @@
-<div class="container-sm">
+<div>
+<!-- <div class="container-sm"> -->
 
   <div class="demo-only">
     <ul>
@@ -12,45 +13,45 @@
 
   @if (hasAuthenticatedSignal()) {
     <mat-toolbar color="primary">
-      <button mat-icon-button (click)="drawer.toggle()">
+      <button mat-icon-button (click)="drawer.toggle()" class="sidenav-toggle">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="cursor-pointer" routerLink="/home" (click)="drawer.close()">CRM Example</span>
+      <span class="cursor-pointer" routerLink="/home" (click)="closeSidenav()">CRM Example</span>
 
       <span class="empty-space"></span>
 
-      <button mat-icon-button routerLink="/notifications" (click)="drawer.close()">
+      <button mat-icon-button routerLink="/notifications" (click)="closeSidenav()">
         <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true" aria-hidden="false">
           notifications
         </mat-icon>
       </button>
 
-      <button mat-icon-button routerLink="/search" (click)="drawer.close()">
+      <button mat-icon-button routerLink="/search" (click)="closeSidenav()">
         <mat-icon>search</mat-icon>
       </button>
     </mat-toolbar>
 
     <mat-drawer-container>
-      <mat-drawer #drawer mode="over">
+      <mat-drawer #drawer [mode]="sidenavMode" [(opened)]="sidenavOpened">
         <mat-nav-list>
-          <a mat-list-item (click)="drawer.close()" routerLink="/home">
+          <a mat-list-item (click)="closeSidenav()" routerLink="/home">
             <mat-icon matListItemIcon>home</mat-icon>
             Home
           </a>
-          <a mat-list-item (click)="drawer.close()" routerLink="/contacts">
+          <a mat-list-item (click)="closeSidenav()" routerLink="/contacts">
             <mat-icon matListItemIcon>group</mat-icon>
             Contacts
           </a>
-          <a mat-list-item (click)="drawer.close()" routerLink="/tasks">
+          <a mat-list-item (click)="closeSidenav()" routerLink="/tasks">
             <mat-icon matListItemIcon>assignment</mat-icon>
             Tasks
           </a>
-          <a mat-list-item (click)="drawer.close()" routerLink="/import-export">
+          <a mat-list-item (click)="closeSidenav()" routerLink="/import-export">
             <mat-icon matListItemIcon>backup</mat-icon>
             Import / Export
           </a>
           <mat-divider></mat-divider>
-          <a mat-list-item (click)="drawer.close()" routerLink="/user-profile">
+          <a mat-list-item (click)="closeSidenav()" routerLink="/user-profile">
             <mat-icon matListItemIcon>account_circle</mat-icon>
             Profile
           </a>

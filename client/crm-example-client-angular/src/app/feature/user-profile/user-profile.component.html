@@ -1,5 +1,5 @@
 <div class="mx-1">
-  <div class="text-center">
+  <div class="text-center-responsive">
     <h1>Profile</h1>
   </div>
 
@@ -19,20 +19,22 @@
         <input matInput type="text" formControlName="username">
       </mat-form-field>
 
-      <button type="submit" mat-raised-button color="primary">Confirm</button>
-      &nbsp;
-      <button type="button" mat-stroked-button color="primary" (click)="editModeUsername = false">Cancel</button>
+      <div>
+        <button type="submit" mat-raised-button color="primary">Confirm</button>
+        &nbsp;
+        <button type="button" mat-stroked-button color="primary" (click)="editModeUsername = false">Cancel</button>
+      </div>
     </form>
   }
 
   <br>
   <mat-divider />
 
-  <div class="text-center">
+  <div class="text-center-responsive">
     <h2>Change Password</h2>
   </div>
 
-  <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
+  <form [formGroup]="changePasswordForm" (submit)="onChangePassword()" class="change-password-form">
     <mat-form-field>
       <mat-label>Old Password</mat-label>
       <input matInput type="password" formControlName="oldPassword">
@@ -48,7 +50,9 @@
       <input matInput type="password" formControlName="confirmPassword">
     </mat-form-field>
 
-    <button type="submit" mat-raised-button color="primary">Change Password</button>
+    <div>
+      <button type="submit" mat-raised-button color="primary">Change Password</button>
+    </div>
   </form>
 
 

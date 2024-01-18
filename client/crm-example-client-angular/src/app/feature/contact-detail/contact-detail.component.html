@@ -6,8 +6,16 @@
       <div>Updated {{contact.date_modified | dateFns}}</div>
     </div>
 
-    <div class="text-center">
-      <h2>{{contact.name || 'Loading...'}}</h2>
+    <div class="text-center-responsive">
+      <h2>
+        {{contact.name || 'Loading...'}}
+        <span class="fab-desktop">
+          <button mat-mini-fab color="primary" (click)="editMode = true">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+      </h2>
+
     </div>
 
   @if (contact.email) { <div><span class="subtitle">E:</span> {{contact.email}}</div> }
@@ -36,12 +44,12 @@
     </button>
   }
 
-
+  <br>
   <br>
   <mat-divider />
 
   @if (!addTaskMode) {
-    <div class="text-center">
+    <div class="text-center-responsive">
       <h2>Tasks</h2>
     </div>
 
@@ -55,8 +63,8 @@
       Add Task
     </button>
 
-    <div class="bottom-fab-absolute right">
-      <div class="bottom-fab-fixed">
+    <div class="bottom-fab-mobile-absolute right">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-fab color="primary" (click)="editMode = true">
           <mat-icon>edit</mat-icon>
         </button>
@@ -71,16 +79,29 @@
 
     <app-task-form #taskForm [noContact]="true" />
 
-    <div class="bottom-fab-absolute left">
-      <div class="bottom-fab-fixed">
+    <div class="fab-desktop">
+      <br>
+      <div>
+        <button mat-mini-fab color="none" (click)="addTaskMode = false">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>&nbsp;</span>
+        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+          <mat-icon>assignment_add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="bottom-fab-mobile-absolute left">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-mini-fab color="none" (click)="addTaskMode = false">
           <mat-icon>arrow_back</mat-icon>
         </button>
       </div>
     </div>
 
-    <div class="bottom-fab-absolute right">
-      <div class="bottom-fab-fixed">
+    <div class="bottom-fab-mobile-absolute right">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
           <mat-icon>assignment_add</mat-icon>
         </button>
@@ -95,16 +116,29 @@
 
     <app-contact-form [existingContact]="contact" />
 
-    <div class="bottom-fab-absolute left">
-      <div class="bottom-fab-fixed">
+    <div class="fab-desktop">
+      <br>
+      <div>
+        <button mat-mini-fab color="none" (click)="editMode = false">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>&nbsp;</span>
+        <button mat-fab color="primary" (click)="onSave()">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="bottom-fab-mobile-absolute left">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-mini-fab color="none" (click)="editMode = false">
           <mat-icon>arrow_back</mat-icon>
         </button>
       </div>
     </div>
 
-    <div class="bottom-fab-absolute right">
-      <div class="bottom-fab-fixed">
+    <div class="bottom-fab-mobile-absolute right">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-fab color="primary" (click)="onSave()">
           <mat-icon>save</mat-icon>
         </button>

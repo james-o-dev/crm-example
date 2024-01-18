@@ -1,4 +1,4 @@
-<div class="text-center">
+<div class="text-center-responsive mx-1">
   <h1>Import</h1>
 
   <button mat-raised-button color="primary" (click)="jsonImportInput.click()">
@@ -8,9 +8,10 @@
 </div>
 <input hidden (change)="onImportJsonFileInput($event)" #jsonImportInput type="file">
 
+<br>
 <mat-divider />
 
-<div class="text-center">
+<div class="text-center-responsive mx-1">
   <h1>Export</h1>
 
   <button mat-raised-button color="primary" (click)="onExportJson()">

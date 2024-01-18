@@ -8,3 +8,11 @@
   row-gap: 1em;
   /* height: 100vh; */
 }
+
+form {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
