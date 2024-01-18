@@ -5,8 +5,15 @@
       <div>Updated {{task.date_modified | dateFns}}</div>
     </div>
 
-    <div class="text-center">
-      <h2>{{task.title || 'Loading...'}}</h2>
+    <div class="text-center-responsive">
+      <h2>
+        {{task.title || 'Loading...'}}
+        <span class="desktop-fab">
+          <button mat-mini-fab color="primary" (click)="editMode = true">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+      </h2>
     </div>
 
     @if (task.contact_id) {
@@ -35,8 +42,8 @@
       Delete Task
     </button>
 
-    <div class="bottom-fab-absolute right">
-      <div class="bottom-fab-fixed">
+    <div class="bottom-fab-mobile-absolute right">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-fab color="primary" (click)="editMode = true">
           <mat-icon>edit</mat-icon>
         </button>
@@ -50,16 +57,29 @@
 
     <app-task-form [existingTask]="task" />
 
-    <div class="bottom-fab-absolute left">
-      <div class="bottom-fab-fixed">
+    <div class="desktop-fab">
+      <br>
+      <div>
+        <button mat-mini-fab color="none" (click)="editMode = false">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>&nbsp;</span>
+        <button mat-fab color="primary" (click)="onSave()">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="bottom-fab-mobile-absolute left">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-mini-fab color="none" (click)="editMode = false">
           <mat-icon>arrow_back</mat-icon>
         </button>
       </div>
     </div>
 
-    <div class="bottom-fab-absolute right">
-      <div class="bottom-fab-fixed">
+    <div class="bottom-fab-mobile-absolute right">
+      <div class="bottom-fab-mobile-fixed">
         <button mat-fab color="primary" (click)="onSave()">
           <mat-icon>save</mat-icon>
         </button>

@@ -1,11 +1,18 @@
-<div class="text-center">
-  <h1>Tasks</h1>
+<div class="text-center-responsive mx-1">
+  <h1>
+    Tasks
+    <span class="fav-desktop">
+      <button mat-mini-fab color="primary" routerLink="/add-task">
+        <mat-icon>assignment_add</mat-icon>
+      </button>
+    </span>
+  </h1>
 </div>
 
 <app-tasks-table />
 
-<div class="bottom-fab-absolute right">
-  <div class="bottom-fab-fixed">
+<div class="bottom-fab-mobile-absolute right">
+  <div class="bottom-fab-mobile-fixed">
     <button mat-fab color="primary" routerLink="/add-task">
       <mat-icon>assignment_add</mat-icon>
     </button>

@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Breakpoints */
+/* Default = mobile */
+/* Widths at 769px or greater = desktop */
+
+
 html,
 body {
   height: 100%;
@@ -10,45 +15,97 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.container-sm {
-  max-width: 320px;
+/* Used as a placeholder during development. */
+.container-xs {
+  max-width: var(--breakpoint-xs);
   margin: 0 auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 100vh;
 }
 
+/* Used as a placeholder during development. */
+.container-sm {
+  max-width: var(--breakpoint-sm);
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  height: 100vh;
+}
+
+/* Take the full width of it's container */
 .w-full {
   width: 100%;
 }
 
+/* Center text */
 .text-center {
   text-align: center;
 }
 
+/* Center text in mobile mode. */
+.text-center-responsive {
+  text-align: center;
+}
+
+/* Horizontal margin of 1em. */
 .mx-1 {
   margin: 0 1em;
 }
 
+/* Use the pointer cursor */
 .cursor-pointer {
   cursor: pointer;
 }
 
 /* Bottom FAB styles; See HomeComponent for example usage. */
 
-.bottom-fab-absolute {
+/* FAB style: Allow absolute positioning, based on its parent. */
+.bottom-fab-mobile-absolute {
   position: absolute;
 }
-.bottom-fab-absolute.right {
+
+/* Place the FAB on the bottom-right. */
+.bottom-fab-mobile-absolute.right {
   right: 56px;
   margin-right: 1em;
 }
-.bottom-fab-absolute.left {
+
+/* Place the FAB on the bottom-left. */
+.bottom-fab-mobile-absolute.left {
   left: 0;
   margin-left: 1em;
 }
 
-.bottom-fab-fixed {
+/* Fix the FAB on the page. */
+.bottom-fab-mobile-fixed {
   position: fixed;
   bottom: 0;
   margin-bottom: 1em;
+}
+
+/* Display FAB only for the desktop mode. */
+.fab-desktop {
+  display: none;
+}
+
+mat-form-field {
+  /* Ensure mat-form-fields do not exceed the mobile width. */
+  max-width: 769px;
+}
+
+/* Desktop styles. */
+@media (min-width: 769px) {
+  /* Revert text align to its initial value */
+  .text-center-responsive {
+    text-align: initial;
+  }
+
+  /* Hide bottom mobile FABs. */
+  .bottom-fab-mobile-absolute, .bottom-fab-mobile-fixed {
+    display: none;
+  }
+
+  /* Show desktop FABs */
+  .fab-desktop {
+    display: initial;
+  }
 }
