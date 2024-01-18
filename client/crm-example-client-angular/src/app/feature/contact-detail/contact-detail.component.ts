@@ -30,7 +30,7 @@ import { NotificationsService } from '../../core/notifications.service'
   styleUrl: './contact-detail.component.css',
 })
 export class ContactDetailComponent implements OnInit {
-  @ViewChild(ContactFormComponent) contactForm: ContactFormComponent = {} as ContactFormComponent
+  @ViewChild('contactForm') contactForm: ContactFormComponent = {} as ContactFormComponent
   @ViewChild('taskForm') taskForm: TaskFormComponent = {} as TaskFormComponent
   @ViewChild(TasksTableComponent) taskTable: TasksTableComponent = {} as TasksTableComponent
 
@@ -54,6 +54,8 @@ export class ContactDetailComponent implements OnInit {
   }
 
   protected onSave() {
+    if (this.contactForm.form.invalid) return
+
     this.contactService.updateContact({ ...this.contactForm.form.value, key: this.contactId } as IContact)
       .pipe(switchMap(() => this.getContact()))
       .subscribe({

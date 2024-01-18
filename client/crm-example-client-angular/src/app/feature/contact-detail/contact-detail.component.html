@@ -114,7 +114,7 @@
       <h1>Edit Contact</h1>
     </div>
 
-    <app-contact-form [existingContact]="contact" />
+    <app-contact-form #contactForm [existingContact]="contact" />
 
     <div class="fab-desktop">
       <br>
@@ -123,7 +123,7 @@
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span>&nbsp;</span>
-        <button mat-fab color="primary" (click)="onSave()">
+        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid">
           <mat-icon>save</mat-icon>
         </button>
       </div>
@@ -139,7 +139,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="onSave()">
+        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid">
           <mat-icon>save</mat-icon>
         </button>
       </div>
