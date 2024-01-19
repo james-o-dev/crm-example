@@ -11,7 +11,7 @@ Each record takes the form a JSON object, with a generated property name/key act
 
 You can convert the 'table' into an array via the `Object.values()` native javascript method.
 
-This mock solution is not intended for production usage nor any usage that requires a lot of data.
+This mock solution is not intended for production usage nor any usage that requires a lot of data. The localStorage solution has a maximum size of 5MB and is synchronous blocking javascript.
 
 ### Format / Schema
 
