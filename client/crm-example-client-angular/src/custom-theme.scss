@@ -3,6 +3,7 @@
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
+@use './custom-palettes.scss' as palettes;
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -12,8 +13,15 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$crm-example-client-angular-primary: mat.define-palette(mat.$indigo-palette);
-$crm-example-client-angular-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// $crm-example-client-angular-primary: mat.define-palette(palettes.$deep-purple-primary);
+// $crm-example-client-angular-accent: mat.define-palette(palettes.$deep-purple-accent);
+// $crm-example-client-angular-primary: mat.define-palette(palettes.$light-blue-primary);
+// $crm-example-client-angular-accent: mat.define-palette(palettes.$light-blue-accent);
+$crm-example-client-angular-primary: mat.define-palette(palettes.$indigo-primary);
+$crm-example-client-angular-accent: mat.define-palette(palettes.$indigo-accent);
+// $crm-example-client-angular-primary: mat.define-palette(palettes.$brown-primary);
+// $crm-example-client-angular-accent: mat.define-palette(palettes.$brown-accent);
 
 // The warn palette is optional (defaults to red).
 $crm-example-client-angular-warn: mat.define-palette(mat.$red-palette);
@@ -32,4 +40,3 @@ $crm-example-client-angular-theme: mat.define-light-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($crm-example-client-angular-theme);
-
