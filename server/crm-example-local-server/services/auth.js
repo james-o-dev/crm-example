@@ -88,10 +88,11 @@ export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKE
 
 // Sign up
 export const signUpEndpoint = async (requestBody) => {
-  const { email, password } = requestBody
+  const { email, password, confirmPassword } = requestBody
 
   if (!email) throw validationErrorResponse({ message: 'No email provided.' })
   if (!password) throw validationErrorResponse({ message: 'No password provided.' })
+  if (confirmPassword !== password) throw validationErrorResponse({ message: 'Passwords do not match' })
 
   const normalEmail = email.toLowerCase().trim()
   const hashedPassword = await hashPassword(password)
