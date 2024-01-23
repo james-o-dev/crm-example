@@ -92,7 +92,7 @@ export const signUpEndpoint = async (requestBody) => {
 
   if (!email) throw validationErrorResponse({ message: 'No email provided.' })
   if (!password) throw validationErrorResponse({ message: 'No password provided.' })
-  if (confirmPassword !== password) throw validationErrorResponse({ message: 'Passwords do not match' })
+  if (confirmPassword !== password) throw validationErrorResponse({ message: 'Passwords do not match.' })
 
   const normalEmail = email.toLowerCase().trim()
   const hashedPassword = await hashPassword(password)
@@ -104,7 +104,7 @@ export const signUpEndpoint = async (requestBody) => {
     try {
       userId = await t.one('INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id', [normalEmail, hashedPassword])
     } catch (error) {
-      if (error.code === '23505' && error.constraint === 'users_unique') throw { validation: true, statusCode: 409, message: 'Email in use' }
+      if (error.code === '23505' && error.constraint === 'users_unique') throw { validation: true, statusCode: 409, message: 'This email is already in use.' }
       throw error
     }
 
@@ -130,7 +130,7 @@ export const signInEndpoint = async (requestBody) => {
   if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' })
 
   const accessToken = await signAccessToken({ user_id: user.user_id, email })
-  return { statusCode: 200, message: 'Sign in successful', accessToken }
+  return { statusCode: 200, message: 'Sign in successful.', accessToken }
 }
 
 // Is authenticated
