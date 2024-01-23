@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
+import cors from 'cors'
 import { PostgresDatabase } from './lib/db/db-postgres.js'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
@@ -9,6 +10,7 @@ const PORT = 3000
 const HOST = 'localhost'
 
 app.use(express.json())
+app.use(cors())
 
 // Health-check.
 app.get('/', async (req, res) => res.status(200).json({ message: 'CRM Example API. For personal/demonstration/educational purposes only.' }))
