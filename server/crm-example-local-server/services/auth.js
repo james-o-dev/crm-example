@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose'
 import bcryptjs from 'bcryptjs'
 import { PostgresDatabase } from '../lib/db/db-postgres.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
+import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
 
 const ACCESS_TOKEN_EXPIRY = '1h'
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET)
@@ -67,7 +67,6 @@ const signToken = async (payload, secret, expiry) => {
 // Function to hash a password
 const hashPassword = async (password) => {
   const saltRounds = 10 // You can adjust the number of salt rounds according to your security requirements
-
   const salt = await bcryptjs.genSalt(saltRounds)
   const hashedPassword = await bcryptjs.hash(password, salt)
   return hashedPassword
@@ -79,11 +78,16 @@ const comparePassword = async (inputPassword, hashedPassword) => {
   return match
 }
 
+const extractAuthHeaderToken = (headers) => {
+  const authHeader = headers['authorization'] || headers['Authorization'] || ''
+  return authHeader.split(' ')[1]
+}
+
 export const verifyAccessToken = async (accessToken) => verifyToken(accessToken, ACCESS_TOKEN_SECRET)
 export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRY)
 
 // Sign up
-export const signUp = async (requestBody) => {
+export const signUpEndpoint = async (requestBody) => {
   const { email, password } = requestBody
 
   if (!email) throw validationErrorResponse({ message: 'No email provided.' })
@@ -109,7 +113,7 @@ export const signUp = async (requestBody) => {
 }
 
 // Sign in
-export const signIn = async (requestBody) => {
+export const signInEndpoint = async (requestBody) => {
   const { email, password } = requestBody
 
   if (!email) throw validationErrorResponse({ message: 'No email provided.' })
@@ -129,3 +133,13 @@ export const signIn = async (requestBody) => {
 }
 
 // Is authenticated
+export const isAuthenticatedEndpoint = async (requestHeaders) => {
+  try {
+    const accessToken = extractAuthHeaderToken(requestHeaders)
+    const verified = await verifyAccessToken(accessToken)
+    if (!verified) throw unauthorizedError()
+    return successfulResponse({ message: 'Authenticated.' })
+  } catch (error) {
+    throw unauthorizedError()
+  }
+}

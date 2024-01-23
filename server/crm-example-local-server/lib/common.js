@@ -26,3 +26,5 @@ export const successfulResponse = (payload, statusCode = 200) => {
 export const validationErrorResponse = (payload, statusCode = 400) => {
   return { ...payload, validation: true, statusCode }
 }
+
+export const unauthorizedError = () => validationErrorResponse({ message: 'Unauthorized.' }, 401)

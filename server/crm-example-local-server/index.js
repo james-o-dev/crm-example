@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import { PostgresDatabase } from './lib/db/db-postgres.js'
-import { signIn, signUp } from './services/auth.js'
+import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
 
 const app = express()
@@ -16,10 +16,13 @@ app.get('/', async (req, res) => res.status(200).json({ message: 'CRM Example AP
 // Auth routes
 
 // Sign-up
-app.post('/auth/sign-up', (req, res) => controllerHandler(req, res, signUp(req.body)))
+app.post('/auth/sign-up', (req, res) => controllerHandler(req, res, signUpEndpoint(req.body)))
 
 // Sign-in
-app.post('/auth/sign-in', (req, res) => controllerHandler(req, res, signIn(req.body)))
+app.post('/auth/sign-in', (req, res) => controllerHandler(req, res, signInEndpoint(req.body)))
+
+// Authenticate
+app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthenticatedEndpoint(req.headers)))
 
 app.listen(PORT, () => {
 
