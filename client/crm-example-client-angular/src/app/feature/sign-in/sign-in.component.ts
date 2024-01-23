@@ -32,28 +32,24 @@ export class SignInComponent {
 
   public ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['' /**Validators.required */], // Disabled for now.
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
     })
-
-    // Dev purposes, password is not required.
-    this.form.get('password')?.disable()
   }
 
   protected onSubmit() {
-    this.authService.signIn(this.form.value.email)
+    this.authService.signIn(this.form.value.email, this.form.value.password)
       .subscribe({
-        next: (response) => {
-          if (response.statusCode === 200) {
-            this.router.navigate(['/home'])
-          } else {
-            this.dialog.open(DialogComponent, {
-              data: {
-                contents: [response.message],
-                actions: [{ text: 'Confirm' }],
-              } as IDialogData,
-            })
-          }
+        next: () => {
+          this.router.navigate(['/home'])
+        },
+        error: (response) => {
+          this.dialog.open(DialogComponent, {
+            data: {
+              contents: [response.error.message],
+              actions: [{ text: 'Confirm' }],
+            } as IDialogData,
+          })
         },
       })
   }
