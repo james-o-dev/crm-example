@@ -14,7 +14,7 @@ export const controllerHandler = async (req, res, serviceFn) => {
       return res.status(error.statusCode).json(errorBody)
     } else {
       console.error(error)
-      return res.status(500).json('Server Error.')
+      return res.status(500).json({ message: 'Server Error.' })
     }
   }
 }
