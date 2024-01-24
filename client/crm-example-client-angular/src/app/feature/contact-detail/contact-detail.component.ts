@@ -12,6 +12,7 @@ import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { TasksService } from '../../core/tasks.service'
 import { DateFnsPipe } from '../../shared/date-fns.pipe'
 import { NotificationsService } from '../../core/notifications.service'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-contact-detail',
@@ -36,6 +37,7 @@ export class ContactDetailComponent implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
+  private dialog = inject(DialogService)
   private notificationsService = inject(NotificationsService)
   private router = inject(Router)
   private tasksService = inject(TasksService)
@@ -61,6 +63,7 @@ export class ContactDetailComponent implements OnInit {
       .pipe(switchMap(() => this.getContact()))
       .subscribe({
         next: () => this.editMode = false,
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 

@@ -6,8 +6,7 @@ import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
-import { MatDialog } from '@angular/material/dialog'
-import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-sign-up',
@@ -25,7 +24,7 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
 })
 export class SignUpComponent implements OnInit {
   private authService = inject(AuthService)
-  private dialog = inject(MatDialog)
+  private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
 
@@ -50,17 +49,8 @@ export class SignUpComponent implements OnInit {
   protected onSubmit() {
     this.authService.signUp(this.form.value.email, this.form.value.password, this.form.value.confirmPassword)
       .subscribe({
-        next: () => {
-          this.router.navigate(['/home'])
-        },
-        error: (response) => {
-          this.dialog.open(DialogComponent, {
-            data: {
-              contents: [response.error.message],
-              actions: [{ text: 'Confirm' }],
-            } as IDialogData,
-          })
-        },
+        next: () => this.router.navigate(['/home']),
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 }

@@ -12,10 +12,12 @@ import {
 export interface IDialogData {
   title?: string
   contents?: string[]
-  actions?: {
-    value?: boolean | string | object
-    text: string
-  }[]
+  actions?: IDialogAction[]
+}
+
+export interface IDialogAction {
+  value?: boolean | string | object
+  text: string
 }
 
 @Component({
