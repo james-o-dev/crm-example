@@ -52,7 +52,15 @@ export class AddContactComponent {
           })
       },
       error: (err) => {
-        console.error(err)
+        this.dialog.open(DialogComponent, {
+          data: {
+            title: 'Error',
+            contents: [err.error.message],
+            actions: [
+              { text: 'Dismiss' },
+            ],
+          } as IDialogData,
+        })
       },
     })
   }

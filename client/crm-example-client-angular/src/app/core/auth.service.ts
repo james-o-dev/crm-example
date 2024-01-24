@@ -26,7 +26,7 @@ export class AuthService {
     localStorage.setItem('accessToken', accessToken)
   }
 
-  private addTokenToHeader(token = this.accessToken) {
+  public addTokenToHeader(token = this.accessToken) {
     return {
       'authorization': `Bearer ${token}`,
     }

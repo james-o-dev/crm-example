@@ -4,6 +4,7 @@ import cors from 'cors'
 import { PostgresDatabase } from './lib/db/db-postgres.js'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
+import { newContactEndpoint } from './services/contacts.js'
 
 const app = express()
 const PORT = 3000
@@ -15,16 +16,31 @@ app.use(cors())
 // Health-check.
 app.get('/', async (req, res) => res.status(200).json({ message: 'CRM Example API. For personal/demonstration/educational purposes only.' }))
 
-// Auth routes
+// Auth routes.
 
-// Sign-up
+// Sign-up.
 app.post('/auth/sign-up', (req, res) => controllerHandler(req, res, signUpEndpoint(req.body)))
 
-// Sign-in
+// Sign-in.
 app.post('/auth/sign-in', (req, res) => controllerHandler(req, res, signInEndpoint(req.body)))
 
-// Authenticate
+// Authenticate.
 app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthenticatedEndpoint(req.headers)))
+
+// Contacts routes.
+
+// New contact.
+app.post('/contacts', (req, res) => controllerHandler(req, res, newContactEndpoint(req.headers, req.body)))
+
+// Get contacts.
+
+// Get single contact.
+
+// Update contact.
+
+// Archive contact.
+
+// Restore contact.
 
 app.listen(PORT, () => {
 
