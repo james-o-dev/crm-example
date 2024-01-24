@@ -30,6 +30,7 @@ CREATE TABLE public.contacts (
 	phone varchar NULL,
 	notes varchar NULL,
 	user_id uuid NOT NULL,
+	archived boolean NULL DEFAULT FALSE,
 	date_created bigint NOT NULL DEFAULT now_unix_timestamp(),
 	date_modified bigint NOT NULL DEFAULT now_unix_timestamp(),
 	CONSTRAINT contacts_pk PRIMARY KEY (contact_id),
