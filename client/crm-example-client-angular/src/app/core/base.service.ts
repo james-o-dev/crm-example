@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { AuthService } from './auth.service'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { environment } from '../../environments/environment'
 
 interface IQueryParams {
   [param: string]: string | number | boolean
@@ -12,6 +13,11 @@ interface IQueryParams {
 export class BaseService {
   protected auth = inject(AuthService)
   protected http = inject(HttpClient)
+
+  /**
+   * Host Url.
+   */
+  protected apiUrl = environment.apiUrl
 
   protected getRequest<T>(url: string, params?: IQueryParams, headers?: HttpHeaders) {
     return this.http.get<T>(url, { headers: { ...this.auth.addTokenToHeader(), ...headers }, params })

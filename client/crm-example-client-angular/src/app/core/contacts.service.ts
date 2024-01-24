@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { environment } from '../../environments/environment'
 import { BaseService } from './base.service'
 
 export interface IContact {
@@ -67,7 +66,7 @@ export class ContactService extends BaseService {
   getContact(contactId: string) {
     // return from(getContactEndpoint(this.authService.accessToken, contactId))
 
-    return this.getRequest<IGetContactResponse>(`${environment.apiUrl}/contact`, { contact_id: contactId })
+    return this.getRequest<IGetContactResponse>(`${this.apiUrl}/contact`, { contact_id: contactId })
   }
 
   /**
@@ -82,7 +81,7 @@ export class ContactService extends BaseService {
 
     // return from(getContactsEndpoint(this.authService.accessToken, filters))
 
-    return this.getRequest<IGetContactsResponse>(`${environment.apiUrl}/contacts`, { archived: !active })
+    return this.getRequest<IGetContactsResponse>(`${this.apiUrl}/contacts`, { archived: !active })
   }
 
   /**
@@ -93,7 +92,7 @@ export class ContactService extends BaseService {
   updateContact(payload: IUpdateContactPayload) {
     // return from(updateContactEndpoint(this.authService.accessToken, payload))
 
-    return this.putRequest<IUpdateContactResponse>(`${environment.apiUrl}/contact`, payload)
+    return this.putRequest<IUpdateContactResponse>(`${this.apiUrl}/contact`, payload)
   }
 
   /**
@@ -104,7 +103,7 @@ export class ContactService extends BaseService {
   newContact(payload: ICreateContactPayload) {
     // return from(newContactEndpoint(this.authService.accessToken, payload))
 
-    return this.postRequest<ICreateContactResponse>(`${environment.apiUrl}/contact`, payload)
+    return this.postRequest<ICreateContactResponse>(`${this.apiUrl}/contact`, payload)
   }
 
   /**
@@ -115,7 +114,7 @@ export class ContactService extends BaseService {
   archiveContact(contactId: string) {
     // return from(archiveContactEndpoint(this.auth.accessToken, contactId))
 
-    return this.putRequest(`${environment.apiUrl}/contact/archived`, {
+    return this.putRequest(`${this.apiUrl}/contact/archived`, {
       contact_id: contactId,
       archived: true,
     })
@@ -129,7 +128,7 @@ export class ContactService extends BaseService {
   restoreContact(contactId: string) {
     // return from(restoreContactEndpoint(this.auth.accessToken, contactId))
 
-    return this.putRequest(`${environment.apiUrl}/contact/archived`, {
+    return this.putRequest(`${this.apiUrl}/contact/archived`, {
       contact_id: contactId,
       archived: false,
     })
