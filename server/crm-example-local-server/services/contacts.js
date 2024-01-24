@@ -33,7 +33,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
     const result = await db.one(sql, params)
     contactId = result.contact_id
   } catch (error) {
-    if (isUniqueConstraintError('contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
+    if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
     console.error(error)
     throw error
   }
@@ -131,7 +131,7 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
     const result = await db.one(sql, params)
     updated = !!result.contact_id
   } catch (error) {
-    if (isUniqueConstraintError('contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
+    if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
     console.error(error)
     throw error
   }

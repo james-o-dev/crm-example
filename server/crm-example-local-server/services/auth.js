@@ -50,7 +50,7 @@ export const signUpEndpoint = async (requestBody) => {
       userId = await t.one('INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id', [normalEmail, hashedPassword])
     } catch (error) {
       // Unique email constraint.
-      if (isUniqueConstraintError('users_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
+      if (isUniqueConstraintError(error, 'users_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
       // Else other error.
       throw error
     }
