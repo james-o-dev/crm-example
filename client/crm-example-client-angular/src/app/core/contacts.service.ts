@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core'
-import { from } from 'rxjs'
-import { archiveContactEndpoint, restoreContactEndpoint } from '../../assets/js/mock/contacts.mock'
 import { environment } from '../../environments/environment'
 import { BaseService } from './base.service'
 
@@ -109,11 +107,31 @@ export class ContactService extends BaseService {
     return this.postRequest<ICreateContactResponse>(`${environment.apiUrl}/contact`, payload)
   }
 
+  /**
+   * Archive an existing contact, owned by the user
+   *
+   * @param {string} contactId
+   */
   archiveContact(contactId: string) {
-    return from(archiveContactEndpoint(this.auth.accessToken, contactId))
+    // return from(archiveContactEndpoint(this.auth.accessToken, contactId))
+
+    return this.putRequest(`${environment.apiUrl}/contact/archived`, {
+      contact_id: contactId,
+      archived: true,
+    })
   }
 
+  /**
+   * Restore an existing archived contact, owned by the user.
+   *
+   * @param {string} contactId
+   */
   restoreContact(contactId: string) {
-    return from(restoreContactEndpoint(this.auth.accessToken, contactId))
+    // return from(restoreContactEndpoint(this.auth.accessToken, contactId))
+
+    return this.putRequest(`${environment.apiUrl}/contact/archived`, {
+      contact_id: contactId,
+      archived: false,
+    })
   }
 }

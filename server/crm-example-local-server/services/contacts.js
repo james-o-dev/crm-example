@@ -22,15 +22,18 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
 
   // Database query.
   // Insert into database.
-  const params = {
-    ...reqBody,
-    userId,
-  }
   const db = getDb()
   const sql = 'INSERT INTO contacts (user_id, name, email, phone, notes) VALUES ($(userId), $(name), $(email), $(phone), $(notes)) RETURNING contact_id'
+  const sqlParams = {
+    userId,
+    name,
+    email,
+    phone: reqBody.phone,
+    notes: reqBody.notes,
+  }
   let contactId
   try {
-    const result = await db.one(sql, params)
+    const result = await db.one(sql, sqlParams)
     contactId = result.contact_id
   } catch (error) {
     if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
@@ -63,8 +66,8 @@ export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
     -- TODO: Left join for task count.
     WHERE user_id = $(userId) AND archived = $(archived)
   `
-  const params = { userId, archived }
-  const contacts = await db.any(sql, params)
+  const sqlParams = { userId, archived }
+  const contacts = await db.any(sql, sqlParams)
 
   // Response.
   return successfulResponse({ contacts })
@@ -86,8 +89,8 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
     FROM contacts
     WHERE user_id = $(userId) AND contact_id = $(contactId)
   `
-  const params = { userId, contactId }
-  const contact = await db.oneOrNone(sql, params)
+  const sqlParams = { userId, contactId }
+  const contact = await db.oneOrNone(sql, sqlParams)
 
   // Response.
   return successfulResponse({ contact })
@@ -121,14 +124,14 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
     WHERE user_id = $(userId) AND contact_id = $(contactId)
     RETURNING contact_id
   `
-  const params = {
+  const sqlParams = {
     contactId, userId,
     name, email,
     notes: reqBody.notes, phone: reqBody.phone,
   }
   let updated = false
   try {
-    const result = await db.one(sql, params)
+    const result = await db.oneOrNone(sql, sqlParams)
     updated = !!result.contact_id
   } catch (error) {
     if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
@@ -137,5 +140,32 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
   }
 
   if (updated) return successfulResponse({ message: 'Contact updated.' })
+  throw validationErrorResponse({ message: 'Contact not found.' }, 404)
+}
+
+/**
+ * Helper: Update the contact 'archived' status.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqBody
+ * @param {boolean} archiveStatus
+ */
+export const updateContactArchiveStatusEndpoint = async (reqHeaders, reqBody) => {
+  const userId = await getUserId(reqHeaders)
+
+  const contactId = reqBody.contact_id
+  if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
+
+  const archiveStatus = reqBody.archived || false
+
+  const db = getDb()
+  const sql = 'UPDATE contacts SET archived = $(archiveStatus) WHERE user_id = $(userId) AND contact_id = $(contactId) RETURNING contact_id'
+  const sqlParams = {
+    archiveStatus: archiveStatus || false,
+    userId, contactId,
+  }
+  const updated = await db.oneOrNone(sql, sqlParams)
+
+  if (updated) return successfulResponse({ message: `Contact ${archiveStatus ? 'archived' : 'restored'}.` })
   throw validationErrorResponse({ message: 'Contact not found.' }, 404)
 }
