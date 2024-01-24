@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { archiveContactEndpoint, getContactEndpoint, getContactsEndpoint, restoreContactEndpoint, updateContactEndpoint } from '../../assets/js/mock/contacts.mock'
+import { archiveContactEndpoint, getContactEndpoint, restoreContactEndpoint, updateContactEndpoint } from '../../assets/js/mock/contacts.mock'
 import { AuthService } from './auth.service'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
@@ -12,11 +12,15 @@ export interface IContact {
   notes?: string;
   date_modified?: number;
   date_created?: number;
-  key?: string;
+  contact_id?: string;
   user_id?: string;
   archived?: boolean;
 
   [key: string]: string | number | undefined | boolean;
+}
+
+export interface IGetContactsResponse {
+  contacts: IContact[]
 }
 
 @Injectable({
@@ -36,11 +40,19 @@ export class ContactService {
    * @param {boolean} [active=true] True to only return active contacts; False to return archived contacts.
    */
   getContacts(active = true) {
-    // Determine filters.
-    const filters: { archived?: boolean } = {}
-    filters.archived = !active
+    // // Determine filters.
+    // const filters: { archived?: boolean } = {}
+    // filters.archived = !active
 
-    return from(getContactsEndpoint(this.authService.accessToken, filters))
+    // return from(getContactsEndpoint(this.authService.accessToken, filters))
+    return this.http.get<IGetContactsResponse>(`${environment.apiUrl}/contacts`, {
+      params: {
+        archived: !active,
+      },
+      headers: {
+        ...this.authService.addTokenToHeader(),
+      },
+    })
   }
 
   updateContact(payload: IContact) {

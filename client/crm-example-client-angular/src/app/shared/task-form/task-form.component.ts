@@ -61,7 +61,7 @@ export class TaskFormComponent implements OnInit {
         this.contacts = (data.contacts as IContact[])
           .map((contact) => {
             return {
-              value: contact.key as string,
+              value: contact.contact_id as string,
               text: contact.name,
             }
           })
