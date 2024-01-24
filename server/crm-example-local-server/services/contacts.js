@@ -67,5 +67,28 @@ export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
   const contacts = await db.any(sql, params)
 
   // Response.
-  return successfulResponse({ contacts }, 200)
+  return successfulResponse({ contacts })
+}
+
+export const getContactEndpoint = async (reqHeaders, reqQuery) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Query params.
+  // Contact ID is required.
+  // Note: using contact_id instead of route params because AWS Lambda functional Urls do not support route params, without API Gateway.
+  const contactId = reqQuery.contact_id
+  if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
+
+  // Database query.
+  const db = PostgresDatabase.getInstance().connection
+  const sql = `
+    SELECT contact_id, name, email, phone, notes, date_created, date_modified
+    FROM contacts
+    WHERE user_id = $(userId) AND contact_id = $(contactId)
+  `
+  const params = { userId, contactId }
+  const contact = await db.oneOrNone(sql, params)
+
+  // Response.
+  return successfulResponse({ contact })
 }

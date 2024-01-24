@@ -20,7 +20,7 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let element">
-      <a [routerLink]="['/contact-detail', element.key]">{{element.name}}</a>
+      <a [routerLink]="['/contact-detail', element.contact_id]">{{element.name}}</a>
     </td>
   </ng-container>
 

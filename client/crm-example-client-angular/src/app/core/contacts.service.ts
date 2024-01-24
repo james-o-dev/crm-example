@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { archiveContactEndpoint, getContactEndpoint, restoreContactEndpoint, updateContactEndpoint } from '../../assets/js/mock/contacts.mock'
+import { archiveContactEndpoint, restoreContactEndpoint, updateContactEndpoint } from '../../assets/js/mock/contacts.mock'
 import { AuthService } from './auth.service'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
@@ -23,6 +23,10 @@ export interface IGetContactsResponse {
   contacts: IContact[]
 }
 
+export interface IGetContactResponse {
+  contact: IContact
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -31,7 +35,15 @@ export class ContactService {
   private http = inject(HttpClient)
 
   getContact(contactId: string) {
-    return from(getContactEndpoint(this.authService.accessToken, contactId))
+    // return from(getContactEndpoint(this.authService.accessToken, contactId))
+    return this.http.get<IGetContactResponse>(`${environment.apiUrl}/contact`, {
+      params: {
+        contact_id: contactId,
+      },
+      headers: {
+        ...this.authService.addTokenToHeader(),
+      },
+    })
   }
 
   /**
