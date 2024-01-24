@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import { PostgresDatabase } from './lib/db/db-postgres.js'
+import { getDb } from './lib/db/db-postgres.js'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint } from './services/contacts.js'
@@ -45,9 +45,7 @@ app.get('/contact', (req, res) => controllerHandler(req, res, getContactEndpoint
 // Restore contact.
 
 app.listen(PORT, () => {
-
-  // Connect to the database on start-up.
-  PostgresDatabase.getInstance().connect()
-
+  // Initially instantiate the database singleton class on start-up.
+  getDb()
   console.log(`Server running at http://${HOST}:${PORT}/`)
 })

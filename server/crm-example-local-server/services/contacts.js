@@ -1,6 +1,6 @@
 import { getUserId } from '../lib/auth.common.js'
 import { successfulResponse, validationErrorResponse } from '../lib/common.js'
-import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
  * Add new contact endpoint.
@@ -26,7 +26,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
     ...reqBody,
     userId,
   }
-  const db = PostgresDatabase.getInstance().connection
+  const db = getDb()
   const sql = 'INSERT INTO contacts (user_id, name, email, phone, notes) VALUES ($(userId), $(name), $(email), $(phone), $(notes)) RETURNING contact_id'
   let contactId
   try {
@@ -56,7 +56,7 @@ export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
   const archived = reqQuery.archived === 'true' ? true : false
 
   // Database query.
-  const db = PostgresDatabase.getInstance().connection
+  const db = getDb()
   const sql = `
     SELECT contact_id, name, email, phone
     FROM contacts
@@ -80,7 +80,7 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
 
   // Database query.
-  const db = PostgresDatabase.getInstance().connection
+  const db = getDb()
   const sql = `
     SELECT contact_id, name, email, phone, notes, date_created, date_modified
     FROM contacts

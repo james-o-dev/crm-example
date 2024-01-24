@@ -6,19 +6,13 @@ const POSTGRES_DATABASE = process.env.POSTGRES_DATABASE
 const POSTGRES_USERNAME = process.env.POSTGRES_USERNAME
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
 
-export class PostgresDatabase {
+/**
+ * Postgres singleton class - i.e. this instance of the class should be shared throughout the app.
+ * * It will connect to the Postgres database on initial instantiation.
+ * * Use helper `getDb()` function to get the database connection.
+ */
+class PostgresDatabase {
   constructor() {
-    this.connection = null
-  }
-
-  static getInstance() {
-    if (!PostgresDatabase.instance) {
-      PostgresDatabase.instance = new PostgresDatabase()
-    }
-    return PostgresDatabase.instance
-  }
-
-  connect() {
     const pgp = pgPromise()
 
     this.connection = pgp({
@@ -37,7 +31,25 @@ export class PostgresDatabase {
       POSTGRES_PASSWORD: '***',
     })
   }
+
+  /**
+   * Singleton instance getter.
+   */
+  static getInstance() {
+    if (!PostgresDatabase.instance) {
+      PostgresDatabase.instance = new PostgresDatabase()
+    }
+    return PostgresDatabase.instance
+  }
 }
+
+/**
+ * Get the database connection.
+ * * Returns the connection from the shared singleton Postgres class
+ *
+ * @returns {pgPromise.IDatabase<{}, pg.IClient>}
+ */
+export const getDb = () => PostgresDatabase.getInstance().connection
 
 /**
  * Determine if the thrown Postgres error was due to a unique constraint.

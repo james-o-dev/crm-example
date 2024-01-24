@@ -1,5 +1,5 @@
 import bcryptjs from 'bcryptjs'
-import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
 import { getUserId, signAccessToken } from '../lib/auth.common.js'
 
@@ -42,7 +42,7 @@ export const signUpEndpoint = async (requestBody) => {
   const normalEmail = email.toLowerCase().trim()
   const hashedPassword = await hashPassword(password)
 
-  const db = PostgresDatabase.getInstance().connection
+  const db = getDb()
   return db.tx(async t => {
 
     let userId
@@ -73,7 +73,7 @@ export const signInEndpoint = async (requestBody) => {
 
   const normalEmail = email.toLowerCase().trim()
 
-  const db = PostgresDatabase.getInstance().connection
+  const db = getDb()
   const user = await db.oneOrNone('SELECT user_id, hashed_password FROM users WHERE email = $1', [normalEmail])
   if (!user) throw validationErrorResponse({ message: 'Invalid sign-in.' })
 
