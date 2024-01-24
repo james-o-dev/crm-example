@@ -115,7 +115,7 @@ export class ContactService {
    */
   newContact(payload: ICreateContactPayload) {
     // return from(newContactEndpoint(this.authService.accessToken, payload))
-    return this.http.post(`${environment.apiUrl}/contacts`, payload, {
+    return this.http.post(`${environment.apiUrl}/contact`, payload, {
       headers: {
         ...this.authService.addTokenToHeader(),
       },

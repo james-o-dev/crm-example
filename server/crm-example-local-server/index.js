@@ -29,14 +29,14 @@ app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthen
 
 // Contacts routes.
 
-// New contact.
-app.post('/contacts', (req, res) => controllerHandler(req, res, newContactEndpoint(req.headers, req.body)))
-
 // Get contacts.
 app.get('/contacts', (req, res) => controllerHandler(req, res, getContactsEndpoint(req.headers, req.query)))
 
 // Get single contact.
 app.get('/contact', (req, res) => controllerHandler(req, res, getContactEndpoint(req.headers, req.query)))
+
+// New contact.
+app.post('/contact', (req, res) => controllerHandler(req, res, newContactEndpoint(req.headers, req.body)))
 
 // Update contact.
 app.put('/contact', (req, res) => controllerHandler(req, res, updateContactEndpoint(req.headers, req.body)))
