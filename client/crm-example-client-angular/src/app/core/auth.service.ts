@@ -4,10 +4,14 @@ import { Router } from '@angular/router'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
 
-interface ReceiveJWTResponse {
+interface IReceiveJWTResponse {
   accessToken: string
   // refreshToken: string // Future.
-  [key: string]: string
+  message: string
+}
+
+interface IIsAuthenticatedResponse {
+  message: string
 }
 
 @Injectable({
@@ -52,7 +56,7 @@ export class AuthService {
     // API Endpoint.
     // TODO
 
-    return this.http.post<ReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-up`, { email, password, confirmPassword })
+    return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-up`, { email, password, confirmPassword })
       .pipe(
         tap(data => {
           this.accessToken = data.accessToken as string
@@ -81,7 +85,7 @@ export class AuthService {
     // API Endpoint.
     // TODO
 
-    return this.http.post<ReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-in`, { email, password })
+    return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-in`, { email, password })
       .pipe(
         tap(data => {
           this.accessToken = data.accessToken as string
@@ -100,7 +104,7 @@ export class AuthService {
     //   }))
 
     // API.
-    return this.http.get(`${environment.apiUrl}/auth/authenticate`, {
+    return this.http.get<IIsAuthenticatedResponse>(`${environment.apiUrl}/auth/authenticate`, {
       headers: {
         ...this.addTokenToHeader(),
       },

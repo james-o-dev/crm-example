@@ -1,9 +1,8 @@
-import { Injectable, inject } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { from } from 'rxjs'
 import { archiveContactEndpoint, restoreContactEndpoint } from '../../assets/js/mock/contacts.mock'
-import { AuthService } from './auth.service'
-import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
+import { BaseService } from './base.service'
 
 export interface IContact {
   name: string;
@@ -48,12 +47,19 @@ export interface IUpdateContactPayload {
   contact_id: string;
 }
 
+interface ICreateContactResponse {
+  message: string
+  contact_id: string
+}
+
+interface IUpdateContactResponse {
+  message: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
-export class ContactService {
-  private authService = inject(AuthService)
-  private http = inject(HttpClient)
+export class ContactService extends BaseService {
 
   /**
    * Returns details for a single contact that the user owns.
@@ -62,14 +68,8 @@ export class ContactService {
    */
   getContact(contactId: string) {
     // return from(getContactEndpoint(this.authService.accessToken, contactId))
-    return this.http.get<IGetContactResponse>(`${environment.apiUrl}/contact`, {
-      params: {
-        contact_id: contactId,
-      },
-      headers: {
-        ...this.authService.addTokenToHeader(),
-      },
-    })
+
+    return this.getRequest<IGetContactResponse>(`${environment.apiUrl}/contact`, { contact_id: contactId })
   }
 
   /**
@@ -83,14 +83,8 @@ export class ContactService {
     // filters.archived = !active
 
     // return from(getContactsEndpoint(this.authService.accessToken, filters))
-    return this.http.get<IGetContactsResponse>(`${environment.apiUrl}/contacts`, {
-      params: {
-        archived: !active,
-      },
-      headers: {
-        ...this.authService.addTokenToHeader(),
-      },
-    })
+
+    return this.getRequest<IGetContactsResponse>(`${environment.apiUrl}/contacts`, { archived: !active })
   }
 
   /**
@@ -101,11 +95,7 @@ export class ContactService {
   updateContact(payload: IUpdateContactPayload) {
     // return from(updateContactEndpoint(this.authService.accessToken, payload))
 
-    return this.http.put(`${environment.apiUrl}/contact`, payload, {
-      headers: {
-        ...this.authService.addTokenToHeader(),
-      },
-    })
+    return this.putRequest<IUpdateContactResponse>(`${environment.apiUrl}/contact`, payload)
   }
 
   /**
@@ -115,18 +105,15 @@ export class ContactService {
    */
   newContact(payload: ICreateContactPayload) {
     // return from(newContactEndpoint(this.authService.accessToken, payload))
-    return this.http.post(`${environment.apiUrl}/contact`, payload, {
-      headers: {
-        ...this.authService.addTokenToHeader(),
-      },
-    })
+
+    return this.postRequest<ICreateContactResponse>(`${environment.apiUrl}/contact`, payload)
   }
 
   archiveContact(contactId: string) {
-    return from(archiveContactEndpoint(this.authService.accessToken, contactId))
+    return from(archiveContactEndpoint(this.auth.accessToken, contactId))
   }
 
   restoreContact(contactId: string) {
-    return from(restoreContactEndpoint(this.authService.accessToken, contactId))
+    return from(restoreContactEndpoint(this.auth.accessToken, contactId))
   }
 }
