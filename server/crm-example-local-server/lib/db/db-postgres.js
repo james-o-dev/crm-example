@@ -38,3 +38,13 @@ export class PostgresDatabase {
     })
   }
 }
+
+/**
+ * Determine if the thrown Postgres error was due to a unique constraint.
+ *
+ * @param {*} error Thrown error
+ * @param {string} uniqueConstraintName Name of the unique constraint in the database
+ */
+export const isUniqueConstraintError = (error, uniqueConstraintName) => {
+  return error && error.code === '23505' && error.constraint === uniqueConstraintName
+}

@@ -1,5 +1,5 @@
 import bcryptjs from 'bcryptjs'
-import { PostgresDatabase } from '../lib/db/db-postgres.js'
+import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
 import { getAccessTokenFromHeaders, signAccessToken } from '../lib/auth.common.js'
 
@@ -50,7 +50,7 @@ export const signUpEndpoint = async (requestBody) => {
       userId = await t.one('INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id', [normalEmail, hashedPassword])
     } catch (error) {
       // Unique email constraint.
-      if (error.code === '23505' && error.constraint === 'users_unique') throw { validation: true, statusCode: 409, message: 'This email is already in use.' }
+      if (isUniqueConstraintError('users_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
       // Else other error.
       throw error
     }

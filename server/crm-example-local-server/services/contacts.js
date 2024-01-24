@@ -1,6 +1,6 @@
 import { getAccessTokenFromHeaders } from '../lib/auth.common.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
-import { PostgresDatabase } from '../lib/db/db-postgres.js'
+import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
  * Add new contact endpoint.
@@ -38,7 +38,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
     const result = await db.one(sql, params)
     contactId = result.contact_id
   } catch (error) {
-    if (error.code === '23505' && error.constraint === 'contacts_unique') throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
+    if (isUniqueConstraintError('contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
     console.error(error)
     throw error
   }
