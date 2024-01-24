@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose'
+import { unauthorizedError } from './common.js'
 
 const ACCESS_TOKEN_EXPIRY = '1h'
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET)
@@ -66,7 +67,7 @@ export const verifyToken = async (token, secret) => {
  *
  * @param {*} headers
  */
-export const extractAuthHeaderToken = (headers) => {
+const extractAuthHeaderToken = (headers) => {
   const authHeader = headers['authorization'] || headers['Authorization'] || ''
   return authHeader.split(' ')[1]
 }
@@ -79,7 +80,22 @@ export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKE
  *
  * @param {*} reqHeaders
  */
-export const getAccessTokenFromHeaders = (reqHeaders) => {
+const getAccessTokenFromHeaders = (reqHeaders) => {
   const accessToken = extractAuthHeaderToken(reqHeaders)
   return verifyAccessToken(accessToken)
+}
+
+/**
+ * Handles user authentication and ultimately returns the user_id if the access token is authentic.
+ * * Throws an error if the access token is not authentic.
+ * * Throws an error if the access token is not found.
+ *
+ * @param {*} reqHeaders
+ */
+export const getUserId = async (reqHeaders) => {
+  const accessToken = await getAccessTokenFromHeaders(reqHeaders)
+  if (!accessToken) throw unauthorizedError()
+  const userId = accessToken.user_id
+  if (!userId) throw unauthorizedError()
+  return userId
 }

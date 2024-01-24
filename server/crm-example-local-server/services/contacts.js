@@ -1,5 +1,5 @@
-import { getAccessTokenFromHeaders } from '../lib/auth.common.js'
-import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
+import { getUserId } from '../lib/auth.common.js'
+import { successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
@@ -9,10 +9,7 @@ import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres
  * @param {*} reqBody
  */
 export const newContactEndpoint = async (reqHeaders, reqBody) => {
-  const accessToken = await getAccessTokenFromHeaders(reqHeaders)
-  if (!accessToken) throw unauthorizedError()
-  const userId = accessToken.user_id
-  if (!userId) throw unauthorizedError()
+  const userId = await getUserId(reqHeaders)
 
   if (!reqBody) throw validationErrorResponse({ message: 'Request body was not provided.' })
 
@@ -52,10 +49,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
  * @param {*} reqQuery
  */
 export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
-  const accessToken = await getAccessTokenFromHeaders(reqHeaders)
-  if (!accessToken) throw unauthorizedError()
-  const userId = accessToken.user_id
-  if (!userId) throw unauthorizedError()
+  const userId = await getUserId(reqHeaders)
 
   // Query params.
   // Get only archived.

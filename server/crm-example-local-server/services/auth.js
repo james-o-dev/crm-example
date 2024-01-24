@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { PostgresDatabase, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
-import { getAccessTokenFromHeaders, signAccessToken } from '../lib/auth.common.js'
+import { getUserId, signAccessToken } from '../lib/auth.common.js'
 
 /**
  * Function to hash a password
@@ -87,12 +87,11 @@ export const signInEndpoint = async (requestBody) => {
 /**
  * Authenticate user endpoint
  *
- * @param {*} requestBody
+ * @param {*} reqHeaders
  */
-export const isAuthenticatedEndpoint = async (requestHeaders) => {
+export const isAuthenticatedEndpoint = async (reqHeaders) => {
   try {
-    const verified = await getAccessTokenFromHeaders(requestHeaders)
-    if (!verified) throw unauthorizedError()
+    await getUserId(reqHeaders)
     return successfulResponse({ message: 'Authenticated.' })
   } catch (error) {
     throw unauthorizedError()
