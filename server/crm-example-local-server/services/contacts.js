@@ -82,7 +82,7 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   // Database query.
   const db = getDb()
   const sql = `
-    SELECT contact_id, name, email, phone, notes, date_created, date_modified
+    SELECT contact_id, name, email, phone, notes, archived, date_created, date_modified
     FROM contacts
     WHERE user_id = $(userId) AND contact_id = $(contactId)
   `
