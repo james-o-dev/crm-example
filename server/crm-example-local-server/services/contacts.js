@@ -92,3 +92,50 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   // Response.
   return successfulResponse({ contact })
 }
+
+/**
+ * Updates a user's contact.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqBody
+ */
+export const updateContactEndpoint = async (reqHeaders, reqBody) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Destructure required values from request.
+  const { contact_id: contactId, name, email } = reqBody
+
+  // Validation.
+  if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
+  if (!name) throw validationErrorResponse({ message: 'Name was not provided.' })
+  if (!email) throw validationErrorResponse({ message: 'Email was not provided.' })
+
+  // Database query.
+  const db = getDb()
+  const sql = `
+    UPDATE contacts
+    SET name = $(name),
+    email = $(email),
+    phone = $(phone),
+    notes = $(notes)
+    WHERE user_id = $(userId) AND contact_id = $(contactId)
+    RETURNING contact_id
+  `
+  const params = {
+    contactId, userId,
+    name, email,
+    notes: reqBody.notes, phone: reqBody.phone,
+  }
+  let updated = false
+  try {
+    const result = await db.one(sql, params)
+    updated = !!result.contact_id
+  } catch (error) {
+    if (isUniqueConstraintError('contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
+    console.error(error)
+    throw error
+  }
+
+  if (updated) return successfulResponse({ message: 'Contact updated.' })
+  throw validationErrorResponse({ message: 'Contact not found.' }, 404)
+}

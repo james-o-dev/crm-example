@@ -4,7 +4,7 @@ import cors from 'cors'
 import { getDb } from './lib/db/db-postgres.js'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
-import { getContactEndpoint, getContactsEndpoint, newContactEndpoint } from './services/contacts.js'
+import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactEndpoint } from './services/contacts.js'
 
 const app = express()
 const PORT = 3000
@@ -39,6 +39,7 @@ app.get('/contacts', (req, res) => controllerHandler(req, res, getContactsEndpoi
 app.get('/contact', (req, res) => controllerHandler(req, res, getContactEndpoint(req.headers, req.query)))
 
 // Update contact.
+app.put('/contact', (req, res) => controllerHandler(req, res, updateContactEndpoint(req.headers, req.body)))
 
 // Archive contact.
 
