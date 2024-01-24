@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { ContactService, IContact, IContactUpdatePayload } from '../../core/contacts.service'
+import { ContactService, IContact, IUpdateContactPayload } from '../../core/contacts.service'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { switchMap, tap } from 'rxjs'
@@ -56,7 +56,7 @@ export class ContactDetailComponent implements OnInit {
   protected onSave() {
     if (this.contactForm.form.invalid) return
 
-    const payload = { ...this.contactForm.form.value, contact_id: this.contactId } as IContactUpdatePayload
+    const payload = { ...this.contactForm.form.value, contact_id: this.contactId } as IUpdateContactPayload
     this.contactService.updateContact(payload)
       .pipe(switchMap(() => this.getContact()))
       .subscribe({

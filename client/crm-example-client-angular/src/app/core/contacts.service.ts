@@ -27,7 +27,20 @@ export interface IGetContactResponse {
   contact: IContact
 }
 
-export interface IContactUpdatePayload {
+/**
+ * Send as the request body to create a new contact.
+ */
+export interface ICreateContactPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  notes?: string;
+}
+
+/**
+ * Send as the request body to update an existing contact.
+ */
+export interface IUpdateContactPayload {
   name: string;
   email: string;
   phone?: string;
@@ -42,6 +55,11 @@ export class ContactService {
   private authService = inject(AuthService)
   private http = inject(HttpClient)
 
+  /**
+   * Returns details for a single contact that the user owns.
+   *
+   * @param {string} contactId
+   */
   getContact(contactId: string) {
     // return from(getContactEndpoint(this.authService.accessToken, contactId))
     return this.http.get<IGetContactResponse>(`${environment.apiUrl}/contact`, {
@@ -75,7 +93,12 @@ export class ContactService {
     })
   }
 
-  updateContact(payload: IContactUpdatePayload) {
+  /**
+   * Update an existing contact that the user owns.
+   *
+   * @param {IUpdateContactPayload} payload
+   */
+  updateContact(payload: IUpdateContactPayload) {
     // return from(updateContactEndpoint(this.authService.accessToken, payload))
 
     return this.http.put(`${environment.apiUrl}/contact`, payload, {
@@ -85,7 +108,12 @@ export class ContactService {
     })
   }
 
-  newContact(payload: IContact) {
+  /**
+   * Create a new contact, owned by the user
+   *
+   * @param {ICreateContactPayload} payload
+   */
+  newContact(payload: ICreateContactPayload) {
     // return from(newContactEndpoint(this.authService.accessToken, payload))
     return this.http.post(`${environment.apiUrl}/contacts`, payload, {
       headers: {
