@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { UserProfileService } from './user-profile.service'
 import { MatIconModule } from '@angular/material/icon'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-user-profile',
@@ -23,8 +24,9 @@ import { MatIconModule } from '@angular/material/icon'
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
-  private userProfileService = inject(UserProfileService)
+  private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
+  private userProfileService = inject(UserProfileService)
 
   protected editModeUsername = false
   protected username = ''
@@ -55,9 +57,12 @@ export class UserProfileComponent implements OnInit {
 
   protected onChangeUsername() {
     this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
-      .subscribe(() => {
-        this.username = this.changeUserNameForm.value.username as string
-        this.editModeUsername = false
+      .subscribe({
+        next: () => {
+          this.username = this.changeUserNameForm.value.username as string
+          this.editModeUsername = false
+        },
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 

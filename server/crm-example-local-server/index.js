@@ -5,6 +5,7 @@ import { getDb } from './lib/db/db-postgres.js'
 import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
+import { getUsername, setUsername } from './services/user-profile.js'
 
 const app = express()
 const PORT = 3000
@@ -43,6 +44,14 @@ app.put('/contact', (req, res) => controllerHandler(req, res, updateContactEndpo
 
 // Archive/restore contact.
 app.put('/contact/archived', (req, res) => controllerHandler(req, res, updateContactArchiveStatusEndpoint(req.headers, req.body)))
+
+// User profile.
+
+// Get username.
+app.get('/user/username', (req, res) => controllerHandler(req, res, getUsername(req.headers)))
+
+// Set username.
+app.put('/user/username', (req, res) => controllerHandler(req, res, setUsername(req.headers, req.body)))
 
 app.listen(PORT, () => {
   // Initially instantiate the database singleton class on start-up.
