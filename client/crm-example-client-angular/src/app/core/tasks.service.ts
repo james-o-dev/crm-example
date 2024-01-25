@@ -1,5 +1,4 @@
-import { Injectable, inject } from '@angular/core'
-import { AuthService } from './auth.service'
+import { Injectable } from '@angular/core'
 import { BaseService } from './base.service'
 
 // export interface ITask {
@@ -86,7 +85,6 @@ interface IDeleteTaskResponse {
   providedIn: 'root',
 })
 export class TasksService extends BaseService {
-  private authService = inject(AuthService)
 
   public addTask(payload: ICreateTaskPayload) {
     // if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
