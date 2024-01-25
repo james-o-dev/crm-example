@@ -63,7 +63,7 @@ export class ContactService extends BaseService {
    *
    * @param {string} contactId
    */
-  getContact(contactId: string) {
+  public getContact(contactId: string) {
     // return from(getContactEndpoint(this.authService.accessToken, contactId))
 
     return this.getRequest<IGetContactResponse>(`${this.apiUrl}/contact`, { contact_id: contactId })
@@ -74,7 +74,7 @@ export class ContactService extends BaseService {
    *
    * @param {boolean} [active=true] True to only return active contacts; False to return archived contacts.
    */
-  getContacts(active = true) {
+  public getContacts(active = true) {
     // // Determine filters.
     // const filters: { archived?: boolean } = {}
     // filters.archived = !active
@@ -89,7 +89,7 @@ export class ContactService extends BaseService {
    *
    * @param {IUpdateContactPayload} payload
    */
-  updateContact(payload: IUpdateContactPayload) {
+  public updateContact(payload: IUpdateContactPayload) {
     // return from(updateContactEndpoint(this.authService.accessToken, payload))
 
     return this.putRequest<IUpdateContactResponse>(`${this.apiUrl}/contact`, payload)
@@ -100,7 +100,7 @@ export class ContactService extends BaseService {
    *
    * @param {ICreateContactPayload} payload
    */
-  newContact(payload: ICreateContactPayload) {
+  public newContact(payload: ICreateContactPayload) {
     // return from(newContactEndpoint(this.authService.accessToken, payload))
 
     return this.postRequest<ICreateContactResponse>(`${this.apiUrl}/contact`, payload)
@@ -111,7 +111,7 @@ export class ContactService extends BaseService {
    *
    * @param {string} contactId
    */
-  archiveContact(contactId: string) {
+  public archiveContact(contactId: string) {
     // return from(archiveContactEndpoint(this.auth.accessToken, contactId))
 
     return this.putRequest(`${this.apiUrl}/contact/archived`, {
@@ -125,7 +125,7 @@ export class ContactService extends BaseService {
    *
    * @param {string} contactId
    */
-  restoreContact(contactId: string) {
+  public restoreContact(contactId: string) {
     // return from(restoreContactEndpoint(this.auth.accessToken, contactId))
 
     return this.putRequest(`${this.apiUrl}/contact/archived`, {
