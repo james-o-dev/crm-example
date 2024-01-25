@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { deleteTaskEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
+import { deleteTaskEndpoint } from '../../assets/js/mock/tasks.mock'
 import { AuthService } from './auth.service'
 import { BaseService } from './base.service'
 
@@ -58,7 +58,7 @@ interface IGetTaskResponse {
 
 interface ICreateTaskPayload {
   title: string
-  due_date: Date
+  due_date?: Date
   notes: string
   contact_id: string
 }
@@ -66,6 +66,18 @@ interface ICreateTaskPayload {
 interface ICreateTaskResponse {
   message: string
   task_id: string
+}
+
+interface IUpdateTaskPayload {
+  task_id: string
+  title: string
+  notes?: string
+  due_date?: Date
+  contact_id?: string
+}
+
+interface IUpdateTaskResponse {
+  message: string
 }
 
 @Injectable({
@@ -82,17 +94,28 @@ export class TasksService extends BaseService {
 
     const requestPayload = {
       ...payload,
-      due_date: new Date(payload.due_date).getTime(), // Convert Date object into unix timestamp number.
+      due_date: payload.due_date ? payload.due_date.getTime() : undefined, // Convert Date object into unix timestamp number.
     }
     return this.postRequest<ICreateTaskResponse>(`${this.apiUrl}/task`, requestPayload)
   }
 
-  public updateTask(payload: ITaskUpdate) {
-    if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
-      payload.due_date = new Date(payload.due_date).getTime()
-    }
+  /**
+   * Update an existing task.
+   *
+   * @param {IUpdateTaskPayload} payload
+   */
+  public updateTask(payload: IUpdateTaskPayload) {
+    // if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
+    //   payload.due_date = new Date(payload.due_date).getTime()
+    // }
 
-    return from(updateTaskEndpoint(this.authService.accessToken, payload))
+    // return from(updateTaskEndpoint(this.authService.accessToken, payload))
+
+    const requestPayload = {
+      ...payload,
+      due_date: payload.due_date ? payload.due_date.getTime() : undefined, // Convert Date object into unix timestamp number.
+    }
+    return this.putRequest<IUpdateTaskResponse>(`${this.apiUrl}/task`, requestPayload)
   }
 
   /**

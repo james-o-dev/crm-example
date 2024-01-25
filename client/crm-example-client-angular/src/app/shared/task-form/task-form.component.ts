@@ -52,6 +52,7 @@ export class TaskFormComponent implements OnInit {
     title: ['', Validators.required],
     due_date: '',
     notes: '',
+    contact_id: '',
   })
 
   public ngOnInit(): void {
@@ -73,7 +74,13 @@ export class TaskFormComponent implements OnInit {
       startWith(this.existingTask.contact_name || ''),
       map((value) => {
         if (!value) return []
-        const text = typeof value === 'string' ? value : value?.text
+        let text = value // Initially set - assumes the value is a string.
+        if (typeof value !== 'string') { // If it is not a string.
+          // Use the text of of the option selected.
+          text = value?.text
+          // Set the contact_id of the selected contact.
+          this.form.controls['contact_id'].setValue(value.value)
+        }
         const normalText = text.trim().toLowerCase()
         return this.contacts.filter((contact) => contact.text.toLowerCase().includes(normalText))
       }),

@@ -105,6 +105,39 @@ export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
   return successfulResponse({ task })
 }
 
-// Update task.
+/**
+ * Update an existing task.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqQuery
+ */
+export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Request body validation.
+  if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
+  if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+
+  // Query database.
+  const db = getDb()
+  const sql = `
+    UPDATE tasks
+    SET title = $(title), notes = $(notes), due_date = $(due_date), contact_id = $(contact_id)
+    WHERE user_id = $(userId) AND task_id = $(task_id)
+    RETURNING task_id
+  `
+  const sqlParams = {
+    userId,
+    task_id: reqBody.task_id,
+    title: reqBody.title,
+    notes: reqBody.notes,
+    due_date: reqBody.due_date,
+    contact_id: reqBody.contact_id,
+  }
+  const taskUpdated = await db.oneOrNone(sql, sqlParams)
+
+  if (taskUpdated) return successfulResponse({ message: 'Task updated.' })
+  throw validationErrorResponse({ message: 'Task not found.' }, 404)
+}
 
 // Delete task.

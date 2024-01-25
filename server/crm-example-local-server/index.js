@@ -6,7 +6,7 @@ import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './servi
 import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
 import { getUsername, setUsername } from './services/user-profile.js'
-import { createTaskEndpoint, getTaskEndpoint, getTasksEndpoint } from './services/tasks.js'
+import { createTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
 
 const app = express()
 const PORT = 3000
@@ -66,6 +66,8 @@ app.post('/task', (req, res) => controllerHandler(req, res, createTaskEndpoint(r
 app.get('/task', (req, res) => controllerHandler(req, res, getTaskEndpoint(req.headers, req.query)))
 
 // Update task.
+app.put('/task', (req, res) => controllerHandler(req, res, updateTaskEndpoint(req.headers, req.body)))
+
 // Delete task.
 
 app.listen(PORT, () => {
