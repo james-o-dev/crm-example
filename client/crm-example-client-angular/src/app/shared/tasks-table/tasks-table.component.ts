@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'
 import { RouterLink } from '@angular/router'
-import { TasksService } from '../../core/tasks.service'
+import { IGetTasks, TasksService } from '../../core/tasks.service'
 import { DateFnsPipe } from '../date-fns.pipe'
 
 @Component({
@@ -26,7 +26,7 @@ export class TasksTableComponent {
 
   protected columns = ['title', 'due_date', 'contact']
 
-  protected dataSource = [] as object[]
+  protected dataSource = [] as IGetTasks[]
 
   public ngOnInit(): void {
     // Remove the redundant contact column if the contactId was provided.
@@ -38,7 +38,7 @@ export class TasksTableComponent {
   private loadData() {
     this.tasksService.getTasks(this.contactId)
       .subscribe(data => {
-        this.dataSource = data.tasks as object[]
+        this.dataSource = data.tasks
       })
   }
 }
