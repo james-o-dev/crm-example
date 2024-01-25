@@ -33,6 +33,7 @@ export interface IGetTasks {
   task_id: string
   title: string
   due_date?: string
+  contact_id?: string
   contact_name?: string
 }
 

@@ -23,6 +23,7 @@ export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
       t.task_id,
       t.title,
       t.due_date,
+      t.contact_id,
       c.name AS "contact_name"
     FROM tasks t
     LEFT JOIN contacts c ON t.contact_id = c.contact_id AND c.user_id = t.user_id
