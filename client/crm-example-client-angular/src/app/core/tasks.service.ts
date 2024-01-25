@@ -1,20 +1,20 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { deleteTaskEndpoint, getTaskEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
+import { deleteTaskEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
 import { AuthService } from './auth.service'
 import { BaseService } from './base.service'
 
-export interface ITask {
-  contact_id?: string
-  contact_name?: string
-  date_created: number
-  date_modified: number
-  due_date?: number
-  key: string
-  notes?: string
-  title: string
-  user_id: string
-}
+// export interface ITask {
+//   contact_id?: string
+//   contact_name?: string
+//   date_created: number
+//   date_modified: number
+//   due_date?: number
+//   key: string
+//   notes?: string
+//   title: string
+//   user_id: string
+// }
 
 export interface ITaskAdd {
   due_date?: number
@@ -29,6 +29,7 @@ export interface ITaskUpdate {
   title: string
 }
 
+
 export interface IGetTasks {
   task_id: string
   title: string
@@ -39,6 +40,20 @@ export interface IGetTasks {
 
 interface IGetTasksResponse {
   tasks: IGetTasks[]
+}
+
+export interface IGetTask {
+  title: string
+  notes?: string
+  due_date?: string
+  contact_id?: string
+  contact_name?: string
+  date_created: string
+  date_modified: string
+}
+
+interface IGetTaskResponse {
+  task: IGetTask
 }
 
 interface ICreateTaskPayload {
@@ -80,8 +95,15 @@ export class TasksService extends BaseService {
     return from(updateTaskEndpoint(this.authService.accessToken, payload))
   }
 
+  /**
+   * Get a task, belonging to the user.
+   *
+   * @param {string} taskId
+   */
   public getTask(taskId: string) {
-    return from(getTaskEndpoint(this.authService.accessToken, taskId))
+    // return from(getTaskEndpoint(this.authService.accessToken, taskId))
+
+    return this.getRequest<IGetTaskResponse>(`${this.apiUrl}/task`, { task_id: taskId })
   }
 
   /**

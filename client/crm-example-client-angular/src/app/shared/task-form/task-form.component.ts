@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { Observable, map, of, startWith } from 'rxjs'
 import { ContactService } from '../../core/contacts.service'
-import { ITask } from '../../core/tasks.service'
+import { IGetTask } from '../../core/tasks.service'
 import { RouterLink } from '@angular/router'
 
 interface IOption {
@@ -41,7 +41,7 @@ export class TaskFormComponent implements OnInit {
   private contactService = inject(ContactService)
   private formBuilder = inject(FormBuilder)
 
-  @Input() existingTask: ITask = {} as ITask
+  @Input() existingTask: IGetTask = {} as IGetTask
   @Input() noContact = false
 
   private contacts: IOption[] = []
@@ -85,7 +85,7 @@ export class TaskFormComponent implements OnInit {
   public onReset() {
     let resetTask = {}
     if (this.existingTask) {
-      const due_date = this.existingTask.due_date ? new Date(this.existingTask.due_date as number) : null
+      const due_date = this.existingTask.due_date ? new Date(this.existingTask.due_date) : null
       resetTask = {
         ...this.existingTask,
         due_date,

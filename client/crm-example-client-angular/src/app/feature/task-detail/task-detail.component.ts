@@ -1,4 +1,4 @@
-import { ITask, ITaskUpdate, TasksService } from './../../core/tasks.service'
+import { IGetTask, ITaskUpdate, TasksService } from './../../core/tasks.service'
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
@@ -38,7 +38,7 @@ export class TaskDetailComponent implements OnInit {
 
   protected editMode = false
   protected taskId = ''
-  protected task: ITask = {} as ITask
+  protected task: IGetTask = {} as IGetTask
 
   public ngOnInit(): void {
     this.taskId = this.activatedRoute.snapshot.params['taskId']
@@ -70,7 +70,7 @@ export class TaskDetailComponent implements OnInit {
 
   private getTask() {
     return this.tasksService.getTask(this.taskId)
-      .pipe(tap((response) => this.task = response.task as ITask))
+      .pipe(tap((response) => this.task = response.task))
   }
 
   protected deleteTask() {

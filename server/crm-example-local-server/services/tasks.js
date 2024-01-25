@@ -39,8 +39,6 @@ export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
   return successfulResponse({ tasks })
 }
 
-// Get task.
-
 /**
  * Create a new task.
  *
@@ -71,6 +69,40 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
   const createdTask = await db.one(sql, sqlParams)
 
   return successfulResponse({ message: 'Task created.', task_id: createdTask.task_Id }, 201)
+}
+
+/**
+ * Get an existing task.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqQuery
+ */
+export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Request body validation.
+  if (!reqQuery.task_id) throw validationErrorResponse({ message: 'Missing Task ID.' })
+  const taskId = reqQuery.task_id
+
+  // Query database.
+  const db = getDb()
+  const sql = `
+    SELECT
+      t.title,
+      t.notes,
+      t.due_date,
+      t.contact_id,
+      c.name AS "contact_name",
+      t.date_created,
+      t.date_modified
+    FROM tasks t
+    LEFT JOIN contacts c ON t.contact_id = c.contact_id AND c.user_id = t.user_id
+    WHERE t.user_id = $(userId) AND t.task_id = $(taskId)
+  `
+  const sqlParams = { userId, taskId }
+  const task = await db.oneOrNone(sql, sqlParams)
+
+  return successfulResponse({ task })
 }
 
 // Update task.
