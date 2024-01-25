@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { Observable, map, of, startWith } from 'rxjs'
-import { ContactService, IContact } from '../../core/contacts.service'
+import { ContactService } from '../../core/contacts.service'
 import { ITask } from '../../core/tasks.service'
 import { RouterLink } from '@angular/router'
 
@@ -58,7 +58,7 @@ export class TaskFormComponent implements OnInit {
     // Get contacts for the auto-complete.
     this.contactService.getContacts()
       .subscribe(data => {
-        this.contacts = (data.contacts as IContact[])
+        this.contacts = data.contacts
           .map((contact) => {
             return {
               value: contact.contact_id as string,

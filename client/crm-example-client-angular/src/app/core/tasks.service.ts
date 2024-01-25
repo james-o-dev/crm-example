@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { from } from 'rxjs'
-import { addTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
+import { deleteTaskEndpoint, getTaskEndpoint, updateTaskEndpoint } from '../../assets/js/mock/tasks.mock'
 import { AuthService } from './auth.service'
 import { BaseService } from './base.service'
 
@@ -40,17 +40,35 @@ interface IGetTasksResponse {
   tasks: IGetTasks[]
 }
 
+interface ICreateTaskPayload {
+  title: string
+  due_date: Date
+  notes: string
+  contact_id: string
+}
+
+interface ICreateTaskResponse {
+  message: string
+  task_id: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class TasksService extends BaseService {
   private authService = inject(AuthService)
 
-  public addTask(payload: ITaskAdd) {
-    if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
-      payload.due_date = new Date(payload.due_date).getTime()
+  public addTask(payload: ICreateTaskPayload) {
+    // if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
+      // payload.due_date = new Date(payload.due_date).getTime()
+    // }
+    // return from(addTaskEndpoint(this.authService.accessToken, payload))
+
+    const requestPayload = {
+      ...payload,
+      due_date: new Date(payload.due_date).getTime(), // Convert Date object into unix timestamp number.
     }
-    return from(addTaskEndpoint(this.authService.accessToken, payload))
+    return this.postRequest<ICreateTaskResponse>(`${this.apiUrl}/task`, requestPayload)
   }
 
   public updateTask(payload: ITaskUpdate) {

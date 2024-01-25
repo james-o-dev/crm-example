@@ -1,5 +1,5 @@
 import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse } from '../lib/common.js'
+import { successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb } from '../lib/db/db-postgres.js'
 
 
@@ -40,7 +40,37 @@ export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
 
 // Get task.
 
-// Create new task.
+/**
+ * Create a new task.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqBody
+ */
+export const createTaskEndpoint = async (reqHeaders, reqBody) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Request body validation.
+  if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
+  if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+
+  // Query database.
+  const db = getDb()
+  const sql = `
+    INSERT INTO tasks (title, notes, due_date, contact_id, user_id)
+    VALUES ($(title), $(notes), $(due_date), $(contact_id), $(userId))
+    RETURNING task_id
+  `
+  const sqlParams = {
+    userId,
+    title: reqBody.title,
+    due_date: reqBody.due_date,
+    notes: reqBody.notes,
+    contact_id: reqBody.contact_id,
+  }
+  const createdTask = await db.one(sql, sqlParams)
+
+  return successfulResponse({ message: 'Task created.', task_id: createdTask.task_Id }, 201)
+}
 
 // Update task.
 

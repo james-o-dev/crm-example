@@ -72,11 +72,9 @@ export class ContactDetailComponent implements OnInit {
 
     this.tasksService.addTask({ ...this.taskForm.form.value, contact_id: this.contactId })
       .subscribe({
-        next: (response) => {
-          if (response.statusCode === 201) {
-            this.notificationsService.triggerNumberUpdateEvent()
-            this.addTaskMode = false
-          }
+        next: () => {
+          this.notificationsService.triggerNumberUpdateEvent()
+          this.addTaskMode = false
         },
       })
   }
