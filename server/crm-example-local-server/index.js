@@ -6,7 +6,7 @@ import { isAuthenticatedEndpoint, signInEndpoint, signUpEndpoint } from './servi
 import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
 import { getUsername, setUsername } from './services/user-profile.js'
-import { createTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
+import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
 
 const app = express()
 const PORT = 3000
@@ -69,6 +69,7 @@ app.get('/task', (req, res) => controllerHandler(req, res, getTaskEndpoint(req.h
 app.put('/task', (req, res) => controllerHandler(req, res, updateTaskEndpoint(req.headers, req.body)))
 
 // Delete task.
+app.delete('/task', (req, res) => controllerHandler(req, res, deleteTaskEndpoint(req.headers, req.query)))
 
 app.listen(PORT, () => {
   // Initially instantiate the database singleton class on start-up.

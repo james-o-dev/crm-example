@@ -140,4 +140,29 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   throw validationErrorResponse({ message: 'Task not found.' }, 404)
 }
 
-// Delete task.
+/**
+ * Delete an existing task.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqQuery
+ */
+export const deleteTaskEndpoint = async (reqHeaders, reqQuery) => {
+  const userId = await getUserId(reqHeaders)
+
+  // Request body validation.
+  if (!reqQuery.task_id) throw validationErrorResponse({ message: 'Missing Task ID.' })
+  const taskId = reqQuery.task_id
+
+  // Query database.
+  const db = getDb()
+  const sql = `
+    DELETE FROM tasks
+    WHERE user_id = $(userId) AND task_id = $(taskId)
+    RETURNING task_id
+  `
+  const sqlParams = { userId, taskId }
+  const taskDeleted = await db.oneOrNone(sql, sqlParams)
+
+  if (taskDeleted) return successfulResponse({ message: 'Task deleted.' })
+  throw validationErrorResponse({ message: 'Task not found.' }, 404)
+}

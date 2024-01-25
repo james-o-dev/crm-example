@@ -1,6 +1,4 @@
 import { Injectable, inject } from '@angular/core'
-import { from } from 'rxjs'
-import { deleteTaskEndpoint } from '../../assets/js/mock/tasks.mock'
 import { AuthService } from './auth.service'
 import { BaseService } from './base.service'
 
@@ -80,6 +78,10 @@ interface IUpdateTaskResponse {
   message: string
 }
 
+interface IDeleteTaskResponse {
+  message: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -140,7 +142,14 @@ export class TasksService extends BaseService {
     return this.getRequest<IGetTasksResponse>(`${this.apiUrl}/tasks`, { contact_id: contactId })
   }
 
+  /**
+   * Delete a task, belonging to the user.
+   *
+   * @param {string} [contactId]
+   */
   public deleteTask(taskId: string) {
-    return from(deleteTaskEndpoint(this.authService.accessToken, taskId))
+    // return from(deleteTaskEndpoint(this.authService.accessToken, taskId))
+
+    return this.deleteRequest<IDeleteTaskResponse>(`${this.apiUrl}/task`, { task_id: taskId })
   }
 }

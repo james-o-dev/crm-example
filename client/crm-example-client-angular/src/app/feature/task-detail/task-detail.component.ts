@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { LineBreakPipe } from '../../shared/line-break.pipe'
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { TaskFormComponent } from '../../shared/task-form/task-form.component'
-import { of, switchMap, tap } from 'rxjs'
+import { catchError, of, switchMap, tap } from 'rxjs'
 import { DateFnsPipe } from '../../shared/date-fns.pipe'
 import { NotificationsService } from '../../core/notifications.service'
 import { DialogService } from '../../shared/dialog/dialog.service'
@@ -86,16 +86,16 @@ export class TaskDetailComponent implements OnInit {
         { value: true, text: 'Delete Confirmed' },
       ],
     )
-    .pipe(
-      switchMap(confirmed => confirmed ? this.tasksService.deleteTask(this.taskId) : of(null)),
-      switchMap(response => {
-        if (response?.statusCode === 200) {
-          this.notificationsService.triggerNumberUpdateEvent()
-
-          return this.dialog.displayDialog('Task Deleted', [], [{ value: true, text: 'Confirm' }])
-        }
-        return of(null)
-      }),
-    ).subscribe(confirmed => confirmed ? this.router.navigate(['/tasks']) : null)
+      .pipe(
+        switchMap(confirmed => confirmed ? this.tasksService.deleteTask(this.taskId) : of(null)),
+        catchError(response => this.dialog.displayErrorDialog(response.error.message)),
+        switchMap((response) => {
+          if (response) {
+            this.notificationsService.triggerNumberUpdateEvent()
+            return this.dialog.displayDialog('Task Deleted', [], [{ value: true, text: 'Confirm' }])
+          }
+          return of(null)
+        }),
+      ).subscribe(confirmed => confirmed ? this.router.navigate(['/tasks']) : null)
   }
 }
