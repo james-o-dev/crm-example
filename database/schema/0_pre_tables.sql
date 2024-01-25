@@ -1,3 +1,8 @@
+-- Delete existing tables.
+DROP TABLE public.users CASCADE;
+DROP TABLE public.contacts CASCADE;
+DROP TABLE public.tasks CASCADE;
+
 -- Returns the current unix timestamp, in milliseconds.
 -- Compatible with the javascript version e.g. `Date.now()`
 CREATE OR REPLACE FUNCTION now_unix_timestamp()
