@@ -45,9 +45,9 @@ export const signUpEndpoint = async (requestBody) => {
   const db = getDb()
   return db.tx(async t => {
 
-    let userId
+    let user
     try {
-      userId = await t.one('INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id', [normalEmail, hashedPassword])
+      user = await t.one('INSERT INTO users (email, hashed_password) VALUES ($1, $2) RETURNING user_id', [normalEmail, hashedPassword])
     } catch (error) {
       // Unique email constraint.
       if (isUniqueConstraintError(error, 'users_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
@@ -55,7 +55,7 @@ export const signUpEndpoint = async (requestBody) => {
       throw error
     }
 
-    const accessToken = await signAccessToken({ user_id: userId, email })
+    const accessToken = await signAccessToken({ user_id: user.user_id, email })
     return successfulResponse({ message: 'User created', accessToken }, 201)
   })
 }
