@@ -7,6 +7,7 @@ import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
 import { getUsername, setUsername } from './services/user-profile.js'
 import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
+import { searchEndpoint } from './services/search.js'
 
 const app = express()
 const PORT = 3000
@@ -71,8 +72,13 @@ app.put('/task', (req, res) => controllerHandler(req, res, updateTaskEndpoint(re
 // Delete task.
 app.delete('/task', (req, res) => controllerHandler(req, res, deleteTaskEndpoint(req.headers, req.query)))
 
+// Search.
+
+// Do search.
+app.get('/search', (req, res) => controllerHandler(req, res, searchEndpoint(req.headers, req.query)))
+
+// Start the server
 app.listen(PORT, () => {
-  // Initially instantiate the database singleton class on start-up.
-  getDb()
+  getDb() // Initially instantiate the database singleton class on start-up.
   console.log(`Server running at http://${HOST}:${PORT}/`)
 })
