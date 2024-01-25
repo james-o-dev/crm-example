@@ -1,26 +1,45 @@
 import { Injectable } from '@angular/core'
 import { BaseService } from './base.service'
 
-export interface IContact {
-  name: string;
-  email?: string;
-  phone?: string;
-  notes?: string;
-  date_modified?: number;
-  date_created?: number;
-  contact_id?: string;
-  user_id?: string;
-  archived?: boolean;
+// export interface IContact {
+//   name: string;
+//   email?: string;
+//   phone?: string;
+//   notes?: string;
+//   date_modified?: number;
+//   date_created?: number;
+//   contact_id?: string;
+//   user_id?: string;
+//   archived?: boolean;
 
-  [key: string]: string | number | undefined | boolean;
+//   [key: string]: string | number | undefined | boolean;
+// }
+
+export interface IGetContacts {
+  contact_id: string
+  name: string
+  email: string
+  phone: string
+  num_tasks: number
 }
 
 export interface IGetContactsResponse {
-  contacts: IContact[]
+  contacts: IGetContacts[]
+}
+
+export interface IGetContact {
+  contact_id: string
+  name: string
+  email: string
+  phone: string
+  notes: string
+  archived: string
+  date_created: string
+  date_modified: string
 }
 
 export interface IGetContactResponse {
-  contact: IContact
+  contact: IGetContact
 }
 
 /**

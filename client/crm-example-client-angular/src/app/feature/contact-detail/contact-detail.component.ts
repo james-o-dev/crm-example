@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { ContactService, IContact, IUpdateContactPayload } from '../../core/contacts.service'
+import { ContactService, IGetContact, IUpdateContactPayload } from '../../core/contacts.service'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { switchMap, tap } from 'rxjs'
@@ -43,7 +43,7 @@ export class ContactDetailComponent implements OnInit {
   private tasksService = inject(TasksService)
 
   protected contactId = ''
-  protected contact: IContact = {} as IContact
+  protected contact: IGetContact = {} as IGetContact
   protected editMode = false
   protected addTaskMode = false
 

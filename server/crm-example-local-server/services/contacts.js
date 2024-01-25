@@ -61,10 +61,12 @@ export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
   // Database query.
   const db = getDb()
   const sql = `
-    SELECT contact_id, name, email, phone
-    FROM contacts
-    -- TODO: Left join for task count.
-    WHERE user_id = $(userId) AND archived = $(archived)
+    SELECT c.contact_id, c.name, c.email, c.phone,
+    (
+      SELECT COUNT(*) FROM tasks t WHERE t.contact_id = c.contact_id
+    ) AS "num_tasks"
+    FROM contacts c
+    WHERE c.user_id = $(userId) AND c.archived = $(archived)
   `
   const sqlParams = { userId, archived }
   const contacts = await db.any(sql, sqlParams)
