@@ -105,9 +105,9 @@ export class AppComponent implements OnInit {
     this.notificationNumber$ = of('')
 
     // Define the notification number Observable.
-    this.notificationNumber$ = this.notificationsService.getNotificationsNumberOnly()
+    this.notificationNumber$ = this.notificationsService.getNotificationsCount()
       .pipe(
-        map(response => response?.number || ''),
+        map(response => response.count || ''),
       )
   }
 

@@ -30,9 +30,9 @@ export class NotificationsComponent implements OnInit {
 
   public ngOnInit(): void {
     // On load, get the data.
-    this.notificationsService.getNotificationsDetails()
+    this.notificationsService.getNotificationsDetail()
       .pipe(
-        map(response => response.details || []),
+        map(response => response.detail || []),
       ).subscribe(data => {
         this.dataSource = data as INotificationDetail[]
       })

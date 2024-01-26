@@ -10,6 +10,7 @@ import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoi
 import { searchEndpoint } from './services/search.js'
 import { dashboardDataEndpoint } from './services/dashboard.js'
 import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.js'
+import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -91,6 +92,15 @@ app.get('/export/contacts/json', (req, res) => controllerHandler(req, res, expor
 
 // Import contacts.
 app.post('/import/contacts/json', (req, res) => controllerHandler(req, res, importContactsJsonEndpoint(req.headers, req.body)))
+
+// Notifications.
+
+// Get notifications count.
+app.get('/notifications/count', (req, res) => controllerHandler(req, res, getNotificationsCountEndpoint(req.headers)))
+
+// Get notifications detail.
+app.get('/notifications/detail', (req, res) => controllerHandler(req, res, getNotificationsDetailEndpoint(req.headers)))
+
 
 // Start the server
 app.listen(PORT, () => {
