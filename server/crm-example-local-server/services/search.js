@@ -19,13 +19,21 @@ export const searchEndpoint = async (reqHeaders, reqQuery) => {
     SELECT contact_id, name
     FROM contacts c
     WHERE c.user_id = $(userId)
-    AND (name || email || phone || notes) ILIKE '%$(q#)%'
+    AND (
+      name
+      || email
+      || COALESCE(phone, '')
+      || COALESCE(notes, '')
+    ) ILIKE '%$(q#)%'
   `
   const sqlTasks = `
     SELECT task_id, title
     FROM tasks t
     WHERE t.user_id = $(userId)
-    AND (title || notes) ILIKE '%$(q#)%'
+    AND (
+      title
+      || COALESCE(notes, '')
+    ) ILIKE '%$(q#)%'
   `
 
   // Batch together for performance.
