@@ -9,6 +9,7 @@ import { getUsername, setUsername } from './services/user-profile.js'
 import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
 import { searchEndpoint } from './services/search.js'
 import { dashboardDataEndpoint } from './services/dashboard.js'
+import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -82,6 +83,14 @@ app.get('/search', (req, res) => controllerHandler(req, res, searchEndpoint(req.
 
 // Get dashboard data.
 app.get('/dashboard', (req, res) => controllerHandler(req, res, dashboardDataEndpoint(req.headers)))
+
+// Import / export.
+
+// Export contacts.
+app.get('/export/contacts/json', (req, res) => controllerHandler(req, res, exportContactsJsonEndpoint(req.headers)))
+
+// Import contacts.
+app.post('/import/contacts/json', (req, res) => controllerHandler(req, res, importContactsJsonEndpoint(req.headers, req.body)))
 
 // Start the server
 app.listen(PORT, () => {
