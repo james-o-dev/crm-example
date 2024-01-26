@@ -11,7 +11,7 @@ import { searchEndpoint } from './services/search.js'
 import { dashboardDataEndpoint } from './services/dashboard.js'
 
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const HOST = 'localhost'
 
 app.use(express.json())
