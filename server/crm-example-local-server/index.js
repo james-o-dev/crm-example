@@ -8,6 +8,7 @@ import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateCont
 import { getUsername, setUsername } from './services/user-profile.js'
 import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
 import { searchEndpoint } from './services/search.js'
+import { dashboardDataEndpoint } from './services/dashboard.js'
 
 const app = express()
 const PORT = 3000
@@ -76,6 +77,11 @@ app.delete('/task', (req, res) => controllerHandler(req, res, deleteTaskEndpoint
 
 // Do search.
 app.get('/search', (req, res) => controllerHandler(req, res, searchEndpoint(req.headers, req.query)))
+
+// Dashboard / home.
+
+// Get dashboard data.
+app.get('/dashboard', (req, res) => controllerHandler(req, res, dashboardDataEndpoint(req.headers)))
 
 // Start the server
 app.listen(PORT, () => {
