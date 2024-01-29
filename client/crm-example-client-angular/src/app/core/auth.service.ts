@@ -6,8 +6,8 @@ import { environment } from '../../environments/environment'
 
 interface IReceiveJWTResponse {
   accessToken: string
-  // refreshToken: string // Future.
-  message: string
+  refreshToken: string // Future.
+  message?: string
 }
 
 interface IIsAuthenticatedResponse {
@@ -33,6 +33,13 @@ export class AuthService {
     localStorage.setItem('accessToken', accessToken)
   }
 
+  get refreshToken() {
+    return localStorage.getItem('refreshToken') || ''
+  }
+  set refreshToken(refreshToken: string) {
+    localStorage.setItem('refreshToken', refreshToken)
+  }
+
   /**
    * Returns an object to be used in the request, to include the 'authorization' header.
    *
@@ -47,6 +54,23 @@ export class AuthService {
   }
 
   /**
+   * Attempt to get a new access token, with a refresh token.
+   */
+  public refreshAccessToken() {
+    return this.http.get<IReceiveJWTResponse>(`${environment.apiUrl}/auth/refresh`, {
+      headers: {
+        ...this.addTokenToHeader(this.refreshToken),
+      },
+    })
+      .pipe(
+        tap(data => {
+          this.accessToken = data.accessToken
+          this.hasAuthenticated.set(true)
+        }),
+      )
+  }
+
+  /**
    * Request to sign up a user.
    *
    * @param {string} email
@@ -55,7 +79,8 @@ export class AuthService {
     return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-up`, { email, password, confirmPassword })
       .pipe(
         tap(data => {
-          this.accessToken = data.accessToken as string
+          this.accessToken = data.accessToken
+          this.refreshToken = data.refreshToken
           this.hasAuthenticated.set(true)
         }),
       )
@@ -67,11 +92,11 @@ export class AuthService {
    * @param {string} email
    */
   public signIn(email: string, password: string) {
-
     return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-in`, { email, password })
       .pipe(
         tap(data => {
-          this.accessToken = data.accessToken as string
+          this.accessToken = data.accessToken
+          this.refreshToken = data.refreshToken
           this.hasAuthenticated.set(true)
         }),
       )
@@ -83,16 +108,12 @@ export class AuthService {
    * * Will return 401 if unable to be unauthenticated
    */
   public isAuthenticated() {
-    return this.http.get<IIsAuthenticatedResponse>(`${environment.apiUrl}/auth/authenticate`, {
-      headers: {
-        ...this.addTokenToHeader(),
-      },
-    })
-    .pipe(
-      map(() => true),
-      catchError(() => of(false)),
-      tap((authenticated: boolean) => this.hasAuthenticated.set(authenticated)),
-    )
+    return this.http.get<IIsAuthenticatedResponse>(`${environment.apiUrl}/auth/authenticate`)
+      .pipe(
+        map(() => true),
+        catchError(() => of(false)),
+        tap((authenticated: boolean) => this.hasAuthenticated.set(authenticated)),
+      )
   }
 
   /**
@@ -101,6 +122,7 @@ export class AuthService {
   public signOut() {
     this.hasAuthenticated.set(false)
     localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     this.router.navigate(['/sign-in'])
   }
 }
