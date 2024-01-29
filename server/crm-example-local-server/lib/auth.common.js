@@ -1,8 +1,11 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { unauthorizedError } from './common.js'
 
-const ACCESS_TOKEN_EXPIRY = '1h'
+const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY
+const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY
+
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET)
+const REFRESH_TOKEN_SECRET = new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET)
 
 /**
  * Generate a JWT string
@@ -67,13 +70,16 @@ export const verifyToken = async (token, secret) => {
  *
  * @param {*} headers
  */
-const extractAuthHeaderToken = (headers) => {
+export const extractAuthHeaderToken = (headers) => {
   const authHeader = headers['authorization'] || headers['Authorization'] || ''
   return authHeader.split(' ')[1]
 }
 
 export const verifyAccessToken = async (accessToken) => verifyToken(accessToken, ACCESS_TOKEN_SECRET)
 export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRY)
+
+export const verifyRefreshToken = async (refreshToken) => verifyToken(refreshToken, REFRESH_TOKEN_SECRET)
+export const signRefreshToken = async (payload) => signToken(payload, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRY)
 
 /**
  * Return the verified access token, from the request header

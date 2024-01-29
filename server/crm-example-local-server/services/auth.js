@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
-import { getUserId, signAccessToken } from '../lib/auth.common.js'
+import { extractAuthHeaderToken, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.js'
 
 /**
  * Function to hash a password
@@ -55,8 +55,10 @@ export const signUpEndpoint = async (requestBody) => {
       throw error
     }
 
-    const accessToken = await signAccessToken({ user_id: user.user_id, email })
-    return successfulResponse({ message: 'User created', accessToken }, 201)
+    const tokenPayload = { user_id: user.user_id, email }
+    const accessToken = await signAccessToken(tokenPayload)
+    const refreshToken = await signRefreshToken(tokenPayload)
+    return successfulResponse({ message: 'User created', accessToken, refreshToken }, 201)
   })
 }
 
@@ -80,8 +82,10 @@ export const signInEndpoint = async (requestBody) => {
   const match = await comparePassword(password, user.hashed_password)
   if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' })
 
-  const accessToken = await signAccessToken({ user_id: user.user_id, email })
-  return { statusCode: 200, message: 'Sign in successful.', accessToken }
+  const tokenPayload = { user_id: user.user_id, email }
+  const accessToken = await signAccessToken(tokenPayload)
+  const refreshToken = await signRefreshToken(tokenPayload)
+  return { statusCode: 200, message: 'Sign in successful.', accessToken, refreshToken }
 }
 
 /**
@@ -93,6 +97,23 @@ export const isAuthenticatedEndpoint = async (reqHeaders) => {
   try {
     await getUserId(reqHeaders)
     return successfulResponse({ message: 'Authenticated.' })
+  } catch (error) {
+    throw unauthorizedError()
+  }
+}
+
+/**
+ * Refresh the access token
+ *
+ * @param {*} reqHeaders
+ */
+export const refreshAccessToken = async (reqHeaders) => {
+  try {
+    const refreshTokenHeader = extractAuthHeaderToken(reqHeaders)
+    const verifiedRefreshToken = await verifyRefreshToken(refreshTokenHeader)
+
+    const accessToken = await signAccessToken({ user_id: verifiedRefreshToken.user_id, email: verifiedRefreshToken })
+    return successfulResponse({ accessToken })
   } catch (error) {
     throw unauthorizedError()
   }
