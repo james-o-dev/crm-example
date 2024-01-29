@@ -1,6 +1,16 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { unauthorizedError } from './common.js'
 
+// These environment variables are required. Stop the server if they are not set.
+[
+  'ACCESS_TOKEN_EXPIRY',
+  'REFRESH_TOKEN_EXPIRY',
+  'ACCESS_TOKEN_SECRET',
+  'REFRESH_TOKEN_SECRET',
+].forEach(varName => {
+  if (!process.env[varName]) throw new Error(`'${varName}' environment variable was not set.`)
+})
+
 const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY
 const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY
 
