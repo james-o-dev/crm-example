@@ -1,16 +1,6 @@
 <div>
 <!-- <div class="container-sm"> -->
 
-  <div class="demo-only">
-    <ul>
-      <li>Demo only, currently under development.</li>
-      <li>Mock database is stored in the localStorage of the client.</li>
-      <li><button (click)="onLocalDbClear()">Clear Local DB</button></li>
-      <li>Do not save any private or confidential information within this app.</li>
-      <li>Currently, password is not required for sign-up and sign-in. Only email is required</li>
-    </ul>
-  </div>
-
   @if (hasAuthenticatedSignal()) {
     <mat-toolbar color="primary">
       <button mat-icon-button (click)="drawer.toggle()" class="sidenav-toggle">

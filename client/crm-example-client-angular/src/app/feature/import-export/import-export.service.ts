@@ -1,19 +1,27 @@
-import { Injectable, inject } from '@angular/core'
-import { from } from 'rxjs'
-import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from '../../../assets/js/mock/import-export.mock'
-import { AuthService } from '../../core/auth.service'
+import { Injectable } from '@angular/core'
+import { BaseService } from '../../core/base.service'
+
+interface IExportContactsJSONResponse {
+  json: string
+}
+
+interface IImportContactsJSONResponse {
+  message: string
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class ImportExportService {
-  private authService = inject(AuthService)
+export class ImportExportService extends BaseService {
 
+  /**
+   * Get contacts in a JSON string.
+   */
   public exportContactsJson() {
-    return from(exportContactsJsonEndpoint(this.authService.accessToken))
+    return this.getRequest<IExportContactsJSONResponse>(`${this.apiUrl}/export/contacts/json`)
   }
 
-  public importContactsJson(jsonString: string) {
-    return from(importContactsJsonEndpoint(this.authService.accessToken, jsonString))
+  public importContactsJson(json: string) {
+    return this.postRequest<IImportContactsJSONResponse>(`${this.apiUrl}/import/contacts/json`, { json })
   }
 }

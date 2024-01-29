@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
-import { ContactService, IContact } from '../../core/contacts.service'
+import { ContactService, IGetContact, IUpdateContactPayload } from '../../core/contacts.service'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { switchMap, tap } from 'rxjs'
@@ -12,6 +12,7 @@ import { TaskFormComponent } from '../../shared/task-form/task-form.component'
 import { TasksService } from '../../core/tasks.service'
 import { DateFnsPipe } from '../../shared/date-fns.pipe'
 import { NotificationsService } from '../../core/notifications.service'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-contact-detail',
@@ -36,12 +37,13 @@ export class ContactDetailComponent implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute)
   private contactService = inject(ContactService)
+  private dialog = inject(DialogService)
   private notificationsService = inject(NotificationsService)
   private router = inject(Router)
   private tasksService = inject(TasksService)
 
   protected contactId = ''
-  protected contact: IContact = {} as IContact
+  protected contact: IGetContact = {} as IGetContact
   protected editMode = false
   protected addTaskMode = false
 
@@ -56,10 +58,12 @@ export class ContactDetailComponent implements OnInit {
   protected onSave() {
     if (this.contactForm.form.invalid) return
 
-    this.contactService.updateContact({ ...this.contactForm.form.value, key: this.contactId } as IContact)
+    const payload = { ...this.contactForm.form.value, contact_id: this.contactId } as IUpdateContactPayload
+    this.contactService.updateContact(payload)
       .pipe(switchMap(() => this.getContact()))
       .subscribe({
         next: () => this.editMode = false,
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 
@@ -68,11 +72,9 @@ export class ContactDetailComponent implements OnInit {
 
     this.tasksService.addTask({ ...this.taskForm.form.value, contact_id: this.contactId })
       .subscribe({
-        next: (response) => {
-          if (response.statusCode === 201) {
-            this.notificationsService.triggerNumberUpdateEvent()
-            this.addTaskMode = false
-          }
+        next: () => {
+          this.notificationsService.triggerNumberUpdateEvent()
+          this.addTaskMode = false
         },
       })
   }

@@ -3,7 +3,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import { IContact } from '../../core/contacts.service'
+import { IGetContact } from '../../core/contacts.service'
 
 @Component({
   selector: 'app-contact-form',
@@ -21,11 +21,11 @@ import { IContact } from '../../core/contacts.service'
 export class ContactFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder)
 
-  @Input() existingContact: IContact = {} as IContact
+  @Input() existingContact: IGetContact = {} as IGetContact
 
   form = this.formBuilder.group({
     name: ['', Validators.required],
-    email: ['', Validators.email],
+    email: ['', [Validators.required, Validators.email]],
     phone: [''],
     notes: [''],
   })

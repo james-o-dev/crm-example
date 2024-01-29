@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { RouterLink } from '@angular/router'
 import { MatCardModule } from '@angular/material/card'
-import { HomeService, IHomeMetadata } from './home.service'
+import { HomeService } from './home.service'
 import { map } from 'rxjs'
 import { AsyncPipe, NgIf } from '@angular/common'
 
@@ -27,5 +27,5 @@ export class HomeComponent {
   private homeService = inject(HomeService)
 
   protected data$ = this.homeService.getHomeMetadata()
-    .pipe(map(response => response.data as IHomeMetadata))
+    .pipe(map(response => response.data))
 }

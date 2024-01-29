@@ -3,7 +3,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'
-import { ISearchResponse, SearchService } from './search.service'
+import { ISearch, SearchService } from './search.service'
 import { Router } from '@angular/router'
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { debounceTime, distinctUntilChanged } from 'rxjs'
@@ -36,7 +36,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     'type',
   ]
 
-  protected dataSource: ISearchResponse[] = []
+  protected dataSource: ISearch[] = []
 
   protected form = this.formBuilder.group({ q: [''] })
 
@@ -55,6 +55,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    // Save the search term on component destroy.
+    // Note - this only works when navigating away. It does not save when the browser is refreshed or closed.
     const q = this.form.controls.q.value
     if (q) {
       sessionStorage.setItem(this.SESSION_STORAGE_SAVE, q)
@@ -70,13 +72,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
 
     this.searchService.search(q as string)
-      .subscribe((response) => {
-        if (response.statusCode === 200) this.dataSource = response.found as ISearchResponse[]
-        else this.dataSource = []
-      })
+      .subscribe((response) => this.dataSource = response.found)
   }
 
-  protected onNavigateToRecord(element: ISearchResponse) {
+  protected onNavigateToRecord(element: ISearch) {
     let route
 
     switch (element.type) {

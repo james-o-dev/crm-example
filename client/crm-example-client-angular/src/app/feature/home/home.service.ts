@@ -1,21 +1,21 @@
-import { getHomeMetadataEndpoint } from '../../../assets/js/mock/meta.mock'
-import { Injectable, inject } from '@angular/core'
-import { AuthService } from '../../core/auth.service'
-import { from } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { BaseService } from '../../core/base.service'
 
-export interface IHomeMetadata {
+interface IHomeMetadata {
   contacts: number
   tasks: number
   tasks_overdue: number
 }
 
+interface IHomeMetadataResponse {
+  data: IHomeMetadata
+}
+
 @Injectable({
   providedIn: 'root',
 })
-export class HomeService {
-  private authService = inject(AuthService)
-
+export class HomeService extends BaseService {
   public getHomeMetadata() {
-    return from(getHomeMetadataEndpoint(this.authService.accessToken))
+    return this.getRequest<IHomeMetadataResponse>(`${this.apiUrl}/dashboard`)
   }
 }

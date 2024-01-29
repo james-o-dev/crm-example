@@ -1,43 +1,47 @@
-import { Injectable, computed, inject, signal } from '@angular/core'
-import { AuthService } from './auth.service'
-import { from } from 'rxjs'
-import { getNotificationsEndpoint } from '../../assets/js/mock/notifications.mock'
+import { Injectable, computed, signal } from '@angular/core'
+import { BaseService } from './base.service'
 
 export interface INotificationDetail {
   type: 'task_overdue' | 'task_soon'
   title: string
   message: string
-  key?: string
+  key: string
+}
+
+interface INotificationCountResponse {
+  count: string
+}
+
+interface INotificationDetailResponse {
+  detail: INotificationDetail[]
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationsService {
-  private authService = inject(AuthService)
-
+export class NotificationsService extends BaseService {
   private manualTriggerNotificationNumber = signal(Math.random())
 
   /**
    * This is the Angular signal to trigger updating the notification number in the top bar.
    */
   public updateNotificationNumberSignal = computed(() => {
-    if (this.authService.hasAuthenticated()) return this.manualTriggerNotificationNumber()
+    if (this.auth.hasAuthenticated()) return this.manualTriggerNotificationNumber()
     return null
   })
 
   /**
    * Get notification details, for this user.
    */
-  public getNotificationsDetails() {
-    return from(getNotificationsEndpoint(this.authService.accessToken, false))
+  public getNotificationsDetail() {
+    return this.getRequest<INotificationDetailResponse>(`${this.apiUrl}/notifications/detail`)
   }
 
   /**
    * Get notification number only, for this user.
    */
-  public getNotificationsNumberOnly() {
-    return from(getNotificationsEndpoint(this.authService.accessToken, true))
+  public getNotificationsCount() {
+    return this.getRequest<INotificationCountResponse>(`${this.apiUrl}/notifications/count`)
   }
 
   /**

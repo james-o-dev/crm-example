@@ -5,8 +5,7 @@ import { ImportExportService } from './import-export.service'
 import { MatIconModule } from '@angular/material/icon'
 import { from, switchMap } from 'rxjs'
 import { Router } from '@angular/router'
-import { MatDialog } from '@angular/material/dialog'
-import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-import-export',
@@ -20,7 +19,7 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
   styleUrl: './import-export.component.css',
 })
 export class ImportExportComponent {
-  private dialog = inject(MatDialog)
+  private dialog = inject(DialogService)
   private importExportService = inject(ImportExportService)
   private router = inject(Router)
 
@@ -33,26 +32,14 @@ export class ImportExportComponent {
 
     from(this.parseJsonFile(file))
       .pipe(
-        switchMap((fileData: string) => {
-          return this.importExportService.importContactsJson(fileData)
-        }),
+        switchMap((fileData: string) => this.importExportService.importContactsJson(fileData)),
       )
-      .subscribe(response => {
-        if (response.statusCode === 200) {
-          this.dialog.open(DialogComponent, {
-            data: {
-              contents: [response.message],
-              actions: [{ text: 'Confirm' }],
-            } as IDialogData,
-          }).afterClosed().subscribe(() => this.router.navigate(['/contacts']))
-        } else {
-          this.dialog.open(DialogComponent, {
-            data: {
-              contents: [response.message],
-              actions: [{ text: 'Confirm' }],
-            } as IDialogData,
-          })
-        }
+      .subscribe({
+        next: response => {
+          this.dialog.displayDialog('', [response.message], [{ text: 'Confirm' }])
+            .subscribe(() => this.router.navigate(['/contacts']))
+        },
+        error: response => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 
@@ -60,7 +47,7 @@ export class ImportExportComponent {
     this.importExportService.exportContactsJson()
       .subscribe(data => {
         // In development, download Json data as JSON file.
-        this.saveAsFile(data.json as string)
+        this.saveAsFile(data.json)
       })
   }
 

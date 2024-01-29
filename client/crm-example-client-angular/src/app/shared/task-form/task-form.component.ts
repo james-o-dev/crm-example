@@ -9,8 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { Observable, map, of, startWith } from 'rxjs'
-import { ContactService, IContact } from '../../core/contacts.service'
-import { ITask } from '../../core/tasks.service'
+import { ContactService } from '../../core/contacts.service'
+import { IGetTask } from '../../core/tasks.service'
 import { RouterLink } from '@angular/router'
 
 interface IOption {
@@ -41,7 +41,7 @@ export class TaskFormComponent implements OnInit {
   private contactService = inject(ContactService)
   private formBuilder = inject(FormBuilder)
 
-  @Input() existingTask: ITask = {} as ITask
+  @Input() existingTask: IGetTask = {} as IGetTask
   @Input() noContact = false
 
   private contacts: IOption[] = []
@@ -52,16 +52,17 @@ export class TaskFormComponent implements OnInit {
     title: ['', Validators.required],
     due_date: '',
     notes: '',
+    contact_id: '',
   })
 
   public ngOnInit(): void {
     // Get contacts for the auto-complete.
     this.contactService.getContacts()
       .subscribe(data => {
-        this.contacts = (data.contacts as IContact[])
+        this.contacts = data.contacts
           .map((contact) => {
             return {
-              value: contact.key as string,
+              value: contact.contact_id as string,
               text: contact.name,
             }
           })
@@ -73,7 +74,13 @@ export class TaskFormComponent implements OnInit {
       startWith(this.existingTask.contact_name || ''),
       map((value) => {
         if (!value) return []
-        const text = typeof value === 'string' ? value : value?.text
+        let text = value // Initially set - assumes the value is a string.
+        if (typeof value !== 'string') { // If it is not a string.
+          // Use the text of of the option selected.
+          text = value?.text
+          // Set the contact_id of the selected contact.
+          this.form.controls['contact_id'].setValue(value.value)
+        }
         const normalText = text.trim().toLowerCase()
         return this.contacts.filter((contact) => contact.text.toLowerCase().includes(normalText))
       }),
@@ -85,7 +92,7 @@ export class TaskFormComponent implements OnInit {
   public onReset() {
     let resetTask = {}
     if (this.existingTask) {
-      const due_date = this.existingTask.due_date ? new Date(this.existingTask.due_date as number) : null
+      const due_date = this.existingTask.due_date ? new Date(parseInt(this.existingTask.due_date)) : null
       resetTask = {
         ...this.existingTask,
         due_date,

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, effect, inject } from '@angular/core'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { RouterLink, RouterOutlet } from '@angular/router'
-import { clearLocalStorageDb } from '../assets/js/mock/mock.js'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
 import { MAT_DATE_FNS_FORMATS, provideDateFnsAdapter } from '@angular/material-date-fns-adapter'
@@ -53,10 +52,6 @@ export class AppComponent implements OnInit {
 
   @ViewChild('drawer') drawer: MatDrawer = {} as MatDrawer
 
-  onLocalDbClear() {
-    clearLocalStorageDb()
-  }
-
   protected hasAuthenticatedSignal = this.authService.hasAuthenticated
 
   // Define the notification number Observable.
@@ -105,9 +100,9 @@ export class AppComponent implements OnInit {
     this.notificationNumber$ = of('')
 
     // Define the notification number Observable.
-    this.notificationNumber$ = this.notificationsService.getNotificationsNumberOnly()
+    this.notificationNumber$ = this.notificationsService.getNotificationsCount()
       .pipe(
-        map(response => response?.number || ''),
+        map(response => response.count || ''),
       )
   }
 

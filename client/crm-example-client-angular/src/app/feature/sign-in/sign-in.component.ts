@@ -5,8 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { AuthService } from '../../core/auth.service'
 import { Router, RouterLink } from '@angular/router'
-import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
-import { MatDialog } from '@angular/material/dialog'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-sign-in',
@@ -24,7 +23,7 @@ import { MatDialog } from '@angular/material/dialog'
 })
 export class SignInComponent {
   private authService = inject(AuthService)
-  private dialog = inject(MatDialog)
+  private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
 
@@ -32,29 +31,16 @@ export class SignInComponent {
 
   public ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['' /**Validators.required */], // Disabled for now.
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
     })
-
-    // Dev purposes, password is not required.
-    this.form.get('password')?.disable()
   }
 
   protected onSubmit() {
-    this.authService.signIn(this.form.value.email)
+    this.authService.signIn(this.form.value.email, this.form.value.password)
       .subscribe({
-        next: (response) => {
-          if (response.statusCode === 200) {
-            this.router.navigate(['/home'])
-          } else {
-            this.dialog.open(DialogComponent, {
-              data: {
-                contents: [response.message],
-                actions: [{ text: 'Confirm' }],
-              } as IDialogData,
-            })
-          }
-        },
+        next: () => this.router.navigate(['/home']),
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
   }
 }

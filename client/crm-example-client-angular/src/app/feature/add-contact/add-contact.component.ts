@@ -4,8 +4,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { ContactService } from '../../core/contacts.service'
 import { Router } from '@angular/router'
-import { MatDialog } from '@angular/material/dialog'
-import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.component'
+import { DialogService } from '../../shared/dialog/dialog.service'
 
 @Component({
   selector: 'app-add-contact',
@@ -20,7 +19,7 @@ import { DialogComponent, IDialogData } from '../../shared/dialog/dialog.compone
 })
 export class AddContactComponent {
   private contactService = inject(ContactService)
-  private dialog = inject(MatDialog)
+  private dialog = inject(DialogService)
   private router = inject(Router)
 
   @ViewChild('contactForm') contactForm: ContactFormComponent = {} as ContactFormComponent
@@ -35,24 +34,20 @@ export class AddContactComponent {
       notes: this.contactForm.form.value.notes as string,
     }).subscribe({
       next: () => {
-
-        this.dialog.open(DialogComponent, {
-          data: {
-            title: 'New contact added',
-            contents: ['Would you like to go to your existing contacts?'],
-            actions: [
-              { value: true, text: 'Yes, go to contacts list' },
-              { text: 'No, stay on the form' },
-            ],
-          } as IDialogData,
-        })
-          .afterClosed().subscribe((confirmed: boolean) => {
+        const title = 'New contact added'
+        const contents = ['Would you like to go to your existing contacts?']
+        const actions = [
+          { value: true, text: 'Yes, go to contacts list' },
+          { text: 'No, stay on the form' },
+        ]
+        this.dialog.displayDialog(title, contents, actions)
+          .subscribe((confirmed: boolean) => {
             if (confirmed) this.router.navigate(['/contacts'])
             else this.contactForm.form.reset()
           })
       },
-      error: (err) => {
-        console.error(err)
+      error: (response) => {
+        this.dialog.displayErrorDialog(response.error.message)
       },
     })
   }

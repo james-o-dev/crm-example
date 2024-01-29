@@ -1,21 +1,22 @@
-import { Injectable, inject } from '@angular/core'
-import { from } from 'rxjs'
-import { searchEndpoint } from '../../../assets/js/mock/search.mock'
-import { AuthService } from '../../core/auth.service'
+import { Injectable } from '@angular/core'
+import { BaseService } from '../../core/base.service'
 
-export interface ISearchResponse {
+export interface ISearch {
   name: string
   key: string
   type: 'contact' | 'task'
 }
 
+interface ISearchResponse {
+  found: ISearch[]
+}
+
 @Injectable({
   providedIn: 'root',
 })
-export class SearchService {
-  private authService = inject(AuthService)
+export class SearchService extends BaseService {
 
   search(q: string) {
-    return from(searchEndpoint(this.authService.accessToken, q))
+    return this.getRequest<ISearchResponse>(`${this.apiUrl}/search`, { q })
   }
 }

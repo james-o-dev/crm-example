@@ -1,4 +1,10 @@
-# Mock scripts for CRM Example API
+# Mock scripts for CRM Example API [DEPRECATED]
+
+## DEPRECATED
+
+These scripts are currently deprecated and are replaced by the local ExpressJS server / Postgres database for local development.
+
+The scripts are kept as reference until no longer needed.
 
 ## Description
 
