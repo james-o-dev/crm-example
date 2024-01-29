@@ -1,32 +1,6 @@
 import { Injectable } from '@angular/core'
 import { BaseService } from './base.service'
 
-// export interface ITask {
-//   contact_id?: string
-//   contact_name?: string
-//   date_created: number
-//   date_modified: number
-//   due_date?: number
-//   key: string
-//   notes?: string
-//   title: string
-//   user_id: string
-// }
-
-export interface ITaskAdd {
-  due_date?: number
-  notes?: string
-  title: string
-}
-
-export interface ITaskUpdate {
-  due_date?: number
-  key: string
-  notes?: string
-  title: string
-}
-
-
 export interface IGetTasks {
   task_id: string
   title: string
@@ -87,11 +61,6 @@ interface IDeleteTaskResponse {
 export class TasksService extends BaseService {
 
   public addTask(payload: ICreateTaskPayload) {
-    // if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
-      // payload.due_date = new Date(payload.due_date).getTime()
-    // }
-    // return from(addTaskEndpoint(this.authService.accessToken, payload))
-
     const requestPayload = {
       ...payload,
       due_date: payload.due_date ? payload.due_date.getTime() : undefined, // Convert Date object into unix timestamp number.
@@ -105,12 +74,6 @@ export class TasksService extends BaseService {
    * @param {IUpdateTaskPayload} payload
    */
   public updateTask(payload: IUpdateTaskPayload) {
-    // if (typeof payload?.due_date === 'string' || typeof payload?.due_date === 'object') {
-    //   payload.due_date = new Date(payload.due_date).getTime()
-    // }
-
-    // return from(updateTaskEndpoint(this.authService.accessToken, payload))
-
     const requestPayload = {
       ...payload,
       due_date: payload.due_date ? payload.due_date.getTime() : undefined, // Convert Date object into unix timestamp number.
@@ -124,8 +87,6 @@ export class TasksService extends BaseService {
    * @param {string} taskId
    */
   public getTask(taskId: string) {
-    // return from(getTaskEndpoint(this.authService.accessToken, taskId))
-
     return this.getRequest<IGetTaskResponse>(`${this.apiUrl}/task`, { task_id: taskId })
   }
 
@@ -135,8 +96,6 @@ export class TasksService extends BaseService {
    * @param {string} [contactId]
    */
   public getTasks(contactId = '') {
-    // return from(getTasksEndpoint(this.authService.accessToken, contactId))
-
     return this.getRequest<IGetTasksResponse>(`${this.apiUrl}/tasks`, { contact_id: contactId })
   }
 
@@ -146,8 +105,6 @@ export class TasksService extends BaseService {
    * @param {string} [contactId]
    */
   public deleteTask(taskId: string) {
-    // return from(deleteTaskEndpoint(this.authService.accessToken, taskId))
-
     return this.deleteRequest<IDeleteTaskResponse>(`${this.apiUrl}/task`, { task_id: taskId })
   }
 }

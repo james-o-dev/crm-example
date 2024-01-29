@@ -17,8 +17,6 @@ interface ISearchResponse {
 export class SearchService extends BaseService {
 
   search(q: string) {
-    // return from(searchEndpoint(this.authService.accessToken, q))
-
     return this.getRequest<ISearchResponse>(`${this.apiUrl}/search`, { q })
   }
 }

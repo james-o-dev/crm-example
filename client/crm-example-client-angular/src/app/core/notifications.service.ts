@@ -34,8 +34,6 @@ export class NotificationsService extends BaseService {
    * Get notification details, for this user.
    */
   public getNotificationsDetail() {
-    // return from(getNotificationsEndpoint(this.authService.accessToken, false))
-
     return this.getRequest<INotificationDetailResponse>(`${this.apiUrl}/notifications/detail`)
   }
 
@@ -43,8 +41,6 @@ export class NotificationsService extends BaseService {
    * Get notification number only, for this user.
    */
   public getNotificationsCount() {
-    // return from(getNotificationsEndpoint(this.authService.accessToken, true))
-
     return this.getRequest<INotificationCountResponse>(`${this.apiUrl}/notifications/count`)
   }
 

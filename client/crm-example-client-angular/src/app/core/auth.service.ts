@@ -21,6 +21,9 @@ export class AuthService {
   private http = inject(HttpClient)
   private router = inject(Router)
 
+  /**
+   * Signal if the user is authenticated.
+   */
   public hasAuthenticated = signal(false)
 
   get accessToken() {
@@ -30,6 +33,13 @@ export class AuthService {
     localStorage.setItem('accessToken', accessToken)
   }
 
+  /**
+   * Returns an object to be used in the request, to include the 'authorization' header.
+   *
+   * @param {string} [token]
+   *
+   * @example { 'headers': { ...this.addTokenToHeader } }
+   */
   public addTokenToHeader(token = this.accessToken) {
     return {
       'authorization': `Bearer ${token}`,
@@ -38,24 +48,10 @@ export class AuthService {
 
   /**
    * Request to sign up a user.
-   * * TODO: Placeholder
    *
    * @param {string} email
    */
   public signUp(email: string, password: string, confirmPassword: string) {
-    // From mock DB.
-    // return from(signUpEndpoint(email))
-    //   .pipe(
-    //     tap(data => {
-    //       if (data.statusCode === 201) {
-    //         this.accessToken = data.accessToken as string
-    //         this.hasAuthenticated.set(true)
-    //       }
-    //     }),
-    //   )
-    // API Endpoint.
-    // TODO
-
     return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-up`, { email, password, confirmPassword })
       .pipe(
         tap(data => {
@@ -67,23 +63,10 @@ export class AuthService {
 
   /**
    * Request to sign in a user.
-   * * TODO: Placeholder
    *
    * @param {string} email
    */
   public signIn(email: string, password: string) {
-    // From mock DB.
-    // return from(signInEndpoint(email))
-    //   .pipe(
-    //     tap(data => {
-    //       if (data.statusCode === 200) {
-    //         this.accessToken = data.accessToken as string
-    //         this.hasAuthenticated.set(true)
-    //       }
-    //     }),
-    //   )
-    // API Endpoint.
-    // TODO
 
     return this.http.post<IReceiveJWTResponse>(`${environment.apiUrl}/auth/sign-in`, { email, password })
       .pipe(
@@ -94,16 +77,12 @@ export class AuthService {
       )
   }
 
+  /**
+   * Determine if the user has been authenticated.
+   * * Will return 200 if authenticated
+   * * Will return 401 if unable to be unauthenticated
+   */
   public isAuthenticated() {
-    // Mock.
-    // return from(isAuthenticatedEndpoint(this.accessToken))
-    //   .pipe(tap(data => {
-    //     if (data.ok && data.statusCode === 200) {
-    //       this.hasAuthenticated.set(true)
-    //     }
-    //   }))
-
-    // API.
     return this.http.get<IIsAuthenticatedResponse>(`${environment.apiUrl}/auth/authenticate`, {
       headers: {
         ...this.addTokenToHeader(),
@@ -116,6 +95,9 @@ export class AuthService {
     )
   }
 
+  /**
+   * Sign-out client side.
+   */
   public signOut() {
     this.hasAuthenticated.set(false)
     localStorage.removeItem('accessToken')

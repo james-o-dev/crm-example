@@ -16,8 +16,6 @@ interface IHomeMetadataResponse {
 })
 export class HomeService extends BaseService {
   public getHomeMetadata() {
-    // return from(getHomeMetadataEndpoint(this.authService.accessToken))
-
     return this.getRequest<IHomeMetadataResponse>(`${this.apiUrl}/dashboard`)
   }
 }

@@ -18,8 +18,6 @@ export class UserProfileService extends BaseService {
    * Get the user's username.
    */
   public getUsername() {
-    // return from(getUsernameEndpoint(this.authService.accessToken))
-
     return this.getRequest<IGetUsernameResponse>(`${this.apiUrl}/user/username`)
   }
 
@@ -29,8 +27,6 @@ export class UserProfileService extends BaseService {
    * @param {string} username
    */
   public setUsername(username: string) {
-    // return from(changeUsernameEndpoint(this.authService.accessToken, username))
-
     return this.putRequest<ISetUsernameResponse>(`${this.apiUrl}/user/username`, { username })
   }
 }
