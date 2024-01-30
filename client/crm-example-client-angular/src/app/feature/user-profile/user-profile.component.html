@@ -34,26 +34,42 @@
     <h2>Change Password</h2>
   </div>
 
+  <div>
+    {{auth.PASSWORD_REGEXP_MESSAGE}}
+  </div>
+  <br>
+
   <form [formGroup]="changePasswordForm" (submit)="onChangePassword()" class="change-password-form">
     <mat-form-field>
       <mat-label>Old Password</mat-label>
       <input matInput type="password" formControlName="oldPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>New Password</mat-label>
       <input matInput type="password" formControlName="newPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Confirm New Password</mat-label>
       <input matInput type="password" formControlName="confirmPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <div>
-      <button type="submit" mat-raised-button color="primary">Change Password</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="changePasswordForm.invalid">Change Password</button>
     </div>
   </form>
 
+  <br>
+  <mat-divider />
+
+  <div class="text-center-responsive">
+    <h2>Sign Out Everywhere</h2>
+  </div>
+
+  <button mat-stroked-button color="warn" (click)="onSignOutEverywhere()">Sign Out Of All Devices</button>
 
 </div>

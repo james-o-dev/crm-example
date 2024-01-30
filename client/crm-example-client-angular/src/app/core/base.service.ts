@@ -12,7 +12,7 @@ interface IQueryParams {
 })
 export class BaseService {
   protected auth = inject(AuthService)
-  protected http = inject(HttpClient)
+  private http = inject(HttpClient)
 
   /**
    * Host Url.
@@ -20,18 +20,18 @@ export class BaseService {
   protected apiUrl = environment.apiUrl
 
   protected getRequest<T>(url: string, params?: IQueryParams, headers?: HttpHeaders) {
-    return this.http.get<T>(url, { headers: { ...this.auth.addTokenToHeader(), ...headers }, params })
+    return this.http.get<T>(url, { headers: { ...headers }, params })
   }
 
   protected postRequest<T>(url: string, body: object, params?: IQueryParams, headers?: HttpHeaders) {
-    return this.http.post<T>(url, body, { headers: { ...this.auth.addTokenToHeader(), ...headers }, params })
+    return this.http.post<T>(url, body, { headers: { ...headers }, params })
   }
 
   protected putRequest<T>(url: string, body: object, params?: IQueryParams, headers?: HttpHeaders) {
-    return this.http.put<T>(url, body, { headers: { ...this.auth.addTokenToHeader(), ...headers }, params })
+    return this.http.put<T>(url, body, { headers: { ...headers }, params })
   }
 
   protected deleteRequest<T>(url: string, params?: IQueryParams, headers?: HttpHeaders) {
-    return this.http.delete<T>(url, { headers: { ...this.auth.addTokenToHeader(), ...headers }, params })
+    return this.http.delete<T>(url, { headers: { ...headers }, params })
   }
 }

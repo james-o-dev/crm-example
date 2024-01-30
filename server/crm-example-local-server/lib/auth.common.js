@@ -1,8 +1,29 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { unauthorizedError } from './common.js'
+import { getDb } from './db/db-postgres.js'
 
-const ACCESS_TOKEN_EXPIRY = '1h'
+// These environment variables are required. Stop the server if they are not set.
+[
+  'ACCESS_TOKEN_EXPIRY',
+  'REFRESH_TOKEN_EXPIRY',
+  'ACCESS_TOKEN_SECRET',
+  'REFRESH_TOKEN_SECRET',
+].forEach(varName => {
+  if (!process.env[varName]) throw new Error(`'${varName}' environment variable was not set.`)
+})
+
+const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY
+const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY
+
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET)
+const REFRESH_TOKEN_SECRET = new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET)
+
+export const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+-])[A-Za-z\d!@#$%^&*()_+-]{8,}$/
+export const PASSWORD_REGEXP_MESSAGE = 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+-), with a minimum length of 8 characters.'
+
+
+// Standard email format. Also includes '+' symbol.
+export const EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 /**
  * Generate a JWT string
@@ -51,9 +72,18 @@ export const verifyToken = async (token, secret) => {
     const { payload } = await jwtVerify(token, secret)
     if (!payload) return null
 
-    // Currently does not exist in the database.
-    // const checkedWithDb = await checkTokenWithDb(payload)
-    // if (!checkedWithDb) return null
+    // Check the database.
+    const db = getDb()
+    const user = await db.oneOrNone('SELECT iat FROM users WHERE user_id = $1', [payload.user_id])
+    // User was not found.
+    if (!user) return null
+    // Check that it is still valid, according to the DB iat.
+    if (user.iat) {
+      const dbIat = parseInt(user.iat)
+      const jwtIat = payload.iat
+      // JWT was invalidated.
+      if (jwtIat <= dbIat) return null
+    }
 
     // Valid - return the verified decoded JWT.
     return payload
@@ -67,13 +97,16 @@ export const verifyToken = async (token, secret) => {
  *
  * @param {*} headers
  */
-const extractAuthHeaderToken = (headers) => {
+export const extractAuthHeaderToken = (headers) => {
   const authHeader = headers['authorization'] || headers['Authorization'] || ''
   return authHeader.split(' ')[1]
 }
 
 export const verifyAccessToken = async (accessToken) => verifyToken(accessToken, ACCESS_TOKEN_SECRET)
 export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRY)
+
+export const verifyRefreshToken = async (refreshToken) => verifyToken(refreshToken, REFRESH_TOKEN_SECRET)
+export const signRefreshToken = async (payload) => signToken(payload, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRY)
 
 /**
  * Return the verified access token, from the request header
@@ -99,3 +132,11 @@ export const getUserId = async (reqHeaders) => {
   if (!userId) throw unauthorizedError()
   return userId
 }
+
+/**
+ * Return the object used as the payload for JWT tokens.
+ *
+ * @param {string} userId
+ * @param {string} email
+ */
+export const getJwtPayload = (userId, email) => ({ email, user_id: userId })
