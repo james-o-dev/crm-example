@@ -1,8 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { AuthService } from './auth.service'
-import { catchError, of, switchMap, tap, throwError } from 'rxjs'
-import { DialogService } from '../shared/dialog/dialog.service'
+import { catchError, switchMap, throwError } from 'rxjs'
 
 /**
  * Requests hitting these endpoints ignore authentication.
@@ -27,7 +26,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (isWhitelisted(req.url)) return next(req)
 
   const auth = inject(AuthService)
-  const dialog = inject(DialogService)
 
   const accessToken = auth.accessToken || null
 
@@ -65,18 +63,24 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }),
             // If not successful, the stored refresh token was invalid. The user must sign in again.
             catchError((refreshError) => {
+              auth.signOut()
+              return throwError(() => refreshError)
+
+              // Below: Show dialog when session is expired.
+              // Buggy - shows multiple times. To be investigated in the future.
+
               // Future/idea: Provide the option to sign-in again, instead of automatically signing out.
 
-              // Display dialog only if JWTs exist.
-              const sessionExpiredDialog = dialog.displayErrorDialog('Your session is invalid. You will be signed-out.')
-              // Do not show dialog if tokens do not exist (e.g. signed out manually).
-              const noDialog = of(null)
+              // // Display dialog only if JWTs exist.
+              // const sessionExpiredDialog = dialog.displayErrorDialog('Your session is invalid. You will be signed-out.')
+              // // Do not show dialog if tokens do not exist (e.g. signed out manually).
+              // const noDialog = of(null)
 
-              return (accessToken ? sessionExpiredDialog : noDialog)
-                .pipe(
-                  tap(() => auth.signOut()),
-                  switchMap(() => throwError(() => refreshError)),
-                )
+              // return (accessToken ? sessionExpiredDialog : noDialog)
+              //   .pipe(
+              //     tap(() => auth.signOut()),
+              //     switchMap(() => throwError(() => refreshError)),
+              //   )
             }),
           )
       }),
