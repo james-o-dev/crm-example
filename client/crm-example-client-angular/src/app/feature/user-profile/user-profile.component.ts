@@ -7,7 +7,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { UserProfileService } from './user-profile.service'
 import { MatIconModule } from '@angular/material/icon'
 import { DialogService } from '../../shared/dialog/dialog.service'
-import { switchMap } from 'rxjs'
+import { map, of, switchMap } from 'rxjs'
 import { AuthService } from '../../core/auth.service'
 import { matchFieldValidator } from '../../shared/common-functions'
 
@@ -82,5 +82,40 @@ export class UserProfileComponent implements OnInit {
         next: () => this.auth.signOut(),
         error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
+  }
+
+  /**
+   * Confirm before signing out everywhere.
+   */
+  protected onSignOutEverywhere() {
+    const title = 'Sign Out Everywhere?'
+    const contents = ['This will sign you out of all existing devices']
+    const actions = [
+      { text: 'Cancel' },
+      { text: 'Sign Out', value: true },
+    ]
+
+    this.dialog.displayDialog(title, contents, actions)
+      .pipe(
+        switchMap(confirmed => {
+          // Make request to sign-out everywhere.
+          if (confirmed) return this.userProfileService.signOutEverywhere()
+          // Else, skipped.
+          return of(null)
+        }),
+        switchMap(result => {
+          // Display success dialog, return true.
+          if (result) return this.dialog.displayDialog('Sign Out Successful', ['You will be signed out.'], [{ text: 'OK' }]).pipe(map(() => true))
+          // Else, skipped.
+          return of(null)
+        }),
+      )
+      .subscribe({
+        next: (data) => data ? this.auth.signOut() : null,
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
+      })
+
+
+
   }
 }

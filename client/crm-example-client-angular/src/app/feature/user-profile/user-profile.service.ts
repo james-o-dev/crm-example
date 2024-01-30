@@ -13,6 +13,10 @@ interface IChangePasswordResponse {
   message: string
 }
 
+interface ISignOutEverywhereResponse {
+  message: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -45,5 +49,12 @@ export class UserProfileService extends BaseService {
     return this.putRequest<IChangePasswordResponse>(`${this.apiUrl}/auth/change-password`, {
       oldPassword, newPassword, confirmPassword,
     })
+  }
+
+  /**
+   * Change the user's password.
+   */
+  public signOutEverywhere() {
+    return this.getRequest<ISignOutEverywhereResponse>(`${this.apiUrl}/auth/sign-out-everywhere`)
   }
 }
