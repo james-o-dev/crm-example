@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { unauthorizedError } from './common.js'
+import { getDb } from './db/db-postgres.js'
 
 // These environment variables are required. Stop the server if they are not set.
 [
@@ -64,9 +65,18 @@ export const verifyToken = async (token, secret) => {
     const { payload } = await jwtVerify(token, secret)
     if (!payload) return null
 
-    // Currently does not exist in the database.
-    // const checkedWithDb = await checkTokenWithDb(payload)
-    // if (!checkedWithDb) return null
+    // Check the database.
+    const db = getDb()
+    const user = await db.oneOrNone('SELECT iat FROM users WHERE user_id = $1', [payload.user_id])
+    // User was not found.
+    if (!user) return null
+    // Check that it is still valid, according to the DB iat.
+    if (user.iat) {
+      const dbIat = parseInt(user.iat)
+      const jwtIat = payload.iat
+      // JWT was invalidated.
+      if (jwtIat <= dbIat) return null
+    }
 
     // Valid - return the verified decoded JWT.
     return payload
