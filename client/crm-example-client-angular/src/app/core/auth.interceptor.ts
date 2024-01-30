@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { AuthService } from './auth.service'
-import { catchError, switchMap, tap, throwError } from 'rxjs'
+import { catchError, of, switchMap, tap, throwError } from 'rxjs'
 import { DialogService } from '../shared/dialog/dialog.service'
 
 /**
@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService)
   const dialog = inject(DialogService)
 
-  const accessToken = auth.accessToken
+  const accessToken = auth.accessToken || null
 
   // Append the access token, if it was stored.
   if (accessToken) {
@@ -65,9 +65,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }),
             // If not successful, the stored refresh token was invalid. The user must sign in again.
             catchError((refreshError) => {
-
               // Future/idea: Provide the option to sign-in again, instead of automatically signing out.
-              return dialog.displayErrorDialog('Your session has expired. You will be signed-out.')
+
+              // Display dialog only if JWTs exist.
+              const sessionExpiredDialog = dialog.displayErrorDialog('Your session is invalid. You will be signed-out.')
+              // Do not show dialog if tokens do not exist (e.g. signed out manually).
+              const noDialog = of(null)
+
+              return (accessToken ? sessionExpiredDialog : noDialog)
                 .pipe(
                   tap(() => auth.signOut()),
                   switchMap(() => throwError(() => refreshError)),
