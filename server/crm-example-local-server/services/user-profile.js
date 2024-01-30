@@ -28,11 +28,12 @@ export const setUsername = async (reqHeaders, reqBody) => {
 
   if (!reqBody) throw validationErrorResponse({ message: 'Username required.' })
   const { username } = reqBody
+  const normalUsername = (username || '').trim()
 
   const db = getDb()
   let user
   try {
-    user = await db.oneOrNone('UPDATE users SET username = $2 WHERE user_id = $1 RETURNING user_id', [userId, username])
+    user = await db.oneOrNone('UPDATE users SET username = $2 WHERE user_id = $1 RETURNING user_id', [userId, normalUsername || null])
   } catch (error) {
     if (isUniqueConstraintError(error, 'users_unique_1')) throw validationErrorResponse({ message: 'Username already taken.' }, 409)
     throw error

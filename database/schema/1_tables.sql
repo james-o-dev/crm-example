@@ -12,10 +12,10 @@ CREATE TABLE public.users (
 	date_created bigint NOT NULL DEFAULT now_unix_timestamp(),
 	date_modified bigint NOT NULL DEFAULT now_unix_timestamp(),
 	CONSTRAINT users_pk PRIMARY KEY (user_id),
-	CONSTRAINT users_unique UNIQUE (email),
-	CONSTRAINT users_unique_1 UNIQUE (username)
+	CONSTRAINT users_unique UNIQUE (email)
 );
-
+-- Unique index constraint - ignore usernames that are null or an empty string.
+CREATE UNIQUE INDEX users_unique_1 ON users (username) WHERE username IS NOT NULL AND username <> '';
 
 -- public.contacts definition
 
