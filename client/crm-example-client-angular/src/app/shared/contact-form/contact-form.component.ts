@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { IGetContact } from '../../core/contacts.service'
+import { AuthService } from '../../core/auth.service'
 
 @Component({
   selector: 'app-contact-form',
@@ -19,13 +20,14 @@ import { IGetContact } from '../../core/contacts.service'
   styleUrl: './contact-form.component.css',
 })
 export class ContactFormComponent implements OnInit {
+  private authService = inject(AuthService)
   private formBuilder = inject(FormBuilder)
 
   @Input() existingContact: IGetContact = {} as IGetContact
 
-  form = this.formBuilder.group({
+  public form = this.formBuilder.group({
     name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, Validators.pattern(this.authService.EMAIL_REGEXP)]],
     phone: [''],
     notes: [''],
   })
