@@ -51,6 +51,9 @@ export class UserProfileComponent implements OnInit {
         this.username = data.username
         this.changeUserNameForm.patchValue({ username: this.username })
       })
+
+    // Every time newPassword is changed, update whether confirmPassword is still valid.
+    this.changePasswordForm.controls.newPassword.statusChanges.subscribe(() => this.changePasswordForm.controls.confirmPassword.updateValueAndValidity())
   }
 
   /**
