@@ -11,11 +11,15 @@ CREATE TABLE public.users (
 	hashed_password varchar NOT NULL,
 	date_created bigint NOT NULL DEFAULT now_unix_timestamp(),
 	date_modified bigint NOT NULL DEFAULT now_unix_timestamp(),
+	iat bigint NULL, -- Used for invalidating JWTs. If JWT iat value is less than this value, that JWT is no longer valid.
 	CONSTRAINT users_pk PRIMARY KEY (user_id),
 	CONSTRAINT users_unique UNIQUE (email),
 	CONSTRAINT users_unique_1 UNIQUE (username)
 );
 
+-- Column comments
+
+COMMENT ON COLUMN public.users.iat IS 'Used for invalidating JWTs. If JWT iat value is less than this value, that JWT is no longer valid.';
 
 -- public.contacts definition
 
