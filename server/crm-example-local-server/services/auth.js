@@ -119,3 +119,51 @@ export const refreshAccessToken = async (reqHeaders) => {
     throw unauthorizedError()
   }
 }
+
+/**
+ * Endpoint to change the password.
+ * * When successful, it will also invalid existing JWTs.
+ *
+ * @param {*} reqHeaders
+ * @param {*} reqBody
+ */
+export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
+  const userId = await getUserId(reqHeaders)
+
+  if (!reqBody) throw validationErrorResponse({ message: 'Request body was not provided.' })
+
+  const { oldPassword, newPassword, confirmPassword } = reqBody
+
+  // New password invalid.
+  // TODO
+  // New passwords do not match.
+  if (newPassword !== confirmPassword) throw validationErrorResponse({ message: 'Confirmation password does not match.' })
+
+  const db = getDb()
+  return db.tx(async t => {
+
+    // Get user.
+    const user = await t.oneOrNone('SELECT hashed_password from users WHERE user_id = $1', [userId])
+    if (!user) throw validationErrorResponse({ message: 'User not found.' }, 404)
+
+    // Old password is invalid.
+    const match = await comparePassword(oldPassword, user.hashed_password)
+    if (!match) throw validationErrorResponse({ message: 'Old password does not match current password.' })
+
+    // Change password.
+    const newHashedPassword = await hashPassword(newPassword)
+    const sql = `
+      UPDATE users
+      SET hashed_password = $(newHashedPassword),
+      iat = now_unix_timestamp() / 1000
+      WHERE user_id = $(userId)
+    `
+    const sqlParams = {
+      userId,
+      newHashedPassword,
+    }
+    await t.none(sql, sqlParams)
+
+    return successfulResponse({ message: 'Password has been changed. Existing tokens have been invalidated.' })
+  })
+}

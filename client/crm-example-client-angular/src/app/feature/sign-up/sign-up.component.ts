@@ -4,9 +4,10 @@ import { Component, OnInit, inject } from '@angular/core'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
-import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
+import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { DialogService } from '../../shared/dialog/dialog.service'
+import { matchFieldValidator } from '../../shared/common-functions'
 
 @Component({
   selector: 'app-sign-up',
@@ -34,16 +35,8 @@ export class SignUpComponent implements OnInit {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required, this.matchFieldValidator('password')]], // Disabled for now.
+      confirmPassword: ['', [Validators.required, matchFieldValidator('password')]],
     })
-
-  }
-
-  private matchFieldValidator(fieldToMatch: string) {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      const controlToMatch = control.parent?.get(fieldToMatch)
-      return controlToMatch && controlToMatch.value !== control.value ? { 'fieldMismatch': true } : null
-    }
   }
 
   protected onSubmit() {

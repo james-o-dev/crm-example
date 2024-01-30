@@ -38,20 +38,23 @@
     <mat-form-field>
       <mat-label>Old Password</mat-label>
       <input matInput type="password" formControlName="oldPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>New Password</mat-label>
       <input matInput type="password" formControlName="newPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Confirm New Password</mat-label>
       <input matInput type="password" formControlName="confirmPassword">
+      <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <div>
-      <button type="submit" mat-raised-button color="primary">Change Password</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="changePasswordForm.invalid">Change Password</button>
     </div>
   </form>
 

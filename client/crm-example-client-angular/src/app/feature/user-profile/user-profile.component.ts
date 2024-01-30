@@ -7,6 +7,9 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { UserProfileService } from './user-profile.service'
 import { MatIconModule } from '@angular/material/icon'
 import { DialogService } from '../../shared/dialog/dialog.service'
+import { switchMap } from 'rxjs'
+import { AuthService } from '../../core/auth.service'
+import { matchFieldValidator } from '../../shared/common-functions'
 
 @Component({
   selector: 'app-user-profile',
@@ -24,6 +27,7 @@ import { DialogService } from '../../shared/dialog/dialog.service'
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
+  private auth = inject(AuthService)
   private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
   private userProfileService = inject(UserProfileService)
@@ -38,16 +42,10 @@ export class UserProfileComponent implements OnInit {
   protected changePasswordForm = this.formBuilder.group({
     oldPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
-    confirmPassword: ['', Validators.required],
+    confirmPassword: ['', [Validators.required, matchFieldValidator('newPassword')]],
   })
 
-  constructor(
-
-  ) { }
-
   public ngOnInit() {
-    this.changePasswordForm.disable()
-
     this.userProfileService.getUsername()
       .subscribe(data => {
         this.username = data.username
@@ -55,6 +53,9 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
+  /**
+   * Make request to change the username.
+   */
   protected onChangeUsername() {
     this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
       .subscribe({
@@ -66,7 +67,20 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
+  /**
+   * Make request to change the password.
+   */
   protected onChangePassword() {
-    // TODO.
+    if (this.changePasswordForm.invalid) return
+
+    const { oldPassword, newPassword, confirmPassword } = this.changePasswordForm.value
+    this.userProfileService.changePassword(oldPassword as string, newPassword as string, confirmPassword as string)
+      .pipe(
+        switchMap(() => this.dialog.displayDialog('Password changed successfully', ['You will be signed out.'], [{ text: 'OK' }])),
+      )
+      .subscribe({
+        next: () => this.auth.signOut(),
+        error: (response) => this.dialog.displayErrorDialog(response.error.message),
+      })
   }
 }

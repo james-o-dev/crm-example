@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { getDb } from './lib/db/db-postgres.js'
-import { isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signUpEndpoint } from './services/auth.js'
+import { changePasswordEndpoint, isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signUpEndpoint } from './services/auth.js'
 import { controllerHandler } from './lib/common.js'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
 import { getUsername, setUsername } from './services/user-profile.js'
@@ -35,6 +35,9 @@ app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthen
 
 // Refresh access token.
 app.get('/auth/refresh', (req, res) => controllerHandler(req, res, refreshAccessToken(req.headers)))
+
+// Change password.
+app.put('/auth/change-password', (req, res) => controllerHandler(req, res, changePasswordEndpoint(req.headers, req.body)))
 
 // Contacts routes.
 
