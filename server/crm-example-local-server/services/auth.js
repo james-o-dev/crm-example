@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
-import { extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.js'
+import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.js'
 
 /**
  * Function to hash a password
@@ -36,8 +36,10 @@ export const signUpEndpoint = async (requestBody) => {
   const { email, password, confirmPassword } = requestBody
 
   if (!email) throw validationErrorResponse({ message: 'No email provided.' })
+  if (!EMAIL_REGEXP.test(email)) throw validationErrorResponse({ message: 'Invalid email format.' })
   if (!password) throw validationErrorResponse({ message: 'No password provided.' })
   if (confirmPassword !== password) throw validationErrorResponse({ message: 'Passwords do not match.' })
+  if (!PASSWORD_REGEXP.test(password)) throw validationErrorResponse({ message: PASSWORD_REGEXP_MESSAGE })
 
   const normalEmail = email.toLowerCase().trim()
   const hashedPassword = await hashPassword(password)
@@ -135,7 +137,7 @@ export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
   const { oldPassword, newPassword, confirmPassword } = reqBody
 
   // New password invalid.
-  // TODO
+  if (!PASSWORD_REGEXP.test(newPassword)) throw validationErrorResponse({ message: PASSWORD_REGEXP_MESSAGE })
   // New passwords do not match.
   if (newPassword !== confirmPassword) throw validationErrorResponse({ message: 'Confirmation password does not match.' })
 
