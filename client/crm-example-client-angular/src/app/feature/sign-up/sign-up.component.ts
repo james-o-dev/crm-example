@@ -8,6 +8,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Valida
 import { Router, RouterLink } from '@angular/router'
 import { DialogService } from '../../shared/dialog/dialog.service'
 import { matchFieldValidator } from '../../shared/common-functions'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-sign-up',
@@ -16,6 +17,7 @@ import { matchFieldValidator } from '../../shared/common-functions'
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     ReactiveFormsModule,
     RouterLink,
@@ -24,7 +26,7 @@ import { matchFieldValidator } from '../../shared/common-functions'
   styleUrl: './sign-up.component.css',
 })
 export class SignUpComponent implements OnInit {
-  private authService = inject(AuthService)
+  protected authService = inject(AuthService)
   private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
   private router = inject(Router)
@@ -33,8 +35,8 @@ export class SignUpComponent implements OnInit {
 
   public ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(this.authService.EMAIL_REGEXP)]],
+      password: ['', [Validators.required, Validators.pattern(this.authService.PASSWORD_REGEXP)]],
       confirmPassword: ['', [Validators.required, matchFieldValidator('password')]],
     })
   }

@@ -3,6 +3,7 @@ import { catchError, map, of, tap } from 'rxjs'
 import { Router } from '@angular/router'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
+import { DialogService } from '../shared/dialog/dialog.service'
 
 interface IReceiveJWTResponse {
   accessToken: string
@@ -18,6 +19,7 @@ interface IIsAuthenticatedResponse {
   providedIn: 'root',
 })
 export class AuthService {
+  private dialog = inject(DialogService)
   private http = inject(HttpClient)
   private router = inject(Router)
 
@@ -39,6 +41,12 @@ export class AuthService {
   set refreshToken(refreshToken: string) {
     localStorage.setItem('refreshToken', refreshToken)
   }
+
+  public PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+-])[A-Za-z\d!@#$%^&*()_+-]{8,}$/
+  public PASSWORD_REGEXP_MESSAGE = 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+-), with a minimum length of 8 characters.'
+
+  // Standard email format. Also includes '+' symbol.
+  public EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
   /**
    * Returns an object to be used in the request, to include the 'authorization' header.
@@ -124,5 +132,12 @@ export class AuthService {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     this.router.navigate(['/sign-in'])
+  }
+
+  /**
+   * Opens a dialog to display information regarding valid password rules.
+   */
+  public openPasswordInfoDialog() {
+    this.dialog.displayDialog('Password', [this.PASSWORD_REGEXP_MESSAGE], [{ text: 'OK' }])
   }
 }

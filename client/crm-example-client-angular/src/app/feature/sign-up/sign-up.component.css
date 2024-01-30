@@ -16,3 +16,8 @@ form {
   align-items: center;
   flex-direction: column;
 }
+
+mat-form-field {
+  /* Minimum width so that form-fields without matSuffix will still be the same length. */
+  min-width: 248px;
+}

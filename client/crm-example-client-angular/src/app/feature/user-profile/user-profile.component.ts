@@ -27,7 +27,7 @@ import { matchFieldValidator } from '../../shared/common-functions'
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
-  private auth = inject(AuthService)
+  protected auth = inject(AuthService)
   private dialog = inject(DialogService)
   private formBuilder = inject(FormBuilder)
   private userProfileService = inject(UserProfileService)
@@ -41,7 +41,7 @@ export class UserProfileComponent implements OnInit {
 
   protected changePasswordForm = this.formBuilder.group({
     oldPassword: ['', Validators.required],
-    newPassword: ['', Validators.required],
+    newPassword: ['', [Validators.required, Validators.pattern(this.auth.PASSWORD_REGEXP)]],
     confirmPassword: ['', [Validators.required, matchFieldValidator('newPassword')]],
   })
 

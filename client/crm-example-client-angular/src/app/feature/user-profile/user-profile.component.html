@@ -34,6 +34,11 @@
     <h2>Change Password</h2>
   </div>
 
+  <div>
+    {{auth.PASSWORD_REGEXP_MESSAGE}}
+  </div>
+  <br>
+
   <form [formGroup]="changePasswordForm" (submit)="onChangePassword()" class="change-password-form">
     <mat-form-field>
       <mat-label>Old Password</mat-label>
