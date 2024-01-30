@@ -115,3 +115,11 @@ export const getUserId = async (reqHeaders) => {
   if (!userId) throw unauthorizedError()
   return userId
 }
+
+/**
+ * Return the object used as the payload for JWT tokens.
+ *
+ * @param {string} userId
+ * @param {string} email
+ */
+export const getJwtPayload = (userId, email) => ({ email, user_id: userId })
