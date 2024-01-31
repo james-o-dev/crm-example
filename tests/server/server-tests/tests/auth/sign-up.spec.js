@@ -5,12 +5,11 @@ describe('Sign Up tests', () => {
   /**
    * Sign up a user request.
    *
-   * @param {object} param
-   * @param {string} param.email
-   * @param {string} param.password
-   * @param {string} param.confirmPassword
+   * @param {string} email
+   * @param {string} password
+   * @param {string} confirmPassword
    */
-  const signUpRequest = async ({ email, password, confirmPassword }) => {
+  const signUpRequest = async (email, password, confirmPassword) => {
     return fetch(`${process.env.API_HOST}/auth/sign-up`, {
       method: 'POST',
       headers: {
@@ -24,7 +23,7 @@ describe('Sign Up tests', () => {
   test('Successfully signs up user', async () => {
     const email = generateRandomEmail()
     const password = generateRandomPassword()
-    const response = await signUpRequest({ email, password, confirmPassword: password })
+    const response = await signUpRequest(email, password, password)
     const data = await response.json()
     expect(response.status).toBe(201)
     expect(data.accessToken).toBeTruthy()
@@ -37,7 +36,7 @@ describe('Sign Up tests', () => {
     const password = generateRandomPassword()
 
     return Promise.all(emails.map(async email => {
-      const response = await signUpRequest({ email, password, confirmPassword: password })
+      const response = await signUpRequest(email, password, password)
       const data = await response.json()
       expect(response.status).toBe(400)
       expect(data.accessToken).toBeFalsy()
@@ -50,7 +49,7 @@ describe('Sign Up tests', () => {
     const email = generateRandomEmail()
 
     return Promise.all(passwords.map(async password => {
-      const response = await signUpRequest({ email, password, confirmPassword: password })
+      const response = await signUpRequest(email, password, password)
       const data = await response.json()
       expect(response.status).toBe(400)
       expect(data.accessToken).toBeFalsy()
@@ -63,7 +62,7 @@ describe('Sign Up tests', () => {
     const password = generateRandomPassword()
     const confirmPassword = generateRandomPassword()
 
-    const response = await signUpRequest({ email, password, confirmPassword })
+    const response = await signUpRequest(email, password, confirmPassword)
     const data = await response.json()
     expect(response.status).toBe(400)
     expect(data.accessToken).toBeFalsy()
@@ -76,10 +75,10 @@ describe('Sign Up tests', () => {
     const password = generateRandomPassword()
 
     // Sign up first.
-    await signUpRequest({ email, password, confirmPassword: password })
+    await signUpRequest(email, password, password)
 
     // Sign up again.
-    const response = await signUpRequest({ email, password, confirmPassword: password })
+    const response = await signUpRequest(email, password, password)
     const data = await response.json()
     expect(response.status).toBe(409)
     expect(data.accessToken).toBeFalsy()

@@ -1,4 +1,4 @@
-const {generateRandomPassword, generateRandomEmail } = require('../../lib/common')
+const { generateRandomPassword, generateRandomEmail } = require('../../lib/common')
 const { signUpNewUser, signInRequest } = require('../../lib/common.users')
 
 describe('Sign In tests', () => {
@@ -12,7 +12,7 @@ describe('Sign In tests', () => {
   test('Successfully signs in', async () => {
     const { email, password } = user
 
-    const response = await signInRequest({ email, password })
+    const response = await signInRequest(email, password)
     const data = await response.json()
     expect(response.status).toBe(200)
     expect(data.accessToken).toBeTruthy()
@@ -23,7 +23,7 @@ describe('Sign In tests', () => {
   test('No password', async () => {
     const passwords = [null, '']
     return Promise.all(passwords.map(async password => {
-      const response = await signInRequest({ email: user.email, password })
+      const response = await signInRequest(user.email, password)
       const data = await response.json()
       expect(response.status).toBe(400)
       expect(data.accessToken).toBeFalsy()
@@ -34,7 +34,7 @@ describe('Sign In tests', () => {
 
   // Test: Password invalid.
   test('Password invalid', async () => {
-    const response = await signInRequest({ email: user.email, password: generateRandomPassword() })
+    const response = await signInRequest(user.email, generateRandomPassword())
     const data = await response.json()
     expect(response.status).toBe(401)
     expect(data.accessToken).toBeFalsy()
@@ -44,7 +44,7 @@ describe('Sign In tests', () => {
 
   // Test: User not found.
   test('User not found', async () => {
-    const response = await signInRequest({ email: generateRandomEmail(), password: user.password })
+    const response = await signInRequest(generateRandomEmail(), user.password)
     const data = await response.json()
     expect(response.status).toBe(401)
     expect(data.accessToken).toBeFalsy()

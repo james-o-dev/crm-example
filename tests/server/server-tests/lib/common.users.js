@@ -39,12 +39,10 @@ const expireUserTokens = async (userId) => {
 /**
  * Sign in a user.
  *
- * @param {object} param
- * @param {string} param.email
- * @param {string} param.password
- * @param {string} param.confirmPassword
+ * @param {string} email
+ * @param {string} password
  */
-const signInRequest = async ({ email, password }) => {
+const signInRequest = async (email, password) => {
   return fetch(`${process.env.API_HOST}/auth/sign-in`, {
     method: 'POST',
     headers: {
