@@ -1,22 +1,28 @@
+const { generateRandomEmail, generateRandomPassword } = require('./common')
 
 /**
- * Sign up a user request.
- *
- * @param {object} param
- * @param {string} param.email
- * @param {string} param.password
- * @param {string} param.confirmPassword
+ * Generate and sign up a new user.
  */
-const signUpRequest = async ({ email, password, confirmPassword }) => {
-  return fetch(`${process.env.API_HOST}/auth/sign-up`, {
+const signUpNewUser = async () => {
+  const email = generateRandomEmail()
+  const password = generateRandomPassword()
+
+  const response = await fetch(`${process.env.API_HOST}/auth/sign-up`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, password, confirmPassword }),
+    body: JSON.stringify({ email, password, confirmPassword: password }),
   })
+  const data = await response.json()
+
+  return {
+    email, password,
+    accessToken: data.accessToken,
+    refreshToken: data.refreshToken,
+  }
 }
 
 module.exports = {
-  signUpRequest,
+  signUpNewUser,
 }
