@@ -1,5 +1,5 @@
 const { generateRandomPassword, generateRandomEmail } = require('../../lib/common')
-const { signUpNewUser, signInRequest } = require('../../lib/common.users')
+const { signUpNewUser, signInRequest } = require('../../lib/common.auth')
 
 describe('Sign In tests', () => {
   let user

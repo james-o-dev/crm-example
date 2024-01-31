@@ -1,4 +1,4 @@
-const { authenticateRequest, signUpNewUser, expireUserTokens } = require('../../lib/common.users')
+const { authenticateRequest, signUpNewUser, expireUserTokens } = require('../../lib/common.auth')
 
 describe('Authenticate tests', () => {
   let user
