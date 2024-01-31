@@ -1,5 +1,5 @@
-const { authHeader } = require('../lib/common')
-const { signUpNewUser, expireUserTokens } = require('../lib/common.users')
+const { authHeader } = require('../../lib/common')
+const { signUpNewUser, expireUserTokens } = require('../../lib/common.users')
 
 describe('Authenticate tests', () => {
   let user

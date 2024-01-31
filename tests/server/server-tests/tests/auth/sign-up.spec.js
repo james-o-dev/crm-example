@@ -1,4 +1,4 @@
-const { generateRandomEmail, generateRandomPassword } = require('../lib/common')
+const { generateRandomEmail, generateRandomPassword } = require('../../lib/common')
 
 describe('Sign Up tests', () => {
 
