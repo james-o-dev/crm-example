@@ -79,10 +79,10 @@ export const signInEndpoint = async (requestBody) => {
 
   const db = getDb()
   const user = await db.oneOrNone('SELECT user_id, hashed_password FROM users WHERE email = $1', [normalEmail])
-  if (!user) throw validationErrorResponse({ message: 'Invalid sign-in.' })
+  if (!user) throw validationErrorResponse({ message: 'Invalid sign-in.' }, 401)
 
   const match = await comparePassword(password, user.hashed_password)
-  if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' })
+  if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' }, 401)
 
   const tokenPayload = getJwtPayload(user.user_id, email)
   const accessToken = await signAccessToken(tokenPayload)
