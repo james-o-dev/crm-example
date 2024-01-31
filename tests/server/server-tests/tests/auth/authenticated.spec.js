@@ -1,5 +1,4 @@
-const { authHeader } = require('../../lib/common')
-const { signUpNewUser, expireUserTokens } = require('../../lib/common.users')
+const { authenticateRequest, signUpNewUser, expireUserTokens } = require('../../lib/common.users')
 
 describe('Authenticate tests', () => {
   let user
@@ -7,17 +6,6 @@ describe('Authenticate tests', () => {
   beforeAll(async () => {
     user = await signUpNewUser()
   })
-
-  /**
-   * Authenticate request.
-   *
-   * @param {string} accessToken
-   */
-  const authenticateRequest = async (accessToken) => {
-    return fetch(`${process.env.API_HOST}/auth/authenticate`, {
-      headers: authHeader(accessToken),
-    })
-  }
 
   // Test: Successfully authenticates.
   test('Successfully authenticates', async () => {

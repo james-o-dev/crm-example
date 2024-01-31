@@ -1,4 +1,4 @@
-const { contentTypeHeader, generateRandomEmail, generateRandomPassword } = require('./common')
+const { contentTypeHeader, generateRandomEmail, generateRandomPassword, authHeader } = require('./common')
 const jwt = require('jsonwebtoken')
 const { getDb } = require('./db-postgres')
 
@@ -52,7 +52,19 @@ const signInRequest = async (email, password) => {
   })
 }
 
+/**
+ * Authenticate request.
+ *
+ * @param {string} accessToken
+ */
+const authenticateRequest = async (accessToken) => {
+  return fetch(`${process.env.API_HOST}/auth/authenticate`, {
+    headers: authHeader(accessToken),
+  })
+}
+
 module.exports = {
+  authenticateRequest,
   expireUserTokens,
   signUpNewUser,
   signInRequest,
