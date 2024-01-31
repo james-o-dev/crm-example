@@ -16,7 +16,7 @@ describe('Sign In tests', () => {
    * @param {string} param.password
    * @param {string} param.confirmPassword
    */
-  const signUpRequest = async ({ email, password }) => {
+  const signInRequest = async ({ email, password }) => {
     return fetch(`${process.env.API_HOST}/auth/sign-in`, {
       method: 'POST',
       headers: {
@@ -30,7 +30,7 @@ describe('Sign In tests', () => {
   test('Successfully signs in', async () => {
     const { email, password } = user
 
-    const response = await signUpRequest({ email, password })
+    const response = await signInRequest({ email, password })
     const data = await response.json()
     expect(response.status).toBe(200)
     expect(data.accessToken).toBeTruthy()
@@ -41,7 +41,7 @@ describe('Sign In tests', () => {
   test('No password', async () => {
     const passwords = [null, '']
     return Promise.all(passwords.map(async password => {
-      const response = await signUpRequest({ email: user.email, password })
+      const response = await signInRequest({ email: user.email, password })
       const data = await response.json()
       expect(response.status).toBe(400)
       expect(data.accessToken).toBeFalsy()
@@ -52,7 +52,7 @@ describe('Sign In tests', () => {
 
   // Test: Password invalid.
   test('Password invalid', async () => {
-    const response = await signUpRequest({ email: user.email, password: generateRandomPassword() })
+    const response = await signInRequest({ email: user.email, password: generateRandomPassword() })
     const data = await response.json()
     expect(response.status).toBe(401)
     expect(data.accessToken).toBeFalsy()
@@ -62,7 +62,7 @@ describe('Sign In tests', () => {
 
   // Test: User not found.
   test('User not found', async () => {
-    const response = await signUpRequest({ email: generateRandomEmail(), password: user.password })
+    const response = await signInRequest({ email: generateRandomEmail(), password: user.password })
     const data = await response.json()
     expect(response.status).toBe(401)
     expect(data.accessToken).toBeFalsy()
