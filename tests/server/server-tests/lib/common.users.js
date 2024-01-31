@@ -1,4 +1,4 @@
-const { generateRandomEmail, generateRandomPassword } = require('./common')
+const { contentTypeHeader, generateRandomEmail, generateRandomPassword } = require('./common')
 const jwt = require('jsonwebtoken')
 const { getDb } = require('./db-postgres')
 
@@ -12,9 +12,7 @@ const signUpNewUser = async () => {
 
   const response = await fetch(`${process.env.API_HOST}/auth/sign-up`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: contentTypeHeader,
     body: JSON.stringify({ email, password, confirmPassword: password }),
   })
   const data = await response.json()
@@ -35,7 +33,7 @@ const signUpNewUser = async () => {
  */
 const expireUserTokens = async (userId) => {
   const db = getDb()
-  return db.none('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1', [userId])
+  await db.none('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1', [userId])
 }
 
 module.exports = {

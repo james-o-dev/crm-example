@@ -9,6 +9,8 @@ function PostgresDatabase() {
     database: process.env.POSTGRES_DATABASE,
     user: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
+    // Exit/disconnect once idle.
+    allowExitOnIdle: true,
   })
 }
 
