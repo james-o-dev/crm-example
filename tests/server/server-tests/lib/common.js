@@ -19,15 +19,29 @@ const generateRandomEmail = () => `test${generateRandomString()}${API_TEST_EMAIL
 const generateRandomPassword = () => generateRandomString() + 'aA1!'
 
 /**
+ * Content type header.
+ */
+const contentTypeHeader = ({ 'Content-Type': 'application/json' })
+
+/**
  * Spread this object in the headers to add the Auth header.
  *
  * @param {string} token
  */
 const authHeader = (token) => ({ authorization: `Bearer ${token}` })
 
+/**
+ * Spread this object in the headers to add common headers.
+ *
+ * @param {string} token
+ */
+const commonHeaders = (token) => ({ ...authHeader(token), ...contentTypeHeader })
+
 module.exports = {
   API_TEST_EMAIL,
   authHeader,
+  commonHeaders,
+  contentTypeHeader,
   generateRandomEmail,
   generateRandomPassword,
   generateRandomString,

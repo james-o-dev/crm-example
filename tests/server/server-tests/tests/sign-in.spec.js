@@ -1,4 +1,4 @@
-const { generateRandomPassword, generateRandomEmail } = require('../lib/common')
+const { contentTypeHeader, generateRandomPassword, generateRandomEmail } = require('../lib/common')
 const { signUpNewUser } = require('../lib/common.users')
 
 describe('Sign In tests', () => {
@@ -20,7 +20,7 @@ describe('Sign In tests', () => {
     return fetch(`${process.env.API_HOST}/auth/sign-in`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        ...contentTypeHeader,
       },
       body: JSON.stringify({ email, password }),
     })
