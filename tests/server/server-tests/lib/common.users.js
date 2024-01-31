@@ -36,7 +36,26 @@ const expireUserTokens = async (userId) => {
   await db.none('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1', [userId])
 }
 
+/**
+ * Sign in a user.
+ *
+ * @param {object} param
+ * @param {string} param.email
+ * @param {string} param.password
+ * @param {string} param.confirmPassword
+ */
+const signInRequest = async ({ email, password }) => {
+  return fetch(`${process.env.API_HOST}/auth/sign-in`, {
+    method: 'POST',
+    headers: {
+      ...contentTypeHeader,
+    },
+    body: JSON.stringify({ email, password }),
+  })
+}
+
 module.exports = {
   expireUserTokens,
   signUpNewUser,
+  signInRequest,
 }

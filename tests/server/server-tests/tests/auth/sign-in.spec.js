@@ -1,5 +1,5 @@
-const { contentTypeHeader, generateRandomPassword, generateRandomEmail } = require('../../lib/common')
-const { signUpNewUser } = require('../../lib/common.users')
+const {generateRandomPassword, generateRandomEmail } = require('../../lib/common')
+const { signUpNewUser, signInRequest } = require('../../lib/common.users')
 
 describe('Sign In tests', () => {
   let user
@@ -7,24 +7,6 @@ describe('Sign In tests', () => {
   beforeAll(async () => {
     user = await signUpNewUser()
   })
-
-  /**
-   * Sign in a user.
-   *
-   * @param {object} param
-   * @param {string} param.email
-   * @param {string} param.password
-   * @param {string} param.confirmPassword
-   */
-  const signInRequest = async ({ email, password }) => {
-    return fetch(`${process.env.API_HOST}/auth/sign-in`, {
-      method: 'POST',
-      headers: {
-        ...contentTypeHeader,
-      },
-      body: JSON.stringify({ email, password }),
-    })
-  }
 
   // Test: Successfully signs in.
   test('Successfully signs in', async () => {
