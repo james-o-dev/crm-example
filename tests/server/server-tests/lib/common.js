@@ -37,11 +37,19 @@ const authHeader = (token) => ({ authorization: `Bearer ${token}` })
  */
 const commonHeaders = (token) => ({ ...authHeader(token), ...contentTypeHeader })
 
+/**
+ * Delay promise.
+ *
+ * @param {number} [timeout=1000]  Number in milliseconds.
+ */
+const delay = (timeout = 1000) => new Promise(resolve => setTimeout(resolve, timeout))
+
 module.exports = {
   API_TEST_EMAIL,
   authHeader,
   commonHeaders,
   contentTypeHeader,
+  delay,
   generateRandomEmail,
   generateRandomPassword,
   generateRandomString,

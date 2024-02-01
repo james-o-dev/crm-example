@@ -1,4 +1,4 @@
-const { generateRandomPassword, commonHeaders } = require('../../lib/common')
+const { generateRandomPassword, commonHeaders, delay } = require('../../lib/common')
 const { signUpNewUser, signInRequest, authenticateRequest } = require('../../lib/common.auth')
 
 describe('Change Password tests', () => {
@@ -47,7 +47,7 @@ describe('Change Password tests', () => {
     expect(data.message).toBe('Invalid sign-in.')
 
     // Wait at least one second, for JWTs to have a different iat value.
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await delay()
 
     // Attempt to sign in again, with new password.
     response = await signInRequest(email, newPassword)
