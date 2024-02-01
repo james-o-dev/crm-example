@@ -1,5 +1,5 @@
 
-const API_TEST_EMAIL = '+apitest'
+const API_TEST_TOKEN = '+apitest'
 
 /**
  * Generate a random string.
@@ -11,7 +11,7 @@ const generateRandomString = () => Math.random().toString().replace(/\./, '')
  * Generate a random valid email.
  * * Test user that will get cleaned up on teardown.
  */
-const generateRandomEmail = () => `test${generateRandomString()}${API_TEST_EMAIL}@test.com`
+const generateRandomEmail = () => `test${generateRandomString()}${API_TEST_TOKEN}@test.com`
 
 /**
  * Generate a random valid password.
@@ -45,7 +45,7 @@ const commonHeaders = (token) => ({ ...authHeader(token), ...contentTypeHeader }
 const delay = (timeout = 1000) => new Promise(resolve => setTimeout(resolve, timeout))
 
 module.exports = {
-  API_TEST_EMAIL,
+  API_TEST_TOKEN,
   authHeader,
   commonHeaders,
   contentTypeHeader,
