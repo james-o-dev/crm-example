@@ -43,7 +43,7 @@ const createNewContact = async (accessToken) => {
 
   return {
     ...newContact,
-    user_id: data.user_id,
+    contact_id: data.contact_id,
   }
 }
 
