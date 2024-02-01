@@ -1,5 +1,5 @@
 import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
@@ -82,8 +82,8 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   // Query params.
   // Contact ID is required.
   // Note: using contact_id instead of route params because AWS Lambda functional Urls do not support route params, without API Gateway.
-  const contactId = reqQuery.contact_id
-  if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
+  const contactId = reqQuery.contact_id || null
+  if (!isUUIDv4(contactId)) throw validationErrorResponse({ message: 'Contact ID was not provided or was invalid.' })
 
   // Database query.
   const db = getDb()
@@ -96,7 +96,8 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   const contact = await db.oneOrNone(sql, sqlParams)
 
   // Response.
-  return successfulResponse({ contact })
+  if (contact) return successfulResponse({ contact })
+  throw validationErrorResponse({ message: 'Contact not found.' }, 404)
 }
 
 /**
