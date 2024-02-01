@@ -99,5 +99,14 @@ describe('Add contact tests', () => {
     expect(data.message).toBe('Email was not provided.')
   })
 
+  // Invalid email format
+  test('Invalid email format', async () => {
+    const response = await addContactRequest(user.accessToken, { ...generateContact(), email: generateRandomString() })
+    const data = await response.json()
+    expect(response.status).toBe(400)
+    expect(data.contact_id).toBeFalsy()
+    expect(data.message).toBe('Invalid email format.')
+  })
+
   // TODO: Potential duplicates.
 })

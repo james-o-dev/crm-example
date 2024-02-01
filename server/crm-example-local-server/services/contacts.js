@@ -1,4 +1,4 @@
-import { getUserId } from '../lib/auth.common.js'
+import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.js'
 import { successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
@@ -19,6 +19,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
   // Validation.
   if (!name) throw validationErrorResponse({ message: 'Name was not provided.' })
   if (!email) throw validationErrorResponse({ message: 'Email was not provided.' })
+  if (!EMAIL_REGEXP.test(email)) throw validationErrorResponse({ message: 'Invalid email format.' })
 
   // Database query.
   // Insert into database.
