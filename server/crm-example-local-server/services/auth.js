@@ -150,7 +150,7 @@ export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
 
     // Old password is invalid.
     const match = await comparePassword(oldPassword, user.hashed_password)
-    if (!match) throw validationErrorResponse({ message: 'Old password does not match current password.' })
+    if (!match) throw validationErrorResponse({ message: 'Old password does not match current password.' }, 401)
 
     // Change password.
     const newHashedPassword = await hashPassword(newPassword)
