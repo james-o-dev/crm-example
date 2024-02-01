@@ -1,5 +1,6 @@
-const { commonHeaders, generateRandomString, generateRandomEmail, delay } = require('../../lib/common')
+const { generateRandomString, delay } = require('../../lib/common')
 const { signUpNewUser, expireUserTokens, signInRequest } = require('../../lib/common.auth')
+const { addContactRequest, generateContact } = require('../../lib/common.contacts')
 
 describe('Add contact tests', () => {
   let user
@@ -7,33 +8,6 @@ describe('Add contact tests', () => {
   beforeAll(async () => {
     user = await signUpNewUser()
   })
-
-  const generateContact = () => {
-    return {
-      name: generateRandomString(),
-      email: generateRandomEmail(),
-      phone: '',
-      notes: 'This is a test contact.',
-    }
-  }
-
-  /**
-   * Make a refresh access token request.
-   *
-   * @param {string} accessToken
-   * @param {object} body
-   * @param {string} body.name
-   * @param {string} body.email
-   * @param {string} [body.phone]
-   * @param {string} [body.notes]
-   */
-  const addContactRequest = async (accessToken, { name, email, phone, notes }) => {
-    return fetch(`${process.env.API_HOST}/contact`, {
-      method: 'POST',
-      headers: commonHeaders(accessToken),
-      body: JSON.stringify({ name, email, phone, notes }),
-    })
-  }
 
   // Test: Successfully authenticates.
   test('Successfully authenticates', async () => {
