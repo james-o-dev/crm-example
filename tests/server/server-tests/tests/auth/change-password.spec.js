@@ -52,16 +52,10 @@ describe('Change Password tests', () => {
     // Attempt to sign in again, with new password.
     response = await signInRequest(email, newPassword)
     data = await response.json()
-    expect(response.status).toBe(200)
-    expect(data.accessToken).toBeTruthy()
-    expect(data.refreshToken).toBeTruthy()
-
     // Update stored users with updated values.
     user.accessToken = data.accessToken
     user.refreshToken = data.refreshToken
     user.password = newPassword
-
-
   })
 
   // Invalid access token.

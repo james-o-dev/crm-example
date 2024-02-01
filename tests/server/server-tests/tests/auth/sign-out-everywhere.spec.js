@@ -1,5 +1,5 @@
 const { commonHeaders } = require('../../lib/common')
-const { authenticateRequest, signUpNewUser, expireUserTokens } = require('../../lib/common.auth')
+const { authenticateRequest, signUpNewUser, expireUserTokens, signInRequest } = require('../../lib/common.auth')
 
 describe('Sign out everywhere tests', () => {
   let user
@@ -36,6 +36,15 @@ describe('Sign out everywhere tests', () => {
     // Attempt to authenticate again, it should fail.
     response = await authenticateRequest(user.accessToken)
     expect(response.status).toBe(401)
+
+    // Wait at least one second, for JWTs to have a different iat value.
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    // Sign in again to get new tokens, once this test is successful.
+    response = await signInRequest(user.email, user.password)
+    data = await response.json()
+    user.accessToken = data.accessToken
+    user.refreshToken = data.refreshToken
   })
 
   // Test: Incorrect token.
