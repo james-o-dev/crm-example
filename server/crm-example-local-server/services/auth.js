@@ -181,6 +181,6 @@ export const signOutEverywhereEndpoint = async (reqHeaders) => {
   const db = getDb()
   const result = await db.oneOrNone('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1 RETURNING user_id', [userId])
 
-  if (result.user_id) return successfulResponse({ message: 'Password has been changed. Existing tokens have been invalidated.' })
+  if (result.user_id) return successfulResponse({ message: 'Signed out of all devices. Existing tokens have been invalidated.' })
   throw validationErrorResponse({ message: 'User could not be found.' }, 404)
 }
