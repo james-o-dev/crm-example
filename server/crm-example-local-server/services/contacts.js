@@ -116,6 +116,7 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
   if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
   if (!name) throw validationErrorResponse({ message: 'Name was not provided.' })
   if (!email) throw validationErrorResponse({ message: 'Email was not provided.' })
+  if (!EMAIL_REGEXP.test(email)) throw validationErrorResponse({ message: 'Invalid email format.' })
 
   // Database query.
   const db = getDb()
