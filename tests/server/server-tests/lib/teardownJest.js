@@ -13,6 +13,7 @@ const teardown = async () => {
   await db.tx(t => t.batch([
     t.none('DELETE FROM users WHERE email ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
     t.none('DELETE FROM contacts WHERE email ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
+    t.none('DELETE FROM tasks WHERE title ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
   ]))
   console.log('Test data deleted.')
 }
