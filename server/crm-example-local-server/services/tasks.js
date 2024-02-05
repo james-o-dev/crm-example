@@ -68,7 +68,7 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
   }
   const createdTask = await db.one(sql, sqlParams)
 
-  return successfulResponse({ message: 'Task created.', task_id: createdTask.task_Id }, 201)
+  return successfulResponse({ message: 'Task created.', task_id: createdTask.task_id }, 201)
 }
 
 /**
