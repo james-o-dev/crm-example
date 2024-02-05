@@ -54,10 +54,16 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
   if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
 
   // Query database.
+  // Only set the contact if it exists and it belongs to the user.
+  // If it does not, do not create a task and return an error.
   const db = getDb()
   const sql = `
-    INSERT INTO tasks (title, notes, due_date, contact_id, user_id)
-    VALUES ($(title), $(notes), $(due_date), $(contact_id), $(userId))
+    INSERT INTO tasks (title, notes, due_date, user_id, contact_id)
+    SELECT $(title), $(notes), $(due_date), u.user_id, c.contact_id
+    FROM users u
+    LEFT JOIN contacts c ON c.contact_id = $(contact_id) AND c.user_id = u.user_id
+    WHERE u.user_id = $(userId)
+    AND ($(contact_id) IS NULL OR c.contact_id = $(contact_id))
     RETURNING task_id
   `
   const sqlParams = {
@@ -65,11 +71,15 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
     title: reqBody.title,
     due_date: reqBody.due_date,
     notes: reqBody.notes,
-    contact_id: reqBody.contact_id,
+    contact_id: reqBody.contact_id || null,
   }
-  const createdTask = await db.one(sql, sqlParams)
+  const createdTask = await db.oneOrNone(sql, sqlParams)
+  const taskId = createdTask?.task_id
 
-  return successfulResponse({ message: 'Task created.', task_id: createdTask.task_id }, 201)
+  if (taskId) return successfulResponse({ message: 'Task created.', task_id: taskId }, 201)
+  // It will only reach below if - an attempt was made to create a task with a contact that does not exist, from the user's perspective.
+  // Since it would not have returned the task_id from the query.
+  throw validationErrorResponse({ message: 'Contact was not found and could not be associated with this new task.' }, 404)
 }
 
 /**
