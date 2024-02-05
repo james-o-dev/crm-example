@@ -2,6 +2,7 @@ const { commonHeaders } = require('../../lib/common')
 const { signUpNewUser } = require('../../lib/common.auth')
 const { createNewContact } = require('../../lib/common.contacts')
 const { getTaskObject, getTaskInDb } = require('../../lib/common.tasks')
+const { randomUUID } = require('node:crypto')
 
 describe('Add task tests', () => {
   let user, contact
@@ -55,7 +56,7 @@ describe('Add task tests', () => {
       const response = await addTaskRequest(accessToken, getTaskObject())
       const data = await response.json()
       expect(response.status).toBe(401)
-      expect(data.accessToken).toBeFalsy()
+      expect(data.task_id).toBeFalsy()
       expect(data.message).toBe('Unauthorized.')
     }))
   })
@@ -65,7 +66,7 @@ describe('Add task tests', () => {
     const response = await addTaskRequest(user.accessToken, { ...getTaskObject(), title: '' })
     const data = await response.json()
     expect(response.status).toBe(400)
-    expect(data.contact_id).toBeFalsy()
+    expect(data.task_id).toBeFalsy()
     expect(data.message).toBe('Missing title.')
   })
 
@@ -73,7 +74,38 @@ describe('Add task tests', () => {
     const response = await addTaskRequest(user.accessToken, { ...getTaskObject(), due_date: 'invalid' })
     const data = await response.json()
     expect(response.status).toBe(400)
-    expect(data.contact_id).toBeFalsy()
+    expect(data.task_id).toBeFalsy()
     expect(data.message).toBe('Invalid due date.')
+  })
+
+  // Contact not found.
+  test('Contact not found', async () => {
+    const response = await addTaskRequest(user.accessToken, getTaskObject(randomUUID()))
+    const data = await response.json()
+    expect(response.status).toBe(404)
+    expect(data.task_id).toBeFalsy()
+    expect(data.message).toBe('Contact was not found and could not be associated with this new task.')
+
+    const dbData = await getTaskInDb(data.task_id)
+    expect(dbData).toBeFalsy()
+  })
+
+  // Must not set a contact that does not belong to the user.
+  test('Must not set a contact that does not belong to the user', async () => {
+    // New user.
+    const newUser = await signUpNewUser()
+    // New contact.
+    const newContact = await createNewContact(newUser.accessToken)
+
+    // Below, use old user with new contact.
+
+    const response = await addTaskRequest(user.accessToken, getTaskObject(newContact.contact_id))
+    const data = await response.json()
+    expect(response.status).toBe(404)
+    expect(data.task_id).toBeFalsy()
+    expect(data.message).toBe('Contact was not found and could not be associated with this new task.')
+
+    const dbData = await getTaskInDb(data.task_id)
+    expect(dbData).toBeFalsy()
   })
 })
