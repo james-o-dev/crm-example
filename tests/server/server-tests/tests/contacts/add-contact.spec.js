@@ -9,8 +9,8 @@ describe('Add contact tests', () => {
     user = await signUpNewUser()
   })
 
-  // Test: Successfully authenticates.
-  test('Successfully authenticates', async () => {
+  // Test: Successfully adds contact.
+  test('Successfully adds contact', async () => {
     let response, data
 
     response = await addContactRequest(user.accessToken, generateContact())
