@@ -1,4 +1,5 @@
 const { commonHeaders, generateRandomString, generateRandomEmail } = require('./common')
+const { getDb } = require('./db-postgres')
 
 /**
  * Generate new contact details.
@@ -47,8 +48,19 @@ const createNewContact = async (accessToken) => {
   }
 }
 
+/**
+ * Get the row of the contact, directly from the DB.
+ *
+ * @param {string} contactId
+ */
+const getContactFromDb = async (contactId) => {
+  const db = getDb()
+  return db.oneOrNone('SELECT * FROM contacts WHERE contact_id = $1', [contactId])
+}
+
 module.exports = {
-  createNewContact,
   addContactRequest,
+  createNewContact,
   generateContact,
+  getContactFromDb,
 }

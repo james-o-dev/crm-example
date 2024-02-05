@@ -1,7 +1,6 @@
 const { generateRandomString, commonHeaders } = require('../../lib/common')
 const { signUpNewUser } = require('../../lib/common.auth')
-const { createNewContact } = require('../../lib/common.contacts')
-const { getDb } = require('../../lib/db-postgres')
+const { createNewContact, getContactFromDb } = require('../../lib/common.contacts')
 const { randomUUID } = require('node:crypto')
 
 describe('Update contact tests', () => {
@@ -18,11 +17,6 @@ describe('Update contact tests', () => {
       headers: commonHeaders(accessToken),
       body: JSON.stringify(payload),
     })
-  }
-
-  const getContactFromDb = async (contactId) => {
-    const db = getDb()
-    return db.oneOrNone('SELECT * FROM contacts WHERE contact_id = $1', [contactId])
   }
 
   // Test: Successfully updates contact.
