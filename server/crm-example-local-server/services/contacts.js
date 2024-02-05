@@ -137,7 +137,7 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
   let updated = false
   try {
     const result = await db.oneOrNone(sql, sqlParams)
-    updated = !!result.contact_id
+    updated = !!result?.contact_id
   } catch (error) {
     if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
     console.error(error)
