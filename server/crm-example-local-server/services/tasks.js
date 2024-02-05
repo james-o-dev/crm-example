@@ -51,6 +51,7 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
   if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+  if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
 
   // Query database.
   const db = getDb()
@@ -117,6 +118,7 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
   if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+  if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
 
   // Query database.
   const db = getDb()
