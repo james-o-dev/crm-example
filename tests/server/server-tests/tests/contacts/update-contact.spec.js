@@ -2,6 +2,7 @@ const { generateRandomString, commonHeaders } = require('../../lib/common')
 const { signUpNewUser } = require('../../lib/common.auth')
 const { createNewContact } = require('../../lib/common.contacts')
 const { getDb } = require('../../lib/db-postgres')
+const { randomUUID } = require('node:crypto')
 
 describe('Update contact tests', () => {
   let user, contact
@@ -121,5 +122,18 @@ describe('Update contact tests', () => {
     const data = await response.json()
     expect(response.status).toBe(409)
     expect(data.message).toBe('This email is already in use.')
+  })
+
+  // Contact not found.
+  test('Contact not found', async () => {
+    const payload = {
+      ...contact,
+      contact_id: randomUUID(),
+      name: generateRandomString(),
+    }
+    const response = await updateContactRequest(user.accessToken, payload)
+    const data = await response.json()
+    expect(response.status).toBe(404)
+    expect(data.message).toBe('Contact not found.')
   })
 })
