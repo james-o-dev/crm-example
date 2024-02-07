@@ -26,7 +26,6 @@ export const getUsername = async (reqHeaders) => {
 export const setUsername = async (reqHeaders, reqBody) => {
   const userId = await getUserId(reqHeaders)
 
-  if (!reqBody) throw validationErrorResponse({ message: 'Username required.' })
   const { username } = reqBody
   const normalUsername = (username || '').trim()
 
