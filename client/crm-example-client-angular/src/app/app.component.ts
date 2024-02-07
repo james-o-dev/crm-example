@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
     // Define the notification number Observable.
     this.notificationNumber$ = this.notificationsService.getNotificationsCount()
       .pipe(
-        map(response => response.count || ''),
+        map(response => response?.count === '0' ? '' : response.count), // Do not display if it returned with '0' (i.e. no notifications).
       )
   }
 
