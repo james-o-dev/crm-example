@@ -101,7 +101,7 @@ describe('Get Contact/s tests', () => {
       const response = await getContactRequest(generateRandomString(), contact.contact_id)
       const data = await response.json()
       expect(response.status).toBe(401)
-      expect(data.contacts).toBeFalsy()
+      expect(data.contact).toBeFalsy()
       expect(data.message).toBe('Unauthorized.')
     })
 

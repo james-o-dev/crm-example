@@ -28,7 +28,6 @@ describe('Add contact tests', () => {
       const response = await addContactRequest(accessToken, generateContact())
       const data = await response.json()
       expect(response.status).toBe(401)
-      expect(data.accessToken).toBeFalsy()
       expect(data.message).toBe('Unauthorized.')
     }))
   })

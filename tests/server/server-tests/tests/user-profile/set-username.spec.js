@@ -43,7 +43,6 @@ describe('Set username tests', () => {
       const response = await setUsernameRequest(accessToken, newUsername)
       const data = await response.json()
       expect(response.status).toBe(401)
-      expect(data.task_id).toBeFalsy()
       expect(data.message).toBe('Unauthorized.')
     }))
   })
