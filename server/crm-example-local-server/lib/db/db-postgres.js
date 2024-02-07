@@ -72,6 +72,8 @@ export const isForeignKeyConstraintError = (error, uniqueConstraintName) => {
 }
 
 /**
+ * @deprecated Avoid using .batch() method. Instead, just use normal Promise.all() or Promise.allSettled()
+ *
  * Determine if the thrown Postgres error was due to a unique constraint.
  * * This is used specifically when an error was caught from a batch error (e.g. using t.batch([...])).
  * * It will attempt to find at least one error with the constraint error.

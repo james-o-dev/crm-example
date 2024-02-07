@@ -30,7 +30,7 @@ export const dashboardDataEndpoint = async (reqHeaders) => {
     AND due_date IS NOT NULL
     AND due_date < now_unix_timestamp()
   `
-  const [activeContacts, tasks, overdueTasks] = await db.task(t => t.batch([
+  const [activeContacts, tasks, overdueTasks] = await db.task(t => Promise.all([
     t.one(sqlActiveContacts, [userId]),
     t.one(sqlTasks, [userId]),
     t.one(sqlOverdueTasks, [userId]),

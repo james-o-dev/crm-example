@@ -1,6 +1,6 @@
 import { getUserId } from '../lib/auth.common.js'
 import { successfulResponse, validationErrorResponse } from '../lib/common.js'
-import { getDb, isUniqueConstraintBatchError } from '../lib/db/db-postgres.js'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
  * Export the user's contacts as a JSON string.
@@ -43,7 +43,7 @@ export const importContactsJsonEndpoint = async (reqHeaders, reqBody) => {
 
   // TODO optimize this.
   try {
-    await db.tx(t => t.batch(
+    await db.tx(t => Promise.all(
       contacts.map((contact) => {
         return t.none(`
           INSERT INTO contacts (
@@ -67,7 +67,7 @@ export const importContactsJsonEndpoint = async (reqHeaders, reqBody) => {
       }),
     ))
   } catch (error) {
-    if (isUniqueConstraintBatchError( error, 'contacts_unique')) throw validationErrorResponse({ message: 'A contact with this email already exists.' }, 409)
+    if (isUniqueConstraintError( error, 'contacts_unique')) throw validationErrorResponse({ message: 'A contact with this email already exists.' }, 409)
     throw error
   }
 

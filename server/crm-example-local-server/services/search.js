@@ -37,7 +37,7 @@ export const searchEndpoint = async (reqHeaders, reqQuery) => {
   `
 
   // Batch together for performance.
-  const [contacts, tasks] = await db.task(t => t.batch([
+  const [contacts, tasks] = await db.task(t => Promise.all([
     t.any(sqlContacts, {userId, q}),
     t.any(sqlTasks, {userId, q}),
   ]))

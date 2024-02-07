@@ -10,7 +10,7 @@ const teardown = async () => {
   // Delete all test data.
   // Other tables with rows relating to the test users should also be deleted -
   // DELETE CASCADE must be enabled for the foreign keys in the database.
-  await db.tx(t => t.batch([
+  await db.tx(t => Promise.allSettled([
     t.none('DELETE FROM users WHERE email ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
     t.none('DELETE FROM contacts WHERE email ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
     t.none('DELETE FROM tasks WHERE title ILIKE \'%$1#%\'', [API_TEST_TOKEN]),
