@@ -15,8 +15,8 @@ describe('Export Contacts JSON tests', () => {
     user = await signUpNewUser()
   })
 
-  // Successfully get search results.
-  test('Successfully get search results', async () => {
+  // Successfully exports contacts.
+  test('Successfully exports contacts', async () => {
     let data, response
 
     // Create new contact.
