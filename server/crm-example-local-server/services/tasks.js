@@ -1,5 +1,5 @@
 import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb } from '../lib/db/db-postgres.js'
 
 
@@ -115,7 +115,8 @@ export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
   const sqlParams = { userId, taskId }
   const task = await db.oneOrNone(sql, sqlParams)
 
-  return successfulResponse({ task })
+  if (task) return successfulResponse({ task })
+  throw validationErrorResponse({ message: 'Task not found.' }, 404)
 }
 
 /**
