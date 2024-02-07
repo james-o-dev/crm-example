@@ -1,5 +1,5 @@
-import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
+import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.js'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
 
 /**
@@ -19,6 +19,7 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
   // Validation.
   if (!name) throw validationErrorResponse({ message: 'Name was not provided.' })
   if (!email) throw validationErrorResponse({ message: 'Email was not provided.' })
+  if (!EMAIL_REGEXP.test(email)) throw validationErrorResponse({ message: 'Invalid email format.' })
 
   // Database query.
   // Insert into database.
@@ -81,8 +82,8 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   // Query params.
   // Contact ID is required.
   // Note: using contact_id instead of route params because AWS Lambda functional Urls do not support route params, without API Gateway.
-  const contactId = reqQuery.contact_id
-  if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
+  const contactId = reqQuery.contact_id || null
+  if (!isUUIDv4(contactId)) throw validationErrorResponse({ message: 'Contact ID was not provided or was invalid.' })
 
   // Database query.
   const db = getDb()
@@ -95,7 +96,8 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
   const contact = await db.oneOrNone(sql, sqlParams)
 
   // Response.
-  return successfulResponse({ contact })
+  if (contact) return successfulResponse({ contact })
+  throw validationErrorResponse({ message: 'Contact not found.' }, 404)
 }
 
 /**
@@ -114,6 +116,7 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
   if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })
   if (!name) throw validationErrorResponse({ message: 'Name was not provided.' })
   if (!email) throw validationErrorResponse({ message: 'Email was not provided.' })
+  if (!EMAIL_REGEXP.test(email)) throw validationErrorResponse({ message: 'Invalid email format.' })
 
   // Database query.
   const db = getDb()
@@ -134,7 +137,7 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
   let updated = false
   try {
     const result = await db.oneOrNone(sql, sqlParams)
-    updated = !!result.contact_id
+    updated = !!result?.contact_id
   } catch (error) {
     if (isUniqueConstraintError(error, 'contacts_unique')) throw validationErrorResponse({ message: 'This email is already in use.' }, 409)
     console.error(error)

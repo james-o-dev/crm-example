@@ -37,7 +37,7 @@ export const getNotificationsCountEndpoint = async (reqHeaders) => {
   const taskCount = parseInt(tasks.count)
 
   // Display 9+ if over 9.
-  const count = taskCount > 9 ? '9+' : taskCount
+  const count = taskCount > 9 ? '9+' : `${taskCount}`
 
   return successfulResponse({ count })
 }

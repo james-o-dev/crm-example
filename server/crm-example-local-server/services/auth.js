@@ -79,10 +79,10 @@ export const signInEndpoint = async (requestBody) => {
 
   const db = getDb()
   const user = await db.oneOrNone('SELECT user_id, hashed_password FROM users WHERE email = $1', [normalEmail])
-  if (!user) throw validationErrorResponse({ message: 'Invalid sign-in.' })
+  if (!user) throw validationErrorResponse({ message: 'Invalid sign-in.' }, 401)
 
   const match = await comparePassword(password, user.hashed_password)
-  if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' })
+  if (!match) throw validationErrorResponse({ message: 'Invalid sign-in.' }, 401)
 
   const tokenPayload = getJwtPayload(user.user_id, email)
   const accessToken = await signAccessToken(tokenPayload)
@@ -150,7 +150,7 @@ export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
 
     // Old password is invalid.
     const match = await comparePassword(oldPassword, user.hashed_password)
-    if (!match) throw validationErrorResponse({ message: 'Old password does not match current password.' })
+    if (!match) throw validationErrorResponse({ message: 'Old password does not match current password.' }, 401)
 
     // Change password.
     const newHashedPassword = await hashPassword(newPassword)
@@ -181,6 +181,6 @@ export const signOutEverywhereEndpoint = async (reqHeaders) => {
   const db = getDb()
   const result = await db.oneOrNone('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1 RETURNING user_id', [userId])
 
-  if (result.user_id) return successfulResponse({ message: 'Password has been changed. Existing tokens have been invalidated.' })
+  if (result.user_id) return successfulResponse({ message: 'Signed out of all devices. Existing tokens have been invalidated.' })
   throw validationErrorResponse({ message: 'User could not be found.' }, 404)
 }

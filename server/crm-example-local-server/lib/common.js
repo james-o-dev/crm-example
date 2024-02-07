@@ -49,3 +49,13 @@ export const validationErrorResponse = (payload, statusCode = 400) => {
  * Return a generic unauthorized validation response.
  */
 export const unauthorizedError = () => validationErrorResponse({ message: 'Unauthorized.' }, 401)
+
+/**
+ * Is the string a valid UUIDv4 format?
+ *
+ * @param {string} str
+ */
+export const isUUIDv4 = (str) => {
+  const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/
+  return regex.test(str)
+}

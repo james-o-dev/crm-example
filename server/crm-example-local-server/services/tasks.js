@@ -1,5 +1,5 @@
 import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
 import { getDb } from '../lib/db/db-postgres.js'
 
 
@@ -15,6 +15,8 @@ export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
 
   // Get query params.
   const contactId = reqQuery.contact_id || null
+  // Validate contact_id.
+  if (contactId && !isUUIDv4(contactId)) throw validationErrorResponse({ message: 'Contact ID was invalid.' })
 
   // Query database.
   const db = getDb()
@@ -51,12 +53,19 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
   if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+  if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
 
   // Query database.
+  // Only set the contact if it exists and it belongs to the user.
+  // If it does not, do not create a task and return an error.
   const db = getDb()
   const sql = `
-    INSERT INTO tasks (title, notes, due_date, contact_id, user_id)
-    VALUES ($(title), $(notes), $(due_date), $(contact_id), $(userId))
+    INSERT INTO tasks (title, notes, due_date, user_id, contact_id)
+    SELECT $(title), $(notes), $(due_date), u.user_id, c.contact_id
+    FROM users u
+    LEFT JOIN contacts c ON c.contact_id = $(contact_id) AND c.user_id = u.user_id
+    WHERE u.user_id = $(userId)
+    AND ($(contact_id) IS NULL OR c.contact_id = $(contact_id))
     RETURNING task_id
   `
   const sqlParams = {
@@ -64,11 +73,15 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
     title: reqBody.title,
     due_date: reqBody.due_date,
     notes: reqBody.notes,
-    contact_id: reqBody.contact_id,
+    contact_id: reqBody.contact_id || null,
   }
-  const createdTask = await db.one(sql, sqlParams)
+  const createdTask = await db.oneOrNone(sql, sqlParams)
+  const taskId = createdTask?.task_id
 
-  return successfulResponse({ message: 'Task created.', task_id: createdTask.task_Id }, 201)
+  if (taskId) return successfulResponse({ message: 'Task created.', task_id: taskId }, 201)
+  // It will only reach below if - an attempt was made to create a task with a contact that does not exist, from the user's perspective.
+  // Since it would not have returned the task_id from the query.
+  throw validationErrorResponse({ message: 'Contact was not found and could not be associated with this new task.' }, 404)
 }
 
 /**
@@ -81,7 +94,7 @@ export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
   const userId = await getUserId(reqHeaders)
 
   // Request body validation.
-  if (!reqQuery.task_id) throw validationErrorResponse({ message: 'Missing Task ID.' })
+  if (!reqQuery.task_id || !isUUIDv4(reqQuery.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
   const taskId = reqQuery.task_id
 
   // Query database.
@@ -102,7 +115,8 @@ export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
   const sqlParams = { userId, taskId }
   const task = await db.oneOrNone(sql, sqlParams)
 
-  return successfulResponse({ task })
+  if (task) return successfulResponse({ task })
+  throw validationErrorResponse({ message: 'Task not found.' }, 404)
 }
 
 /**
@@ -117,13 +131,20 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
   if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
+  if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
+  if (!reqBody.task_id || !isUUIDv4(reqBody.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
+  if (reqBody.contact_id && !isUUIDv4(reqBody.contact_id)) throw validationErrorResponse({ message: 'Invalid Contact ID.' })
 
   // Query database.
   const db = getDb()
   const sql = `
     UPDATE tasks
-    SET title = $(title), notes = $(notes), due_date = $(due_date), contact_id = $(contact_id)
-    WHERE user_id = $(userId) AND task_id = $(task_id)
+    SET title = $(title), notes = $(notes), due_date = $(due_date), contact_id = c.contact_id
+    FROM users u
+    LEFT JOIN contacts c ON c.contact_id = $(contact_id) AND c.user_id = u.user_id
+    WHERE u.user_id = $(userId)
+    AND task_id = $(task_id)
+    AND tasks.user_id = u.user_id
     RETURNING task_id
   `
   const sqlParams = {
@@ -137,7 +158,7 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   const taskUpdated = await db.oneOrNone(sql, sqlParams)
 
   if (taskUpdated) return successfulResponse({ message: 'Task updated.' })
-  throw validationErrorResponse({ message: 'Task not found.' }, 404)
+  throw validationErrorResponse({ message: 'Task and/or contact not found.' }, 404)
 }
 
 /**
@@ -150,7 +171,7 @@ export const deleteTaskEndpoint = async (reqHeaders, reqQuery) => {
   const userId = await getUserId(reqHeaders)
 
   // Request body validation.
-  if (!reqQuery.task_id) throw validationErrorResponse({ message: 'Missing Task ID.' })
+  if (!reqQuery.task_id || !isUUIDv4(reqQuery.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
   const taskId = reqQuery.task_id
 
   // Query database.

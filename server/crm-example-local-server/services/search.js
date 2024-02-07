@@ -6,12 +6,12 @@ import { getDb } from '../lib/db/db-postgres.js'
  * Search records belonging to the user.
  *
  * @param {*} reqHeaders
- * @param {*} reqQuery
+ * @param {*} reqQuery Ensure the 'q' value is URI-encoded. e.g. `?q=encodeURIComponent(search)`
  */
 export const searchEndpoint = async (reqHeaders, reqQuery) => {
   const userId = await getUserId(reqHeaders)
 
-  const q = reqQuery.q
+  const q = decodeURIComponent(reqQuery.q)
 
   const db = getDb()
 
@@ -37,7 +37,7 @@ export const searchEndpoint = async (reqHeaders, reqQuery) => {
   `
 
   // Batch together for performance.
-  const [contacts, tasks] = await db.task(t => t.batch([
+  const [contacts, tasks] = await db.task(t => Promise.all([
     t.any(sqlContacts, {userId, q}),
     t.any(sqlTasks, {userId, q}),
   ]))
