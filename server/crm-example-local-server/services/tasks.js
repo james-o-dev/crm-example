@@ -171,7 +171,7 @@ export const deleteTaskEndpoint = async (reqHeaders, reqQuery) => {
   const userId = await getUserId(reqHeaders)
 
   // Request body validation.
-  if (!reqQuery.task_id) throw validationErrorResponse({ message: 'Missing Task ID.' })
+  if (!reqQuery.task_id || !isUUIDv4(reqQuery.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
   const taskId = reqQuery.task_id
 
   // Query database.
