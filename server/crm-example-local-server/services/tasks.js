@@ -132,6 +132,8 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
   if (!reqBody.title) throw validationErrorResponse({ message: 'Missing title.' })
   if (reqBody.due_date && isNaN(parseInt(reqBody.due_date))) throw validationErrorResponse({ message: 'Invalid due date.' })
+  if (!reqBody.task_id || !isUUIDv4(reqBody.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
+  if (reqBody.contact_id && !isUUIDv4(reqBody.contact_id)) throw validationErrorResponse({ message: 'Invalid Contact ID.' })
 
   // Query database.
   const db = getDb()
