@@ -45,7 +45,7 @@ export const importContactsJsonEndpoint = async (reqHeaders, reqBody) => {
   try {
     await db.tx(t => t.batch(
       contacts.map((contact) => {
-        return db.none(`
+        return t.none(`
           INSERT INTO contacts (
             name,
             email,
