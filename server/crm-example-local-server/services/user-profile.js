@@ -13,8 +13,7 @@ export const getUsername = async (reqHeaders) => {
   const db = getDb()
   const user = await db.oneOrNone('SELECT username FROM users WHERE user_id = $1', [userId])
 
-  if (user) return successfulResponse({ username: user.username })
-  throw validationErrorResponse({ message: 'User not found.' }, 404)
+  return successfulResponse({ username: user.username })
 }
 
 /**
@@ -30,14 +29,12 @@ export const setUsername = async (reqHeaders, reqBody) => {
   const normalUsername = (username || '').trim()
 
   const db = getDb()
-  let user
   try {
-    user = await db.oneOrNone('UPDATE users SET username = $2 WHERE user_id = $1 RETURNING user_id', [userId, normalUsername || null])
+    await db.oneOrNone('UPDATE users SET username = $2 WHERE user_id = $1 RETURNING user_id', [userId, normalUsername || null])
   } catch (error) {
     if (isUniqueConstraintError(error, 'users_unique_1')) throw validationErrorResponse({ message: 'Username already taken.' }, 409)
     throw error
   }
 
-  if (user) return successfulResponse({ message: 'Username updated.' })
-  throw validationErrorResponse({ message: 'User not found.' }, 404)
+  return successfulResponse({ message: 'Username updated.' })
 }
