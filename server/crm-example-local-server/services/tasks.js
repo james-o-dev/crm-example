@@ -139,8 +139,12 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   const db = getDb()
   const sql = `
     UPDATE tasks
-    SET title = $(title), notes = $(notes), due_date = $(due_date), contact_id = $(contact_id)
-    WHERE user_id = $(userId) AND task_id = $(task_id)
+    SET title = $(title), notes = $(notes), due_date = $(due_date), contact_id = c.contact_id
+    FROM users u
+    LEFT JOIN contacts c ON c.contact_id = $(contact_id) AND c.user_id = u.user_id
+    WHERE u.user_id = $(userId)
+    AND task_id = $(task_id)
+    AND tasks.user_id = u.user_id
     RETURNING task_id
   `
   const sqlParams = {
