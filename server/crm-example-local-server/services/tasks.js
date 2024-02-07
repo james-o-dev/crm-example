@@ -154,7 +154,7 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
   const taskUpdated = await db.oneOrNone(sql, sqlParams)
 
   if (taskUpdated) return successfulResponse({ message: 'Task updated.' })
-  throw validationErrorResponse({ message: 'Task not found.' }, 404)
+  throw validationErrorResponse({ message: 'Task and/or contact not found.' }, 404)
 }
 
 /**
