@@ -11,6 +11,7 @@ import { searchEndpoint } from './services/search.js'
 import { dashboardDataEndpoint } from './services/dashboard.js'
 import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.js'
 import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.js'
+import { cleanupTestRecords } from './services/test.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -109,6 +110,8 @@ app.get('/notifications/count', (req, res) => controllerHandler(req, res, getNot
 // Get notifications detail.
 app.get('/notifications/detail', (req, res) => controllerHandler(req, res, getNotificationsDetailEndpoint(req.headers)))
 
+// Cleanup test records.
+app.get('/test/cleanup', (req, res) => controllerHandler(req, res, cleanupTestRecords()))
 
 // Start the server
 app.listen(PORT, () => {
