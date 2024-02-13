@@ -11,7 +11,7 @@
     <mat-form-field>
       <mat-label>Password</mat-label>
       <input matInput type="password" formControlName="password" name="password">
-      <button type="button" mat-icon-button matSuffix (click)="authService.openPasswordInfoDialog()">
+      <button type="button" mat-icon-button matSuffix (click)="authService.openPasswordInfoDialog()" aria-label="password help">
         <mat-icon>info</mat-icon>
       </button>
       <mat-error>Invalid</mat-error>
