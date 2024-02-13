@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-force */
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -23,3 +24,48 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+/**
+ * Do sign up.
+ * * Redirects to the sign-up page
+ *
+ * @param {string} email
+ * @param {string} password
+ */
+const signUp = (email, password) => {
+  cy.visit('/sign-up')
+  cy.url().should('include', '/sign-up')
+
+  cy.get('input[name="email"]').type(email)
+  cy.get('input[name="password"]').type(password)
+  cy.get('input[name="confirmPassword"]').type(password, { force: true })
+
+  // Finally allow sign-up.
+  cy.get('button[mat-raised-button]').contains('Sign Up').click()
+
+  // Home page.
+  cy.get('h1').contains('Home').should('exist')
+}
+Cypress.Commands.add('signUp', signUp)
+
+/**
+ * Do sign in.
+ * * Redirects to the sign-in page
+ *
+ * @param {string} email
+ * @param {string} password
+ */
+const signIn = (email, password) => {
+  cy.visit('/sign-in')
+  cy.url().should('include', '/sign-in')
+
+  cy.get('input[name="email"]').type(email)
+  cy.get('input[name="password"]').type(password)
+
+  // Finally allow sign-up.
+  cy.get('button[mat-raised-button]').contains('Sign In').click()
+
+  // Home page.
+  cy.get('h1').contains('Home').should('exist')
+}
+Cypress.Commands.add('signIn', signIn)
