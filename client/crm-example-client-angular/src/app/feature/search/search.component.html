@@ -6,7 +6,7 @@
   <form [formGroup]="form">
     <mat-form-field>
       <mat-icon matPrefix>search</mat-icon>
-      <input type="text" matInput formControlName="q">
+      <input type="text" matInput formControlName="q" name="q">
 
       @if (form.value.q) {
         <button type="button" mat-icon-button matSuffix (click)="form.reset()">

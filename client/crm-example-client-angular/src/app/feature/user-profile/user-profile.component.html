@@ -16,7 +16,7 @@
     <form [formGroup]="changeUserNameForm" (submit)="onChangeUsername()">
       <mat-form-field>
         <mat-label>Username</mat-label>
-        <input matInput type="text" formControlName="username">
+        <input matInput type="text" formControlName="username" name="username">
       </mat-form-field>
 
       <div>
@@ -42,19 +42,19 @@
   <form [formGroup]="changePasswordForm" (submit)="onChangePassword()" class="change-password-form">
     <mat-form-field>
       <mat-label>Old Password</mat-label>
-      <input matInput type="password" formControlName="oldPassword">
+      <input matInput type="password" formControlName="oldPassword" name="oldPassword">
       <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>New Password</mat-label>
-      <input matInput type="password" formControlName="newPassword">
+      <input matInput type="password" formControlName="newPassword" name="newPassword">
       <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Confirm New Password</mat-label>
-      <input matInput type="password" formControlName="confirmPassword">
+      <input matInput type="password" formControlName="confirmPassword" name="confirmPassword">
       <mat-error>Invalid</mat-error>
     </mat-form-field>
 
