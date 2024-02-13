@@ -8,7 +8,7 @@
   @if (!editModeUsername) {
     <div>
       Username: {{username}}
-      <button mat-icon-button color="primary" (click)="editModeUsername = true">
+      <button mat-icon-button color="primary" (click)="editModeUsername = true" aria-label="change username">
         <mat-icon>edit</mat-icon>
       </button>
     </div>
