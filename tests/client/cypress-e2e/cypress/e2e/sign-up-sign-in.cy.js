@@ -25,7 +25,7 @@ describe('Sign Up / Sign In tests', () => {
     // Incorrect email.
     cy.get('input[name="email"]').type(wrongPassword)
     // Do not allow sign up.
-    cy.get('button[mat-raised-button][disabled="true"]').contains('Sign Up').should('exist')
+    cy.get('button[disabled="true"]').contains('Sign Up').should('exist')
     cy.get('input[name="email"]').clear()
     cy.get('input[name="email"]').type(email)
 
@@ -41,20 +41,20 @@ describe('Sign Up / Sign In tests', () => {
     cy.get('input[name="password"]').type(wrongPassword)
     cy.get('input[name="confirmPassword"]').type(wrongPassword, { force: true })
     // Do not allow sign up.
-    cy.get('button[mat-raised-button][disabled="true"]').contains('Sign Up').should('exist')
+    cy.get('button[disabled="true"]').contains('Sign Up').should('exist')
 
     // Correct password and wrong confirmPassword.
     cy.get('input[name="password"]').clear()
     cy.get('input[name="password"]').type(password)
     // Do not allow sign up.
-    cy.get('button[mat-raised-button][disabled="true"]').contains('Sign Up').should('exist')
+    cy.get('button[disabled="true"]').contains('Sign Up').should('exist')
 
     // Correct confirmPassword.
     cy.get('input[name="confirmPassword"]').clear()
     cy.get('input[name="confirmPassword"]').type(password, { force: true })
 
     // Finally allow sign-up.
-    cy.get('button[mat-raised-button]').contains('Sign Up').click()
+    cy.get('button').contains('Sign Up').click()
 
     // Home page.
     cy.get('h1').contains('Home').should('exist')
@@ -68,16 +68,16 @@ describe('Sign Up / Sign In tests', () => {
     // Incorrect email.
     cy.get('input[name="email"]').type(wrongPassword)
     // Do not allow sign up.
-    cy.get('button[mat-raised-button][disabled="true"]').contains('Sign In').should('exist')
+    cy.get('button[disabled="true"]').contains('Sign In').should('exist')
     // Enter correct email.
     cy.get('input[name="email"]').clear()
     cy.get('input[name="email"]').type(email)
     // Do not allow sign up (password not entered).
-    cy.get('button[mat-raised-button][disabled="true"]').contains('Sign In').should('exist')
+    cy.get('button[disabled="true"]').contains('Sign In').should('exist')
 
     // Enter wrong password and submit.
     cy.get('input[name="password"]').type(email)
-    cy.get('button[mat-raised-button]').contains('Sign In').click()
+    cy.get('button').contains('Sign In').click()
 
     // Should display dialog of invalid sign-in.
     cy.get('h1').contains('Error').should('exist')
@@ -87,7 +87,7 @@ describe('Sign Up / Sign In tests', () => {
     // Enter correct password and sign in successfully.
     cy.get('input[name="password"]').clear()
     cy.get('input[name="password"]').type(password)
-    cy.get('button[mat-raised-button]').contains('Sign In').click()
+    cy.get('button').contains('Sign In').click()
     cy.get('h1').contains('Home').should('exist')
   })
 })
