@@ -18,6 +18,11 @@ $crm-example-client-angular-accent: mat.define-palette(mat.$pink-palette, A200, 
 // The warn palette is optional (defaults to red).
 $crm-example-client-angular-warn: mat.define-palette(mat.$red-palette);
 
+// Define the Angular Material app topography.
+$crm-example-client-angular-typography: mat.define-typography-config(
+  $font-family: Roboto
+);
+
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $crm-example-client-angular-theme: mat.define-light-theme((
@@ -25,11 +30,11 @@ $crm-example-client-angular-theme: mat.define-light-theme((
     primary: $crm-example-client-angular-primary,
     accent: $crm-example-client-angular-accent,
     warn: $crm-example-client-angular-warn,
-  )
+  ),
+  typography: $crm-example-client-angular-typography
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($crm-example-client-angular-theme);
-
