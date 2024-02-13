@@ -11,7 +11,7 @@
       <span class="empty-space"></span>
 
       <button mat-icon-button routerLink="/notifications" (click)="closeSidenav()">
-        <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true" aria-hidden="false">
+        <mat-icon [matBadge]="notificationNumber$ | async" matBadgeColor="accent" matBadgeSize="small" matBadgeOverlap="true" [matBadgeHidden]="false">
           notifications
         </mat-icon>
       </button>
