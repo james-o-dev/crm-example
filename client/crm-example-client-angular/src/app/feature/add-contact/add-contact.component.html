@@ -7,14 +7,14 @@
 
   <div class="fab-desktop">
     <br>
-    <button mat-fab color="primary" [disabled]="contactForm.form.invalid" (click)="onSubmit()">
+    <button mat-fab color="primary" [disabled]="contactForm.form.invalid" (click)="onSubmit()" aria-label="create contact">
       <mat-icon>person_add</mat-icon>
     </button>
   </div>
 
   <div class="bottom-fab-mobile-absolute right">
     <div class="bottom-fab-mobile-fixed">
-      <button mat-fab color="primary" [disabled]="contactForm.form.invalid" (click)="onSubmit()">
+      <button mat-fab color="primary" [disabled]="contactForm.form.invalid" (click)="onSubmit()" aria-label="create contact">
         <mat-icon>person_add</mat-icon>
       </button>
     </div>

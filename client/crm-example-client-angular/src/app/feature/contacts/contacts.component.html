@@ -2,7 +2,7 @@
   <h1>
     Contacts
     <div class="fab-desktop">
-      <button mat-mini-fab color="primary" routerLink="/add-contact">
+      <button mat-mini-fab color="primary" routerLink="/add-contact" aria-label="add contact">
         <mat-icon>person_add</mat-icon>
       </button>
     </div>
@@ -10,7 +10,7 @@
 </div>
 
 <div class="text-center-responsive mx-1">
-  <mat-slide-toggle [checked]="activeToggle" color="primary" (toggleChange)="onActiveToggleChange()">
+  <mat-slide-toggle [checked]="activeToggle" color="primary" (toggleChange)="onActiveToggleChange()" [aria-label]="activeToggle ? 'display archived' : 'display active'">
     {{activeToggle ? 'Active' : 'Archived'}}
   </mat-slide-toggle>
 </div>
