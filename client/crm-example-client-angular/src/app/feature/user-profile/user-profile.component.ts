@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatDividerModule } from '@angular/material/divider'
@@ -25,6 +25,7 @@ import { matchFieldValidator } from '../../shared/common-functions'
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserProfileComponent implements OnInit {
   protected auth = inject(AuthService)
@@ -32,8 +33,8 @@ export class UserProfileComponent implements OnInit {
   private formBuilder = inject(FormBuilder)
   private userProfileService = inject(UserProfileService)
 
-  protected editModeUsername = false
-  protected username = ''
+  protected editModeUsername = signal(false)
+  protected username = signal('')
 
   protected changeUserNameForm = this.formBuilder.group({
     username: [''],
@@ -48,8 +49,8 @@ export class UserProfileComponent implements OnInit {
   public ngOnInit() {
     this.userProfileService.getUsername()
       .subscribe(data => {
-        this.username = data.username
-        this.changeUserNameForm.patchValue({ username: this.username })
+        this.username.set(data.username)
+        this.changeUserNameForm.patchValue({ username: data.username })
       })
 
     // Every time newPassword is changed, update whether confirmPassword is still valid.
@@ -63,8 +64,8 @@ export class UserProfileComponent implements OnInit {
     this.userProfileService.setUsername(this.changeUserNameForm.value.username as string)
       .subscribe({
         next: () => {
-          this.username = this.changeUserNameForm.value.username as string
-          this.editModeUsername = false
+          this.username.set(this.changeUserNameForm.value.username as string)
+          this.editModeUsername.set(false)
         },
         error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
@@ -117,8 +118,5 @@ export class UserProfileComponent implements OnInit {
         next: (data) => data ? this.auth.signOut() : null,
         error: (response) => this.dialog.displayErrorDialog(response.error.message),
       })
-
-
-
   }
 }
