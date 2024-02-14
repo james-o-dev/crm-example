@@ -11,7 +11,7 @@ describe('Search', () => {
     await cleanUpTests()
   })
 
-  it('Search contact and ta', () => {
+  it('Search contact and task', () => {
     const email = generateRandomEmail()
     const password = generateRandomPassword()
 
