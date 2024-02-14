@@ -46,10 +46,10 @@ describe('Tasks', () => {
     // Select the contact.
     cy.get('input[name="autoContact"]').type(contactName)
     cy.get('mat-option span').contains(contactName).click()
-    // Select due date, from calendar picker.
+    // Select due date, from date picker.
     cy.get('mat-datepicker-toggle').click()
     cy.get('button span.mat-calendar-body-today').click()
-    cy.get('button span.mat-calendar-body-today').click()
+    cy.get('body').type('{esc}') // Requires this in order to close the date picker.
     // Create new task.
     cy.get('.fab-desktop button[aria-label="create new task"').click()
     // Dialog displayed.
