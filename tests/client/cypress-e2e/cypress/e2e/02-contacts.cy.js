@@ -91,5 +91,21 @@ describe('Contacts', () => {
     cy.get('a').contains(taskTitle).click()
     cy.url().should('include', '/task-detail/')
     cy.get('h2').contains(taskTitle).should('exist')
+
+    // Attempt to create a contact with a duplicate email.
+
+    // Go to contacts.
+    cy.get('a').contains('Contacts').click()
+    cy.url().should('include', '/contacts')
+    // Add new contact.
+    cy.get('button[aria-label="add contact"').click()
+    cy.url().should('include', '/add-contact')
+    cy.get('input[name="name"]').type(contactName)
+    cy.get('input[name="email"]').type(contactEmail)
+    cy.get('.fab-desktop button[aria-label="create contact"').click()
+    // Dialog displayed.
+    cy.get('h1').contains('Error').should('exist')
+    cy.get('div').contains('This email is already in use.').should('exist')
+    cy.get('button').contains('Dismiss').click()
   })
 })
