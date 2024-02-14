@@ -25,6 +25,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+require('cypress-delete-downloads-folder').addCustomCommand()
+
 /**
  * Do sign up.
  * * Redirects to the sign-up page

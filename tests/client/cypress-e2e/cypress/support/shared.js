@@ -21,5 +21,6 @@ export const generateRandomPassword = () => generateRandomString() + 'aA1!'
  * Request to clean up test records in the database.
  */
 export const cleanUpTests = async () => {
+  cy.deleteDownloadsFolder()
   return fetch(`${Cypress.env('API_HOST')}/test/cleanup`)
 }
