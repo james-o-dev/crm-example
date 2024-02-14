@@ -13,17 +13,17 @@
   <div class="cards" *ngIf="data$ | async as data">
     <mat-card routerLink="/contacts">
       <div>Contacts</div>
-      <h2>{{ data.contacts || 0 }}</h2>
+      <h2 aria-label="number of contacts">{{ data.contacts || 0 }}</h2>
     </mat-card>
 
     <mat-card routerLink="/tasks">
       <div>Tasks</div>
-      <h2>{{ data.tasks || 0 }}</h2>
+      <h2 aria-label="number of tasks">{{ data.tasks || 0 }}</h2>
     </mat-card>
 
     <mat-card routerLink="/tasks">
       <div>Tasks (overdue)</div>
-      <h2>{{ data.tasks_overdue || 0 }}</h2>
+      <h2 aria-label="number of overdue tasks">{{ data.tasks_overdue || 0 }}</h2>
     </mat-card>
   </div>
 
