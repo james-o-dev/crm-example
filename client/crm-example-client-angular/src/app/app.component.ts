@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, effect, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, effect, inject } from '@angular/core'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -44,6 +44,7 @@ import { NotificationsService } from './core/notifications.service'
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   private authService = inject(AuthService)
