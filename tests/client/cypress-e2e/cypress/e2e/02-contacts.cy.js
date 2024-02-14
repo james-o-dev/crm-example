@@ -11,13 +11,15 @@ describe('Contacts', () => {
     await cleanUpTests()
   })
 
-  it('Create, edit, archive contacts', () => {
+  it('Create, edit, archive contacts. Add task to contact', () => {
     const email = generateRandomEmail()
     const password = generateRandomPassword()
 
     const contactName = generateRandomString()
     const contactName2 = generateRandomString()
     const contactEmail = generateRandomEmail()
+
+    const taskTitle = generateRandomString()
 
     // Sign up.
     cy.signUp(email, password)
@@ -68,6 +70,21 @@ describe('Contacts', () => {
     cy.get('button').contains('Restore Contact').click()
     cy.url().should('include', '/contacts')
     // cy.get('[aria-label="display active"]').click() // It displays active by default.
-    cy.get('a').contains(contactName2).should('exist')
+
+    // Create task.
+    cy.get('a').contains(contactName2).click()
+    cy.get('button').contains('Add Task').click()
+    cy.get('input[name="title"]').type(taskTitle)
+    // Select due date, from calendar picker.
+    cy.get('mat-datepicker-toggle').click()
+    cy.get('button span.mat-calendar-body-today').click()
+    cy.get('body').type('{esc}') // Requires this in order to close the date picker.
+    // Submit new task.
+    cy.get('.fab-desktop button[aria-label="add task to contact"').click()
+
+    // Check task detail.
+    cy.get('a').contains(taskTitle).click()
+    cy.url().should('include', '/task-detail/')
+    cy.get('h2').contains(taskTitle).should('exist')
   })
 })

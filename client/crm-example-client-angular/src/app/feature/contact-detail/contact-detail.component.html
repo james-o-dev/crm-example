@@ -86,7 +86,7 @@
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span>&nbsp;</span>
-        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid" aria-label="add task to contact">
           <mat-icon>assignment_add</mat-icon>
         </button>
       </div>
@@ -102,7 +102,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid" aria-label="add task to contact">
           <mat-icon>assignment_add</mat-icon>
         </button>
       </div>
