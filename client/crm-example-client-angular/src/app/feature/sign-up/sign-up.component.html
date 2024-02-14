@@ -4,14 +4,14 @@
   <form [formGroup]="form" (submit)="onSubmit()">
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email">
+      <input matInput type="email" formControlName="email" name="email">
       <mat-error>Invalid</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password">
-      <button type="button" mat-icon-button matSuffix (click)="authService.openPasswordInfoDialog()">
+      <input matInput type="password" formControlName="password" name="password">
+      <button type="button" mat-icon-button matSuffix (click)="authService.openPasswordInfoDialog()" aria-label="password help">
         <mat-icon>info</mat-icon>
       </button>
       <mat-error>Invalid</mat-error>
@@ -19,7 +19,7 @@
 
     <mat-form-field>
       <mat-label>Confirm Password</mat-label>
-      <input matInput type="password" formControlName="confirmPassword">
+      <input matInput type="password" formControlName="confirmPassword" name="confirmPassword">
       <mat-error>Invalid</mat-error>
     </mat-form-field>
 

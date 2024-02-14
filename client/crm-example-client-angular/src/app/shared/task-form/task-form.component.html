@@ -10,7 +10,7 @@
   } @else if (!noContact) {
     <mat-form-field>
       <mat-label>For Contact</mat-label>
-      <input matInput type="text" formControlName="autoContact" [matAutocomplete]="auto">
+      <input matInput type="text" formControlName="autoContact" name="autoContact" [matAutocomplete]="auto">
       <mat-icon matSuffix>search</mat-icon>
 
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="autoDisplayFn">
@@ -25,13 +25,13 @@
 
   <mat-form-field>
     <mat-label>Title</mat-label>
-    <input matInput type="text" formControlName="title">
+    <input matInput type="text" formControlName="title" name="title">
     <mat-error>Invalid</mat-error>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Due Date</mat-label>
-    <input matInput type="text" [matDatepicker]="picker" formControlName="due_date">
+    <input matInput type="text" [matDatepicker]="picker" formControlName="due_date" name="due_date">
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
     <mat-error>Invalid</mat-error>
@@ -39,7 +39,7 @@
 
   <mat-form-field>
     <mat-label>Notes</mat-label>
-    <textarea matInput rows="5" formControlName="notes"></textarea>
+    <textarea matInput rows="5" formControlName="notes" name="notes"></textarea>
   </mat-form-field>
 
   <div>

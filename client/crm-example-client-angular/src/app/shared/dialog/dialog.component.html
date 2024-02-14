@@ -6,6 +6,6 @@
 </div>
 <div mat-dialog-actions>
   @for (action of data.actions; track $index) {
-    <button mat-button [mat-dialog-close]="action.value" color="primary">{{action.text}}</button>
+    <button mat-button [mat-dialog-close]="action.value" color="primary" [aria-label]="action.text + ' dialog action'">{{action.text}}</button>
   }
 </div>

@@ -10,7 +10,7 @@
       <h2>
         {{contact.name || 'Loading...'}}
         <span class="fab-desktop">
-          <button mat-mini-fab color="primary" (click)="editMode = true">
+          <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit contact">
             <mat-icon>edit</mat-icon>
           </button>
         </span>
@@ -65,7 +65,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="editMode = true">
+        <button mat-fab color="primary" (click)="editMode = true" edit contact>
           <mat-icon>edit</mat-icon>
         </button>
       </div>
@@ -86,7 +86,7 @@
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span>&nbsp;</span>
-        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid" aria-label="add task to contact">
           <mat-icon>assignment_add</mat-icon>
         </button>
       </div>
@@ -102,7 +102,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid">
+        <button mat-fab color="primary" (click)="onAddTask()" [disabled]="taskForm.form.invalid" aria-label="add task to contact">
           <mat-icon>assignment_add</mat-icon>
         </button>
       </div>
@@ -123,7 +123,7 @@
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span>&nbsp;</span>
-        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid">
+        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid" aria-label="update contact">
           <mat-icon>save</mat-icon>
         </button>
       </div>
@@ -139,7 +139,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid">
+        <button mat-fab color="primary" (click)="onSave()" [disabled]="contactForm.form.invalid" aria-label="update contact">
           <mat-icon>save</mat-icon>
         </button>
       </div>
