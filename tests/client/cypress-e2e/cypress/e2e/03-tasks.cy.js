@@ -42,6 +42,7 @@ describe('Tasks', () => {
     cy.get('a').contains('Tasks').click()
     // Create task.
     cy.get('.fab-desktop button[aria-label="add task"]').click()
+    cy.get('.fab-desktop button[aria-label="create new task"').should('be.disabled') // Title is required.
     cy.get('input[name="title"]').type(taskTitle)
     // Select the contact.
     cy.get('input[name="autoContact"]').type(contactName)

@@ -31,7 +31,12 @@ describe('Contacts', () => {
     // Add new contact.
     cy.get('button[aria-label="add contact"').click()
     cy.url().should('include', '/add-contact')
+    cy.get('.fab-desktop button[aria-label="create contact"').should('be.disabled') // Name and email is still required.
     cy.get('input[name="name"]').type(contactName)
+    cy.get('.fab-desktop button[aria-label="create contact"').should('be.disabled') // Email is still required.
+    cy.get('input[name="email"]').type(contactName)
+    cy.get('.fab-desktop button[aria-label="create contact"').should('be.disabled') // Email has an incorrect format.
+    cy.get('input[name="email"]').clear()
     cy.get('input[name="email"]').type(contactEmail)
     cy.get('.fab-desktop button[aria-label="create contact"').click()
     // Dialog displayed.
