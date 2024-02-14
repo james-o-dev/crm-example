@@ -89,5 +89,21 @@ describe('Sign Up / Sign In tests', () => {
     cy.get('input[name="password"]').type(password)
     cy.get('button').contains('Sign In').click()
     cy.get('h1').contains('Home').should('exist')
+
+    // Attempt to sign up again - email in use.
+
+    // Sign out.
+    cy.get('a').contains('Sign Out').click()
+    cy.visit('/sign-up')
+
+    // Sign up form/
+    cy.get('input[name="email"]').type(email)
+    cy.get('input[name="password"]').type(password)
+    cy.get('input[name="confirmPassword"]').type(password, { force: true })
+    cy.get('button').contains('Sign Up').click()
+    // Dialog displayed.
+    cy.get('h1').contains('Error').should('exist')
+    cy.get('div').contains('This email is already in use.').should('exist')
+    cy.get('button').contains('Dismiss').click()
   })
 })
