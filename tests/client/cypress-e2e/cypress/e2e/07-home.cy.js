@@ -76,5 +76,15 @@ describe('Home', () => {
     cy.get('h2[aria-label="number of tasks"]').should('contain.text', '2')
     // Check tasks overdue number - expected 1
     cy.get('h2[aria-label="number of overdue tasks"]').should('contain.text', '1')
+
+    // Check that clicking each card goes to the relevant route.
+    cy.get('h2[aria-label="number of contacts"]').click()
+    cy.url().should('include', '/contacts')
+    cy.visit('/')
+    cy.get('h2[aria-label="number of tasks"]').click()
+    cy.url().should('include', '/tasks')
+    cy.visit('/')
+    cy.get('h2[aria-label="number of overdue tasks"]').click()
+    cy.url().should('include', '/tasks')
   })
 })
