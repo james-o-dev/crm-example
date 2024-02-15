@@ -55,7 +55,7 @@ resource "aws_lambda_function" "lambdaFunction" {
 }
 
 # Lambda function url.
-resource "aws_lambda_function_url" "lambdaFunction" {
+resource "aws_lambda_function_url" "lambdaFunctionUrl" {
   function_name      = aws_lambda_function.lambdaFunction.function_name
   authorization_type = "NONE"
   cors {
@@ -66,6 +66,11 @@ resource "aws_lambda_function_url" "lambdaFunction" {
     # expose_headers = ["Date"]
     max_age = 86400
   }
+}
+# Output the URL.
+output "lambdaFunctionUrl" {
+  description = "API Host URL of the Lambda Function."
+  value = aws_lambda_function_url.lambdaFunctionUrl.function_url
 }
 
 # IAM role for the Lambda.
