@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common'
-import { Component, Input, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatButtonModule } from '@angular/material/button'
@@ -36,6 +36,7 @@ interface IOption {
   ],
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskFormComponent implements OnInit {
   private contactService = inject(ContactService)

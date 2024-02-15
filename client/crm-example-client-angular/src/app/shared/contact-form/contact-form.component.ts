@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core'
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -18,6 +18,7 @@ import { AuthService } from '../../core/auth.service'
   ],
   templateUrl: './contact-form.component.html',
   styleUrl: './contact-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactFormComponent implements OnInit {
   private authService = inject(AuthService)
