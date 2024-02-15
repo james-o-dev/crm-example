@@ -5,7 +5,7 @@ import { dashboardDataEndpoint } from './services/dashboard.mjs'
 import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.mjs'
 import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.mjs'
 import { searchEndpoint } from './services/search.mjs'
-import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, updateTaskEndpoint } from './services/tasks.mjs'
+import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.mjs'
 import { cleanupTestRecords } from './services/test.mjs'
 import { getUsername, setUsername } from './services/user-profile.mjs'
 
@@ -84,7 +84,7 @@ export const handler = async (event) => {
     // Tasks.
 
     // Get tasks.
-    if (reqPath === '/tasks' && reqMethod === 'GET') response = await getTaskEndpoint(reqHeaders, reqQueryStringParameters)
+    if (reqPath === '/tasks' && reqMethod === 'GET') response = await getTasksEndpoint(reqHeaders, reqQueryStringParameters)
 
     // Create new task.
     if (reqPath === '/task' && reqMethod === 'POST') response = await createTaskEndpoint(reqHeaders, reqBody)
