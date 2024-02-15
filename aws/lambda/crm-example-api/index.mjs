@@ -1,5 +1,5 @@
 import { successfulResponse, validationErrorResponse } from './lib/common.mjs'
-import { changePasswordEndpoint, isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signUpEndpoint } from './services/auth.mjs'
+import { changePasswordEndpoint, isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signOutEverywhereEndpoint, signUpEndpoint } from './services/auth.mjs'
 import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.mjs'
 import { dashboardDataEndpoint } from './services/dashboard.mjs'
 import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.mjs'
