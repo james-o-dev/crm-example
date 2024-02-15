@@ -9,6 +9,11 @@ import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoi
 import { cleanupTestRecords } from './services/test.mjs'
 import { getUsername, setUsername } from './services/user-profile.mjs'
 
+/**
+ * Main function handler.
+ *
+ * @param {*} event
+ */
 export const handler = async (event) => {
 
   // Get attributes of the request.
@@ -34,6 +39,7 @@ export const handler = async (event) => {
   let response = validationErrorResponse({ message: 'API endpoint not found' }, 404)
 
   try {
+    // 'Health check' / introduction route.
     if (reqPath === '/' && reqMethod === 'GET') response = successfulResponse({ message: 'CRM Example API. For personal/demonstration/educational purposes only.' })
 
     // Auth routes.
@@ -136,6 +142,7 @@ export const handler = async (event) => {
     }
   }
 
+  // Lambda response.
   return {
     statusCode: response.statusCode,
     body: JSON.stringify({
@@ -143,5 +150,12 @@ export const handler = async (event) => {
       statusCode: undefined, // Remove these from the response body.
       validation: undefined, // Remove these from the response body.
     }),
+    headers: {
+      'Content-Type': 'application/json',
+      // Note: Configure CORS in the Lambda settings.
+      // 'Access-Control-Allow-Origin': allowedOrigins.has(origin) ? origin : '',
+      // 'Access-Control-Allow-Origin': reqOrigin,
+      // 'Access-Control-Allow-Credentials': true,
+    }
   }
 }
