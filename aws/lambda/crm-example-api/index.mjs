@@ -23,7 +23,7 @@ export const handler = async (event) => {
   const reqPathParameters = event.pathParameters // Note: Only available when using API Gateway.
   const reqQueryStringParameters = event.queryStringParameters
   const reqHeaders = event.headers
-  const reqOrigin = reqHeaders.origin || reqHeaders.Origin
+  // const reqOrigin = reqHeaders.origin || reqHeaders.Origin
 
   // Console log attributes.
   console.log({
@@ -156,6 +156,6 @@ export const handler = async (event) => {
       // 'Access-Control-Allow-Origin': allowedOrigins.has(origin) ? origin : '',
       // 'Access-Control-Allow-Origin': reqOrigin,
       // 'Access-Control-Allow-Credentials': true,
-    }
+    },
   }
 }
