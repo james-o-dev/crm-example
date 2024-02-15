@@ -33,7 +33,7 @@ const signUpNewUser = async () => {
  */
 const expireUserTokens = async (userId) => {
   const db = getDb()
-  await db.none('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1', [userId])
+  await db.none('UPDATE users SET iat = $2 WHERE user_id = $1', [userId, Math.floor(Date.now() / 1000)])
 }
 
 /**
