@@ -1,7 +1,9 @@
 -- Delete existing tables.
-DROP TABLE public.users CASCADE;
-DROP TABLE public.contacts CASCADE;
-DROP TABLE public.tasks CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+DROP TABLE IF EXISTS public.contacts CASCADE;
+DROP TABLE IF EXISTS public.tasks CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Returns the current unix timestamp, in milliseconds.
 -- Compatible with the javascript version e.g. `Date.now()`
