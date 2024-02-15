@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
-import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
-import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.js'
-import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.js'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
+import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.mjs'
+import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.mjs'
 
 /**
  * Get the current timestamp that is compatible with the 'iat' value of a JWT.

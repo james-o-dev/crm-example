@@ -1,6 +1,6 @@
-import { getUserId } from '../lib/auth.common.js'
-import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
-import { getDb } from '../lib/db/db-postgres.js'
+import { getUserId } from '../lib/auth.common.mjs'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.mjs'
+import { getDb } from '../lib/db/db-postgres.mjs'
 
 
 /**

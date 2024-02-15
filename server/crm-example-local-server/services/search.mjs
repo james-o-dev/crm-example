@@ -1,6 +1,6 @@
-import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse } from '../lib/common.js'
-import { getDb } from '../lib/db/db-postgres.js'
+import { getUserId } from '../lib/auth.common.mjs'
+import { successfulResponse } from '../lib/common.mjs'
+import { getDb } from '../lib/db/db-postgres.mjs'
 
 /**
  * Search records belonging to the user.

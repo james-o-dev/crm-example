@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose'
-import { unauthorizedError } from './common.js'
-import { getDb } from './db/db-postgres.js'
+import { unauthorizedError } from './common.mjs'
+import { getDb } from './db/db-postgres.mjs'
 
 // These environment variables are required. Stop the server if they are not set.
 [

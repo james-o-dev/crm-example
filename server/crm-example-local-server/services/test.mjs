@@ -1,5 +1,5 @@
-import { successfulResponse } from '../lib/common.js'
-import { getDb } from '../lib/db/db-postgres.js'
+import { successfulResponse } from '../lib/common.mjs'
+import { getDb } from '../lib/db/db-postgres.mjs'
 
 const API_TEST_TOKEN = '+apitest'
 

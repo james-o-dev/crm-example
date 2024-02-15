@@ -1,6 +1,6 @@
-import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.js'
-import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.js'
-import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
+import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.mjs'
+import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.mjs'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 
 /**
  * Add new contact endpoint.

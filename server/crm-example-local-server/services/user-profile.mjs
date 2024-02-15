@@ -1,6 +1,6 @@
-import { getUserId } from '../lib/auth.common.js'
-import { successfulResponse, validationErrorResponse } from '../lib/common.js'
-import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.js'
+import { getUserId } from '../lib/auth.common.mjs'
+import { successfulResponse, validationErrorResponse } from '../lib/common.mjs'
+import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 
 /**
  * Get the user's username.
