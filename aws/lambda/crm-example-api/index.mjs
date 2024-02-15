@@ -1,15 +1,13 @@
-// import { changePasswordEndpoint, isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signOutEverywhereEndpoint, signUpEndpoint } from './services/auth.js'
-// import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.js'
-// import { getUsername, setUsername } from './services/user-profile.js'
-// import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, getTasksEndpoint, updateTaskEndpoint } from './services/tasks.js'
-// import { searchEndpoint } from './services/search.js'
-// import { dashboardDataEndpoint } from './services/dashboard.js'
-// import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.js'
-// import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.js'
-// import { cleanupTestRecords } from './services/test.js'
-
 import { successfulResponse, validationErrorResponse } from './lib/common.mjs'
-import { signInEndpoint, signUpEndpoint } from './services/auth.mjs'
+import { changePasswordEndpoint, isAuthenticatedEndpoint, refreshAccessToken, signInEndpoint, signUpEndpoint } from './services/auth.mjs'
+import { getContactEndpoint, getContactsEndpoint, newContactEndpoint, updateContactArchiveStatusEndpoint, updateContactEndpoint } from './services/contacts.mjs'
+import { dashboardDataEndpoint } from './services/dashboard.mjs'
+import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.mjs'
+import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.mjs'
+import { searchEndpoint } from './services/search.mjs'
+import { createTaskEndpoint, deleteTaskEndpoint, getTaskEndpoint, updateTaskEndpoint } from './services/tasks.mjs'
+import { cleanupTestRecords } from './services/test.mjs'
+import { getUsername, setUsername } from './services/user-profile.mjs'
 
 export const handler = async (event) => {
 
@@ -46,87 +44,89 @@ export const handler = async (event) => {
     // Sign-in.
     if (reqPath === '/auth/sign-in' && reqMethod === 'POST') response = await signInEndpoint(reqBody)
 
-    // // Authenticate.
-    // app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthenticatedEndpoint(req.headers)))
+    // Authenticate.
+    if (reqPath === '/auth/authenticate' && reqMethod === 'GET') response = await isAuthenticatedEndpoint(reqHeaders)
 
-    // // Refresh access token.
-    // app.get('/auth/refresh', (req, res) => controllerHandler(req, res, refreshAccessToken(req.headers)))
+    // Refresh access token.
+    if (reqPath === '/auth/refresh' && reqMethod === 'GET') response = await refreshAccessToken(reqHeaders)
 
-    // // Change password.
-    // app.put('/auth/change-password', (req, res) => controllerHandler(req, res, changePasswordEndpoint(req.headers, req.body)))
+    // Change password.
+    if (reqPath === '/auth/change-password' && reqMethod === 'PUT') response = await changePasswordEndpoint(reqHeaders, reqBody)
 
-    // app.get('/auth/sign-out-everywhere', (req, res) => controllerHandler(req, res, signOutEverywhereEndpoint(req.headers)))
+    // Sign out everywhere.
+    if (reqPath === '/auth/sign-out-everywhere' && reqMethod === 'GET') response = await signOutEverywhereEndpoint(reqHeaders)
 
-    // // Contacts routes.
+    // Contacts routes.
 
-    // // Get contacts.
-    // app.get('/contacts', (req, res) => controllerHandler(req, res, getContactsEndpoint(req.headers, req.query)))
+    // Get contacts.
+    if (reqPath === '/contacts' && reqMethod === 'GET') response = await getContactsEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // Get single contact.
-    // app.get('/contact', (req, res) => controllerHandler(req, res, getContactEndpoint(req.headers, req.query)))
+    // Get single contact.
+    if (reqPath === '/contact' && reqMethod === 'GET') response = await getContactEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // New contact.
-    // app.post('/contact', (req, res) => controllerHandler(req, res, newContactEndpoint(req.headers, req.body)))
+    // New contact.
+    if (reqPath === '/contact' && reqMethod === 'POST') response = await newContactEndpoint(reqHeaders, reqBody)
 
     // // Update contact.
-    // app.put('/contact', (req, res) => controllerHandler(req, res, updateContactEndpoint(req.headers, req.body)))
+    if (reqPath === '/contact' && reqMethod === 'PUT') response = await updateContactEndpoint(reqHeaders, reqBody)
 
-    // // Archive/restore contact.
-    // app.put('/contact/archived', (req, res) => controllerHandler(req, res, updateContactArchiveStatusEndpoint(req.headers, req.body)))
+    // Archive/restore contact.
+    if (reqPath === '/contact/archived' && reqMethod === 'PUT') response = await updateContactArchiveStatusEndpoint(reqHeaders, reqBody)
 
-    // // User profile.
+    // User profile.
 
-    // // Get username.
-    // app.get('/user/username', (req, res) => controllerHandler(req, res, getUsername(req.headers)))
+    // Get username.
+    if (reqPath === '/user/username' && reqMethod === 'GET') response = await getUsername(reqHeaders)
 
-    // // Set username.
-    // app.put('/user/username', (req, res) => controllerHandler(req, res, setUsername(req.headers, req.body)))
+    // Set username.
+    if (reqPath === '/user/username' && reqMethod === 'PUT') response = await setUsername(reqHeaders, reqBody)
 
-    // // Tasks.
+    // Tasks.
 
-    // // Get tasks.
-    // app.get('/tasks', (req, res) => controllerHandler(req, res, getTasksEndpoint(req.headers, req.query)))
+    // Get tasks.
+    if (reqPath === '/tasks' && reqMethod === 'GET') response = await getTaskEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // Create new task.
-    // app.post('/task', (req, res) => controllerHandler(req, res, createTaskEndpoint(req.headers, req.body)))
+    // Create new task.
+    if (reqPath === '/task' && reqMethod === 'POST') response = await createTaskEndpoint(reqHeaders, reqBody)
 
-    // // Get a task.
-    // app.get('/task', (req, res) => controllerHandler(req, res, getTaskEndpoint(req.headers, req.query)))
+    // Get a task.
+    if (reqPath === '/task' && reqMethod === 'GET') response = await getTaskEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // Update task.
-    // app.put('/task', (req, res) => controllerHandler(req, res, updateTaskEndpoint(req.headers, req.body)))
+    // Update task.
+    if (reqPath === '/task' && reqMethod === 'PUT') response = await updateTaskEndpoint(reqHeaders, reqBody)
 
-    // // Delete task.
-    // app.delete('/task', (req, res) => controllerHandler(req, res, deleteTaskEndpoint(req.headers, req.query)))
+    // Delete task.
+    if (reqPath === '/task' && reqMethod === 'DELETE') response = await deleteTaskEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // Search.
+    // Search.
 
-    // // Do search.
-    // app.get('/search', (req, res) => controllerHandler(req, res, searchEndpoint(req.headers, req.query)))
+    // Do search.
+    if (reqPath === '/search' && reqMethod === 'GET') response = await searchEndpoint(reqHeaders, reqQueryStringParameters)
 
-    // // Dashboard / home.
+    // Dashboard / home.
 
-    // // Get dashboard data.
-    // app.get('/dashboard', (req, res) => controllerHandler(req, res, dashboardDataEndpoint(req.headers)))
+    // Get dashboard data.
+    if (reqPath === '/dashboard' && reqMethod === 'GET') response = await dashboardDataEndpoint(reqHeaders)
 
-    // // Import / export.
+    // Import / export.
 
-    // // Export contacts.
-    // app.get('/export/contacts/json', (req, res) => controllerHandler(req, res, exportContactsJsonEndpoint(req.headers)))
+    // Export contacts.
+    if (reqPath === '/export/contacts/json' && reqMethod === 'GET') response = await exportContactsJsonEndpoint(reqHeaders)
 
-    // // Import contacts.
-    // app.post('/import/contacts/json', (req, res) => controllerHandler(req, res, importContactsJsonEndpoint(req.headers, req.body)))
+    // Import contacts.
+    if (reqPath === '/import/contacts/json' && reqMethod === 'POST') response = await importContactsJsonEndpoint(reqHeaders, reqBody)
 
-    // // Notifications.
+    // Notifications.
 
-    // // Get notifications count.
-    // app.get('/notifications/count', (req, res) => controllerHandler(req, res, getNotificationsCountEndpoint(req.headers)))
+    // Get notifications count.
+    if (reqPath === '/notifications/count' && reqMethod === 'GET') response = await getNotificationsCountEndpoint(reqHeaders)
 
-    // // Get notifications detail.
-    // app.get('/notifications/detail', (req, res) => controllerHandler(req, res, getNotificationsDetailEndpoint(req.headers)))
+    // Get notifications detail.
+    if (reqPath === '/notifications/detail' && reqMethod === 'GET') response = await getNotificationsDetailEndpoint(reqHeaders)
 
-    // // Cleanup test records.
-    // app.get('/test/cleanup', (req, res) => controllerHandler(req, res, cleanupTestRecords()))
+    // Cleanup test records.
+    if (reqPath === '/test/cleanup' && reqMethod === 'GET') response = await cleanupTestRecords()
+
   } catch (error) {
     if (error.validation) {
       response = error
