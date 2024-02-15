@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, effect, inject } from '@angular/core'
-import { AsyncPipe, CommonModule } from '@angular/common'
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, effect, inject, signal } from '@angular/core'
+import { CommonModule } from '@angular/common'
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
@@ -14,14 +14,12 @@ import { MatListModule } from '@angular/material/list'
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav'
 import { AuthService } from './core/auth.service.js'
 import { BreakpointObserver } from '@angular/cdk/layout'
-import { Observable, map, of } from 'rxjs'
 import { NotificationsService } from './core/notifications.service'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    AsyncPipe,
     MatBadgeModule,
     MatButtonModule,
     MatDividerModule,
@@ -44,6 +42,7 @@ import { NotificationsService } from './core/notifications.service'
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   private authService = inject(AuthService)
@@ -54,8 +53,8 @@ export class AppComponent implements OnInit {
 
   protected hasAuthenticatedSignal = this.authService.hasAuthenticated
 
-  // Define the notification number Observable.
-  protected notificationNumber$: Observable<string> = of('')
+  // Define the notification number signal.
+  protected notificationNumber = signal('')
 
   protected sidenavOpened = false
   protected sidenavMode: MatDrawerMode = 'over'
@@ -97,13 +96,15 @@ export class AppComponent implements OnInit {
    * * Call it again to update
    */
   private getNotificationCount() {
-    this.notificationNumber$ = of('')
+    // Do not get notification if not authenticated.
+    if (!this.authService.hasAuthenticated()) return
 
-    // Define the notification number Observable.
-    this.notificationNumber$ = this.notificationsService.getNotificationsCount()
-      .pipe(
-        map(response => response?.count === '0' ? '' : response.count), // Do not display if it returned with '0' (i.e. no notifications).
-      )
+    // Make the request.
+    this.notificationsService.getNotificationsCount()
+      .subscribe(response => {
+        const count = response?.count === '0' ? '' : response.count
+        this.notificationNumber.set(count)
+      })
   }
 
   protected onSignOut() {

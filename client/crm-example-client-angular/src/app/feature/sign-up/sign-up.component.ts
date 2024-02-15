@@ -1,5 +1,5 @@
 import { AuthService } from './../../core/auth.service'
-import { Component, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core'
 
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon'
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignUpComponent implements OnInit {
   protected authService = inject(AuthService)

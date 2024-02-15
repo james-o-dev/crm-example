@@ -2,13 +2,13 @@
 
   @if (!editMode) {
     <div class="subtitle">
-      <div>Created {{contact.date_created | dateFns}}</div>
-      <div>Updated {{contact.date_modified | dateFns}}</div>
+      <div>Created {{contact().date_created | dateFns}}</div>
+      <div>Updated {{contact().date_modified | dateFns}}</div>
     </div>
 
     <div class="text-center-responsive">
       <h2>
-        {{contact.name || 'Loading...'}}
+        {{contact().name || 'Loading...'}}
         <span class="fab-desktop">
           <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit contact">
             <mat-icon>edit</mat-icon>
@@ -18,18 +18,18 @@
 
     </div>
 
-  @if (contact.email) { <div><span class="subtitle">E:</span> {{contact.email}}</div> }
-  @if (contact.phone) { <div><span class="subtitle">P:</span> {{contact.phone}}</div> }
+  @if (contact().email) { <div><span class="subtitle">E:</span> {{contact().email}}</div> }
+  @if (contact().phone) { <div><span class="subtitle">P:</span> {{contact().phone}}</div> }
 
-  @if (contact.notes) {
+  @if (contact().notes) {
     <br>
     <div class="subtitle">Notes:</div>
-    <div [innerHTML]="(contact.notes || '') | lineBreak"></div>
+    <div [innerHTML]="(contact().notes || '') | lineBreak"></div>
   }
 
   <br>
 
-  @if (contact.archived) {
+  @if (contact().archived) {
     <div>
       <strong>This contact has been archived.</strong>
     </div>
@@ -48,17 +48,17 @@
   <br>
   <mat-divider />
 
-  @if (!addTaskMode) {
+  @if (!addTaskMode()) {
     <div class="text-center-responsive">
       <h2>Tasks</h2>
     </div>
 
     <br>
 
-    <app-tasks-table [contactId]="contactId" />
+    <app-tasks-table [contactId]="contactId()" />
 
     <br>
-    <button mat-stroked-button color="primary" (click)="addTaskMode = true">
+    <button mat-stroked-button color="primary" (click)="addTaskMode.set(true)">
       <mat-icon>assignment_add</mat-icon>
       Add Task
     </button>
@@ -82,7 +82,7 @@
     <div class="fab-desktop">
       <br>
       <div>
-        <button mat-mini-fab color="none" (click)="addTaskMode = false">
+        <button mat-mini-fab color="none" (click)="addTaskMode.set(false)">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span>&nbsp;</span>
@@ -94,7 +94,7 @@
 
     <div class="bottom-fab-mobile-absolute left">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-mini-fab color="none" (click)="addTaskMode = false">
+        <button mat-mini-fab color="none" (click)="addTaskMode.set(false)">
           <mat-icon>arrow_back</mat-icon>
         </button>
       </div>
@@ -114,7 +114,7 @@
       <h1>Edit Contact</h1>
     </div>
 
-    <app-contact-form #contactForm [existingContact]="contact" />
+    <app-contact-form #contactForm [existingContact]="contact()" />
 
     <div class="fab-desktop">
       <br>

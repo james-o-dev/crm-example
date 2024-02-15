@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, signal } from '@angular/core'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatIconModule } from '@angular/material/icon'
@@ -23,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button'
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder)
@@ -36,7 +37,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     'type',
   ]
 
-  protected dataSource: ISearch[] = []
+  protected dataSource = signal<ISearch[]>([])
 
   protected form = this.formBuilder.group({ q: [''] })
 
@@ -67,12 +68,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     const q = this.form.value.q
 
     if (!q) {
-      this.dataSource = []
+      this.dataSource.set([])
       return
     }
 
     this.searchService.search(q as string)
-      .subscribe((response) => this.dataSource = response.found)
+      .subscribe((response) => this.dataSource.set(response.found))
   }
 
   protected onNavigateToRecord(element: ISearch) {

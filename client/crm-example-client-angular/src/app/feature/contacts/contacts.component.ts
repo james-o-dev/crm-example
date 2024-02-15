@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core'
-import { ContactService } from '../../core/contacts.service'
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core'
+import { ContactService, IGetContacts } from '../../core/contacts.service'
 import { MatTableModule } from '@angular/material/table'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -18,6 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
   ],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactsComponent implements OnInit {
   private contactService = inject(ContactService)
@@ -25,7 +26,7 @@ export class ContactsComponent implements OnInit {
   protected readonly COLUMNS = ['name', 'contact-details', 'tasks']
 
   protected activeToggle = true
-  protected dataSource = [] as object[]
+  protected dataSource = signal<IGetContacts[]>([])
 
   public ngOnInit(): void {
     this.loadData()
@@ -34,7 +35,7 @@ export class ContactsComponent implements OnInit {
   private loadData() {
     this.contactService.getContacts(this.activeToggle)
       .subscribe(data => {
-        this.dataSource = data.contacts as object[]
+        this.dataSource.set(data.contacts)
       })
   }
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -20,6 +20,7 @@ import { DialogService } from '../../shared/dialog/dialog.service'
   ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignInComponent {
   private authService = inject(AuthService)

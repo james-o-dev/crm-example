@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { ContactService, IGetContact, IUpdateContactPayload } from '../../core/contacts.service'
@@ -29,6 +29,7 @@ import { DialogService } from '../../shared/dialog/dialog.service'
   ],
   templateUrl: './contact-detail.component.html',
   styleUrl: './contact-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactDetailComponent implements OnInit {
   @ViewChild('contactForm') contactForm: ContactFormComponent = {} as ContactFormComponent
@@ -42,15 +43,15 @@ export class ContactDetailComponent implements OnInit {
   private router = inject(Router)
   private tasksService = inject(TasksService)
 
-  protected contactId = ''
-  protected contact: IGetContact = {} as IGetContact
+  protected contactId = signal('')
+  protected contact = signal<IGetContact>({} as IGetContact)
   protected editMode = false
-  protected addTaskMode = false
+  protected addTaskMode = signal(false)
 
   public ngOnInit(): void {
-    this.contactId = this.activatedRoute.snapshot.params['contactId']
+    this.contactId.set(this.activatedRoute.snapshot.params['contactId'])
 
-    if (!this.contactId) return
+    if (!this.contactId()) return
 
     this.getContact().subscribe()
   }
@@ -58,7 +59,7 @@ export class ContactDetailComponent implements OnInit {
   protected onSave() {
     if (this.contactForm.form.invalid) return
 
-    const payload = { ...this.contactForm.form.value, contact_id: this.contactId } as IUpdateContactPayload
+    const payload = { ...this.contactForm.form.value, contact_id: this.contactId() } as IUpdateContactPayload
     this.contactService.updateContact(payload)
       .pipe(switchMap(() => this.getContact()))
       .subscribe({
@@ -70,27 +71,27 @@ export class ContactDetailComponent implements OnInit {
   protected onAddTask() {
     if (this.taskForm.form.invalid) return
 
-    this.tasksService.addTask({ ...this.taskForm.form.value, contact_id: this.contactId })
+    this.tasksService.addTask({ ...this.taskForm.form.value, contact_id: this.contactId() })
       .subscribe({
         next: () => {
           this.notificationsService.triggerNumberUpdateEvent()
-          this.addTaskMode = false
+          this.addTaskMode.set(false)
         },
       })
   }
 
   private getContact() {
-    return this.contactService.getContact(this.contactId)
-      .pipe(tap(data => this.contact = data.contact))
+    return this.contactService.getContact(this.contactId())
+      .pipe(tap(data => this.contact.set(data.contact)))
   }
 
   protected archiveContact() {
-    this.contactService.archiveContact(this.contactId)
+    this.contactService.archiveContact(this.contactId())
       .subscribe(() => this.router.navigate(['/contacts']))
   }
 
   protected restoreContact() {
-    this.contactService.restoreContact(this.contactId)
+    this.contactService.restoreContact(this.contactId())
       .subscribe(() => this.router.navigate(['/contacts']))
   }
 }

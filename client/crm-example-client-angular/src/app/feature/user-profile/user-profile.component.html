@@ -5,10 +5,10 @@
 
   <p>If no username is specified, we will identify you with your email address, throughout the app.</p>
 
-  @if (!editModeUsername) {
+  @if (!editModeUsername()) {
     <div>
-      Username: {{username}}
-      <button mat-icon-button color="primary" (click)="editModeUsername = true" aria-label="change username">
+      Username: {{username()}}
+      <button mat-icon-button color="primary" (click)="editModeUsername.set(true)" aria-label="change username">
         <mat-icon>edit</mat-icon>
       </button>
     </div>
@@ -22,7 +22,7 @@
       <div>
         <button type="submit" mat-raised-button color="primary">Confirm</button>
         &nbsp;
-        <button type="button" mat-stroked-button color="primary" (click)="editModeUsername = false">Cancel</button>
+        <button type="button" mat-stroked-button color="primary" (click)="editModeUsername.set(false)">Cancel</button>
       </div>
     </form>
   }

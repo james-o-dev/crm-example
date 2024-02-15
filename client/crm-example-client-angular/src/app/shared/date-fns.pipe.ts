@@ -12,6 +12,7 @@ import { enNZ } from 'date-fns/locale'
 @Pipe({
   name: 'dateFns',
   standalone: true,
+  pure: true,
 })
 export class DateFnsPipe implements PipeTransform {
 

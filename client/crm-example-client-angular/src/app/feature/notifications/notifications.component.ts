@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core'
 import { MatTableModule } from '@angular/material/table'
 import { INotificationDetail, NotificationsService } from '../../core/notifications.service'
 import { map } from 'rxjs/operators'
@@ -14,13 +14,14 @@ import { MatButtonModule } from '@angular/material/button'
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationsComponent implements OnInit {
   private notificationsService = inject(NotificationsService)
   private router = inject(Router)
 
   // Table data source.
-  protected dataSource: INotificationDetail[] = []
+  protected dataSource = signal<INotificationDetail[]>([])
 
   // Define the table columns.
   protected readonly COLUMNS = [
@@ -34,7 +35,7 @@ export class NotificationsComponent implements OnInit {
       .pipe(
         map(response => response.detail || []),
       ).subscribe(data => {
-        this.dataSource = data as INotificationDetail[]
+        this.dataSource.set(data)
       })
   }
 
