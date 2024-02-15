@@ -58,7 +58,7 @@ describe('Refresh access token tests', () => {
   // Test: Access token expired.
   test('Tokens expired', async () => {
     // Expire tokens in the DB.
-    await expireUserTokens(user.user_id)
+    await expireUserTokens(user.accessToken)
 
     const response = await refreshTokenRequest(user.refreshToken)
     const data = await response.json()

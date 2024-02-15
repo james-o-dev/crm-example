@@ -57,7 +57,7 @@ describe('Sign out everywhere tests', () => {
 
   // Test: Access token expired.
   test('Access token expired', async () => {
-    await expireUserTokens(user.user_id)
+    await expireUserTokens(user.accessToken)
     const response = await authenticateRequest(user.accessToken)
     const data = await response.json()
     expect(response.status).toBe(401)

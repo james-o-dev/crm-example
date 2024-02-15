@@ -36,7 +36,7 @@ describe('Add contact tests', () => {
   test('Tokens expired', async () => {
     let response, data
     // Expire tokens in the DB.
-    await expireUserTokens(user.user_id)
+    await expireUserTokens(user.accessToken)
 
     response = await addContactRequest(user.accessToken, generateContact())
     data = await response.json()

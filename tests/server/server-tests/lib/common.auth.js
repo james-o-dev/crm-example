@@ -1,6 +1,5 @@
-const { contentTypeHeader, generateRandomEmail, generateRandomPassword, authHeader } = require('./common')
+const { contentTypeHeader, generateRandomEmail, generateRandomPassword, authHeader, commonHeaders } = require('./common')
 const jwt = require('jsonwebtoken')
-const { getDb } = require('./db-postgres')
 
 /**
  * Generate and sign up a new user.
@@ -28,12 +27,15 @@ const signUpNewUser = async () => {
 
 /**
  * Expire the user's existing access tokens.
+ * * It will use the 'sign-out-everywhere' endpoint to expire all user's access tokens.
+ * * Required if using the tests on a remote server (since clocks may be different between the remote machine and the local machine).
  *
- * @param {string} userId
+ * @param {string} accessToken
  */
-const expireUserTokens = async (userId) => {
-  const db = getDb()
-  await db.none('UPDATE users SET iat = $2 WHERE user_id = $1', [userId, Math.floor(Date.now() / 1000)])
+const expireUserTokens = async (accessToken) => {
+  return fetch(`${process.env.API_HOST}/auth/sign-out-everywhere`, {
+    headers: commonHeaders(accessToken),
+  })
 }
 
 /**
