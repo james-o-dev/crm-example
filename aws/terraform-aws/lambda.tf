@@ -70,7 +70,7 @@ resource "aws_lambda_function_url" "lambdaFunctionUrl" {
 # Output the URL.
 output "lambdaFunctionUrl" {
   description = "API Host URL of the Lambda Function."
-  value = aws_lambda_function_url.lambdaFunctionUrl.function_url
+  value       = aws_lambda_function_url.lambdaFunctionUrl.function_url
 }
 
 # IAM role for the Lambda.

@@ -12,9 +12,9 @@ variable "sqsName" {
   default     = "crm-example-sqs"
 }
 
-variable "s3BucketName" {
+variable "clientS3BucketName" {
   type        = string
-  description = "Name for the S3 bucket; Note- only lowercase alphanumeric characters and hyphens allowed"
+  description = "Name for the S3 bucket, to be used to serve the client files; Note- only lowercase alphanumeric characters and hyphens allowed"
   default     = "crm-example-s3"
 }
 

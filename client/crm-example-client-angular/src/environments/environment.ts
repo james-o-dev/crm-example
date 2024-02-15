@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3000', // To be replaced.
+  apiUrl: 'https://REPLACE_ME_WITH_THE_API_HOST',
 }
