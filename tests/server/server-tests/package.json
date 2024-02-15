@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles --no-cache --watchAll"
   },
   "keywords": [],
   "author": "",
