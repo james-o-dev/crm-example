@@ -58,12 +58,10 @@ describe('Notification tests', () => {
     test('Abbreviate count if greater than 9', async () => {
       let response, data
 
-      const promises = []
+      // Note: Do not use Promise.all(); It can hang the test (possibly due to database connection pooling?)
       for (let i = 0; i < 10; i++) {
-        promises.push(createNotificationTask(user.accessToken))
+        await createNotificationTask(user.accessToken)
       }
-
-      await Promise.all(promises)
 
       response = await notificationCountRequest(user.accessToken)
       data = await response.json()
