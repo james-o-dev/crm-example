@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core'
 import { ContactFormComponent } from '../../shared/contact-form/contact-form.component'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
@@ -16,6 +16,7 @@ import { DialogService } from '../../shared/dialog/dialog.service'
   ],
   templateUrl: './add-contact.component.html',
   styleUrl: './add-contact.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddContactComponent {
   private contactService = inject(ContactService)

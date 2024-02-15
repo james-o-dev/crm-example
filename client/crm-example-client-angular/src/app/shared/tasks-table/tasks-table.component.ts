@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, inject, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'
@@ -18,6 +18,7 @@ import { DateFnsPipe } from '../date-fns.pipe'
   ],
   templateUrl: './tasks-table.component.html',
   styleUrl: './tasks-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksTableComponent {
   private tasksService = inject(TasksService)
@@ -26,7 +27,7 @@ export class TasksTableComponent {
 
   protected columns = ['title', 'due_date', 'contact']
 
-  protected dataSource = [] as IGetTasks[]
+  protected dataSource = signal<IGetTasks[]>([] as IGetTasks[])
 
   public ngOnInit(): void {
     // Remove the redundant contact column if the contactId was provided.
@@ -38,7 +39,7 @@ export class TasksTableComponent {
   private loadData() {
     this.tasksService.getTasks(this.contactId)
       .subscribe(data => {
-        this.dataSource = data.tasks
+        this.dataSource.set(data.tasks)
       })
   }
 }

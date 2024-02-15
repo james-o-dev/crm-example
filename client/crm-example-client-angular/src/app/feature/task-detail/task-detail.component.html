@@ -1,13 +1,13 @@
 <div class="mx-1">
   @if (!editMode) {
     <div class="subtitle">
-      <div>Created {{task.date_created | dateFns}}</div>
-      <div>Updated {{task.date_modified | dateFns}}</div>
+      <div>Created {{task().date_created | dateFns}}</div>
+      <div>Updated {{task().date_modified | dateFns}}</div>
     </div>
 
     <div class="text-center-responsive">
       <h2>
-        {{task.title || 'Loading...'}}
+        {{task().title || 'Loading...'}}
         <span class="fab-desktop">
           <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit task">
             <mat-icon>edit</mat-icon>
@@ -16,24 +16,24 @@
       </h2>
     </div>
 
-    @if (task.contact_id) {
+    @if (task().contact_id) {
       <div>
         <span class="subtitle">Contact:&nbsp;</span>
-        <a [routerLink]="['/contact-detail', task.contact_id]">{{task.contact_name}}</a>
+        <a [routerLink]="['/contact-detail', task().contact_id]">{{task().contact_name}}</a>
       </div>
     }
 
-    @if (task.due_date) {
+    @if (task().due_date) {
       <div>
         <span class="subtitle">Due date:&nbsp;</span>
-        {{task.due_date | dateFns:'P'}}
+        {{task().due_date | dateFns:'P'}}
       </div>
     }
 
-    @if (task.notes) {
+    @if (task().notes) {
       <br>
       <div class="subtitle">Notes:</div>
-      <div [innerHTML]="(task.notes || '') | lineBreak"></div>
+      <div [innerHTML]="(task().notes || '') | lineBreak"></div>
     }
 
     <br>
@@ -55,7 +55,7 @@
       <h2>Edit Task</h2>
     </div>
 
-    <app-task-form [existingTask]="task" />
+    <app-task-form [existingTask]="task()" />
 
     <div class="fab-desktop">
       <br>

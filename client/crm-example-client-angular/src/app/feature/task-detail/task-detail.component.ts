@@ -1,5 +1,5 @@
 import { IGetTask, TasksService } from './../../core/tasks.service'
-import { Component, OnInit, ViewChild, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon'
@@ -25,6 +25,7 @@ import { DialogService } from '../../shared/dialog/dialog.service'
   ],
   templateUrl: './task-detail.component.html',
   styleUrl: './task-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDetailComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute)
@@ -37,7 +38,7 @@ export class TaskDetailComponent implements OnInit {
 
   protected editMode = false
   protected taskId = ''
-  protected task: IGetTask = {} as IGetTask
+  protected task = signal<IGetTask>({} as IGetTask)
 
   public ngOnInit(): void {
     this.taskId = this.activatedRoute.snapshot.params['taskId']
@@ -71,7 +72,7 @@ export class TaskDetailComponent implements OnInit {
 
   private getTask() {
     return this.tasksService.getTask(this.taskId)
-      .pipe(tap((response) => this.task = response.task))
+      .pipe(tap((response) => this.task.set(response.task)))
   }
 
   protected deleteTask() {
