@@ -1,0 +1,16 @@
+{
+  "name": "terraform-aws",
+  "version": "1.0.0",
+  "description": "Scripts for AWS, using Terraform.",
+  "main": "index.js",
+  "scripts": {
+    "apply": "terraform apply --auto-approve -lock=true",
+    "destroy": "terraform destroy --auto-approve",
+    "format": "terraform fmt",
+    "init": "terraform init",
+    "validate": "terraform validate"
+  }  ,
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
