@@ -4,6 +4,12 @@ import { successfulResponse, unauthorizedError, validationErrorResponse } from '
 import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.js'
 
 /**
+ * Get the current timestamp that is compatible with the 'iat' value of a JWT.
+ * * Get the 'iat' value from the server, rather than the database - due to potential differences with server and database clocks.
+ */
+const getIatNow = () => Math.floor(Date.now() / 1000)
+
+/**
  * Function to hash a password
  *
  * @param {string} inputPassword Input password
@@ -157,12 +163,13 @@ export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
     const sql = `
       UPDATE users
       SET hashed_password = $(newHashedPassword),
-      iat = now_unix_timestamp() / 1000
+      iat = $(iat)
       WHERE user_id = $(userId)
     `
     const sqlParams = {
       userId,
       newHashedPassword,
+      iat: getIatNow(),
     }
     await t.none(sql, sqlParams)
 
@@ -179,7 +186,7 @@ export const signOutEverywhereEndpoint = async (reqHeaders) => {
   const userId = await getUserId(reqHeaders)
 
   const db = getDb()
-  const result = await db.oneOrNone('UPDATE users SET iat = (now_unix_timestamp() / 1000) WHERE user_id = $1 RETURNING user_id', [userId])
+  const result = await db.oneOrNone('UPDATE users SET iat = $2 WHERE user_id = $1 RETURNING user_id', [userId, getIatNow()])
 
   if (result.user_id) return successfulResponse({ message: 'Signed out of all devices. Existing tokens have been invalidated.' })
   throw validationErrorResponse({ message: 'User could not be found.' }, 404)
