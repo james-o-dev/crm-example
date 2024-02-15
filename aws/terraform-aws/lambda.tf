@@ -2,14 +2,14 @@
 data "archive_file" "lambdaZip" {
   type        = "zip"
   source_dir  = "../lambda/crm-example-api"
-  output_path = "lambda.zip"
+  output_path = "build/lambda.zip"
 }
 
 # Lambda layer zip.
 data "archive_file" "lambdaLayerZip" {
   type        = "zip"
   source_dir  = "../lambda/crm-example-api-layer"
-  output_path = "lambdaLayer.zip"
+  output_path = "build/lambdaLayer.zip"
 }
 
 # Lambda layer version.
