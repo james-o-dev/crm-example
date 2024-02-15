@@ -9,7 +9,7 @@
       <h2>
         {{task().title || 'Loading...'}}
         <span class="fab-desktop">
-          <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit task">
+          <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit task" [disabled]="!task().title">
             <mat-icon>edit</mat-icon>
           </button>
         </span>
@@ -44,7 +44,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="editMode = true" aria-label="edit task">
+        <button mat-fab color="primary" (click)="editMode = true" aria-label="edit task" [disabled]="!task().title">
           <mat-icon>edit</mat-icon>
         </button>
       </div>

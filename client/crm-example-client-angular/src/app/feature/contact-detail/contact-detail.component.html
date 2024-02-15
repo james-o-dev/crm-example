@@ -10,7 +10,7 @@
       <h2>
         {{contact().name || 'Loading...'}}
         <span class="fab-desktop">
-          <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit contact">
+          <button mat-mini-fab color="primary" (click)="editMode = true" aria-label="edit contact" [disabled]="!contact().name">
             <mat-icon>edit</mat-icon>
           </button>
         </span>
@@ -65,7 +65,7 @@
 
     <div class="bottom-fab-mobile-absolute right">
       <div class="bottom-fab-mobile-fixed">
-        <button mat-fab color="primary" (click)="editMode = true" aria-label="edit contact">
+        <button mat-fab color="primary" (click)="editMode = true" aria-label="edit contact" [disabled]="!contact().name">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
