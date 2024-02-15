@@ -36,7 +36,7 @@ resource "aws_lambda_function" "lambdaFunction" {
   runtime                        = "nodejs20.x"
   architectures                  = ["arm64"]
   memory_size                    = 128
-  reserved_concurrent_executions = 1
+  reserved_concurrent_executions = -1 # A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1
   timeout                        = 15
 
   environment {
