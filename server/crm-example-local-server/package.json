@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon index.mjs",
     "start": "node index.mjs",
+    "lint": "npx eslint --ext .mjs .",
+    "lint:fix": "npx eslint --ext .mjs --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",

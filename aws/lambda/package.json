@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-
+    "lint": "npx eslint --ext .mjs .",
+    "lint:fix": "npx eslint --ext .mjs --fix ."
   },
   "devDependencies": {
     "dotenv": "^16.3.2",
