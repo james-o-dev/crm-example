@@ -37,7 +37,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     'type',
   ]
 
-  // protected dataSource: ISearch[] = []
   protected dataSource = signal<ISearch[]>([])
 
   protected form = this.formBuilder.group({ q: [''] })
