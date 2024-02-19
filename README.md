@@ -25,6 +25,8 @@ Note: This is app is **NOT intended for any commercial or production usage**. It
 
 * User Sign In + Sign Up.
 * User profile management.
+  * Optional username
+  * Change password
 * Contacts: Defines a customer.
   * Operations
     * Create
@@ -38,15 +40,18 @@ Note: This is app is **NOT intended for any commercial or production usage**. It
     * Update
     * List
     * Delete
+* Search functionality
+* Notification list
+  * Basic - excludes push notifications or SMS / emailing
 * Import / Export
   * JSON (basic)
 
 ### Other Capabilities
 
-* Responsive-first designed web client.
-* Client Progress Web App (PWA) support.
-* Serverless API or hosted server API (locally with NodeJS).
-* User authentication, security.
+* Responsive-first designed client.
+* Client Progressive Web App (PWA) support.
+* Serverless or hosted server (locally with NodeJS) REST API.
+* Access/refresh JWT authentication.
 
 ### Potential Future Ideas
 
@@ -56,19 +61,21 @@ Note: Unordered and subject to change.
 * Angular client
   * Different or multiple colour themes.
   * Light / dark mode.
-* Security
+* Security / authentication
   * TOTP MFA (e.g. Google Authenticator codes)
   * Forgot password
   * Google Sign On
   * Other federated sign on
 * Import / export
   * CSV
-  * Excel
-  * Google Sheets
+  * Possibly Google Sheets
+  * Possibly Excel
   * Update handling of uploading and downloading files
-* Containerization
+* Containerization, if relevant
   * Docker
 * Emailing
+  * For authentication/security purposes
+  * Possibly for notifications
 
 ## Technologies
 
@@ -79,19 +86,19 @@ Note: Subject to change.
 |Front end client|Angular (v17+) |
 |API|AWS Lambda serverless function/s (NodeJS) OR local NodeJS server|
 |Database|PostgreSQL (v15+)|
-|Infrastructure as Code (IaC)|Terraform AWS + AWS CloudFormation|
+|Infrastructure as Code (IaC)|Terraform AWS + AWS CloudFormation + |
 
 ## Project Structure
 
 |Directory|Description|
 |-|-|
-|[`/client`](./client)|Contains source code of the front-end web client/s.|
-|[`/aws`](./aws)|Contains IaC templates, using Terraform + CloudFormation.|
-|[`/server`](./server)|Contains API source code. Both local NodeJS as well as serverless AWS Lambda. |
-|[`/database`](./database)|Contains database-related scripts and content.|
-|[`/tests`](./tests)|Contains both API Jest tests and client E2E tests for this app.|
+|[`/aws`](./aws)|AWS Lambda function and layer code for the serverless REST API. Terraform templates.|
+|[`/client`](./client)|Front-end web client/s.|
+|[`/database`](./database)|Database-related scripts and content.|
+|[`/server`](./server)|Local NodeJS REST API server.|
+|[`/tests`](./tests)|REST API Jest tests and client E2E tests.|
 
-Please visit each of these folders and sub-folders for more detailed readmes relating to each area.
+Please visit each of these folders and sub-folders for more detailed information relating to each area.
 
 ## Getting Started
 
