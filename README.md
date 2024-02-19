@@ -108,4 +108,4 @@ Note: Subject to change.
 
 ## License
 
-`TODO`
+[Apache License 2.0](LICENSE)
