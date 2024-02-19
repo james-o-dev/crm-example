@@ -1,27 +1,81 @@
-# CrmExampleClientAngular
+# Angular Client | CRM Example
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
+- [Angular Client | CRM Example](#angular-client--crm-example)
+  - [Description](#description)
+  - [Main Technologies](#main-technologies)
+  - [Getting Started](#getting-started)
+    - [Pre-requisites](#pre-requisites)
+    - [Steps](#steps)
+  - [Deploying remotely](#deploying-remotely)
+    - [Pre-requisites](#pre-requisites-1)
+    - [Steps](#steps-1)
 
-## Development server
+## Description
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This is the client for the CRM Example app, built with the Angular.
 
-## Code scaffolding
+## Main Technologies
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Tech|Description
+-|-
+[Angular (v17+)](https://angular.dev/)|Javascript framework.
+Typescript|Main scripting language used to build this Angular client, instead of Javascript.
+[Angular Material](https://material.angular.io/)|Main component library used.
+[DateFns](https://date-fns.org/)|Date formatting library.
 
-## Build
+## Getting Started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+How to run the client locally, for development or local preview.
 
-## Running unit tests
+### Pre-requisites
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+In order for all the client functionality to work, the API must already set up.
 
-## Running end-to-end tests
+This can be the local NodeJS server (recommended) or another hosted CRM Example API (e.g. serverless API already deployed to AWS Lambda).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Required:
+* API host domain
 
-## Further help
+### Steps
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+* Run `npm i`, if not already done so, to install dependencies. Recommended to use `npm ci` to install the exact dependencies, from the package-lock file.
+* Edit [environment.development.ts](./src/environments/environment.development.ts) <sup>1</sup>
+  * `apiUrl` = **API host domain**.
+* Run `npm start` to serve the client.
+
+<sup>1</sup> Do not commit these changes.
+
+## Deploying remotely
+
+How to deploy the client remotely, for production or testing preview.
+
+This will transfer the compiled Angular files to an AWS S3 bucket, which is served via the AWS CloudFront distribution.
+
+### Pre-requisites
+
+Unix or bash command line (i.e. git bash)
+
+AWS account.
+
+AWS CLI installed and set up on your machine, including credentials.
+
+AWS S3 and CloudFront already set up.
+
+Required:
+* S3 bucket name
+* Cloudfront distribution ID
+* API host domain
+
+### Steps
+
+* Run `npm i`, if not already done so, to install dependencies. Recommended to use `npm ci` to install the exact dependencies, from the package-lock file.
+* Edit [environment.ts](./src/environments/environment.ts) <sup>1</sup>
+  * `apiUrl` = **API host domain**.
+* Edit the [deploy-s3-cloudfront.sh](./deploy-s3-cloudfront.sh) shell script <sup>1</sup>
+  * `S3_BUCKET_NAME` = **S3 bucket name**
+  * `CLOUDFRONT_DISTRIBUTION_ID` = **Cloudfront distribution ID**
+* Run `npm run build:deploy` to build and deploy the client.
+
+<sup>1</sup> Do not commit these changes.
+
+This runs a shell script that will build the Angular client, transfer the compiled files to an S3 bucket and then create an invalidation to the Cloudfront distribution.
