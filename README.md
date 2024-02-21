@@ -102,7 +102,20 @@ Please visit each of these folders and sub-folders for more detailed information
 
 ## Getting Started
 
-`TODO`
+To first start locally, in general the flow is...
+* Set up the [database](./database/), if not done so already.
+* Run the [ExpressJS server](./server/crm-example-local-server/)
+* Start the client ([Angular](./client/crm-example-client-angular/))
+
+Then you are able to preview it locally.
+
+Run [API](./tests/server/server-tests/) and [E2E](./tests/client/cypress-e2e/) tests locally.
+
+Any ExpressJS changes are then copied over to the [Lambda function code](./aws/lambda/crm-example-api/), as well as changes to [dependencies](./aws/lambda/crm-example-api-layer/nodejs/package.json).
+
+To deploy the app remotely, we use [Terraform to apply infrastructure changes](./aws/terraform-aws/) to AWS.
+
+
 
 ## Designs and Notes
 
