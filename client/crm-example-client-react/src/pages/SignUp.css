@@ -1,0 +1,23 @@
+.sign-up-container {
+  margin: 1em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 1em;
+  /* height: 100vh; */
+}
+
+form {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* mat-form-field { */
+  /* Minimum width so that form-fields without matSuffix will still be the same length. */
+  /* min-width: 248px;
+} */
