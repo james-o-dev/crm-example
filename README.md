@@ -50,7 +50,7 @@ Note: This is app is **NOT intended for any commercial or production usage**. It
 
 * Responsive-first designed client.
 * Client Progressive Web App (PWA) support.
-* Serverless or hosted server (locally with NodeJS) REST API.
+* Serverless or hosted server (locally with ExpressJS) REST API.
 * Access/refresh JWT authentication.
 
 ### Potential Future Ideas
@@ -84,7 +84,7 @@ Note: Subject to change.
 |Type|Technology|
 |-|-|
 |Front end client|Angular (v17+) |
-|API|AWS Lambda serverless function/s (NodeJS) OR local NodeJS server|
+|API|AWS Lambda serverless function/s (NodeJS) OR local ExpressJS server|
 |Database|PostgreSQL (v15+)|
 |Infrastructure as Code (IaC)|Terraform AWS + AWS CloudFormation + |
 
@@ -95,7 +95,7 @@ Note: Subject to change.
 |[`/aws`](./aws)|AWS Lambda function and layer code for the serverless REST API. Terraform templates.|
 |[`/client`](./client)|Front-end web client/s.|
 |[`/database`](./database)|Database-related scripts and content.|
-|[`/server`](./server)|Local NodeJS REST API server.|
+|[`/server`](./server)|Local ExpressJS REST API server.|
 |[`/tests`](./tests)|REST API Jest tests and client E2E tests.|
 
 Please visit each of these folders and sub-folders for more detailed information relating to each area.
