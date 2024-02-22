@@ -4,7 +4,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { SignUp } from './pages/SignUp/SignUp'
 
 function App() {
@@ -12,13 +12,16 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/'>
+        <Route>
           {/* <Route index element={<Home />} /> */}
           {/* <Route path='/sign-in' element={<SignIn />} /> */}
           <Route path='/sign-up' element={<SignUp />} />
 
           {/* Protected */}
 
+
+          {/* Default/root */}
+          <Route path='*' element={<Navigate to='/sign-up' replace />} />
         </Route>
       </Routes>
     </>
