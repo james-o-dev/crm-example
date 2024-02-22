@@ -1,42 +1,34 @@
-import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { TextField } from '@mui/material'
 import './SignIn.css'
 import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
 import { useNavigate } from 'react-router-dom'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+
+type Inputs = {
+  email: string
+  password: string
+}
 
 export const SignIn = () => {
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState<string>('')
-  const [emailInvalid, setEmailInvalid] = useState('')
-  const [emailFocused, setEmailFocused] = useState(false)
-
-  const [password, setPassword] = useState<string>('')
-  const [passwordInvalid, setPasswordInvalid] = useState('')
-  const [passwordFocused, setPasswordFocused] = useState(false)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<Inputs>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
 
   // const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Validation - email.
-  useEffect(() => {
-    if (emailFocused && !EMAIL_REGEXP.test(email)) setEmailInvalid('Invalid')
-    else setEmailInvalid('')
-  }, [email, emailFocused])
-
-  // Validation - password.
-  useEffect(() => {
-    if (passwordFocused && !PASSWORD_REGEXP.test(password)) setPasswordInvalid('Invalid')
-    else setPasswordInvalid('')
-  }, [password, passwordFocused])
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-
-    // If the form is invalid, return.
-
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
     // TODO
-    console.log({ email, password })
+    console.log(data)
   }
 
   return (
@@ -44,38 +36,46 @@ export const SignIn = () => {
       <div className='sign-up-container'>
         <h1>CRM Example</h1>
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            variant='outlined'
-            required={true}
-            type='email'
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
             name='email'
-            label='Email'
-            autoComplete='username'
-            error={!!emailInvalid}
-            helperText={emailInvalid || ' '}
-            value={email}
-            onFocus={() => setEmailFocused(true)}
-            onChange={e => setEmail(e.target.value)}
+            control={control}
+            rules={{ required: true, pattern: EMAIL_REGEXP }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                variant='outlined'
+                required={true}
+                type='email'
+                label='Email'
+                autoComplete='username'
+                error={!!errors.email}
+                helperText={errors.email ? 'Invalid' : ' '}
+                {...field}
+              />
+            )}
           />
 
-          <TextField
-            fullWidth
-            variant='outlined'
-            required={true}
-            type='password'
+          <Controller
             name='password'
-            label='Password'
-            autoComplete='new-password'
-            error={!!passwordInvalid}
-            helperText={passwordInvalid || ' '}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            onFocus={() => setPasswordFocused(true)}
+            control={control}
+            rules={{ required: true, pattern: PASSWORD_REGEXP }}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                variant='outlined'
+                required={true}
+                type='password'
+                label='Password'
+                autoComplete='new-password'
+                error={!!errors.password}
+                helperText={errors.password ? 'Invalid' : ' '}
+                {...field}
+              />
+            )}
           />
 
-          <Button variant='contained' className='w-full' type='submit'>Sign In</Button>
+          <Button variant='contained' className='w-full' type='submit' disabled={!isValid}>Sign In</Button>
         </form >
 
         <Button variant='outlined' onClick={() => navigate('/sign-up')}>Or Sign Up</Button>
