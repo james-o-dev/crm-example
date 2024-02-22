@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import './SignUp.css'
-import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../lib/constants'
+import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
 import InfoIcon from '@mui/icons-material/Info'
 
 export const SignUp = () => {
@@ -65,8 +65,8 @@ export const SignUp = () => {
             helperText={emailInvalid || ' '}
             value={email}
             onFocus={() => setEmailFocused(true)}
-            onChange={e => setEmail(e.target.value)}>
-          </TextField>
+            onChange={e => setEmail(e.target.value)}
+          />
 
           <TextField
             fullWidth
@@ -90,8 +90,7 @@ export const SignUp = () => {
                 </InputAdornment>
               ),
             }}
-          >
-          </TextField>
+          />
 
           <TextField
             fullWidth
@@ -105,8 +104,8 @@ export const SignUp = () => {
             helperText={confirmPasswordInvalid || ' '}
             value={confirmPassword}
             onFocus={() => setConfirmPasswordFocused(true)}
-            onChange={e => setConfirmPassword(e.target.value)}>
-          </TextField>
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
 
           <Button variant='contained' className='w-full' type='submit'>Sign Up</Button>
         </form >

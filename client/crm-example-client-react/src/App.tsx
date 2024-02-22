@@ -5,7 +5,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 import { Route, Routes } from 'react-router-dom'
-import { SignUp } from './pages/SignUp'
+import { SignUp } from './pages/SignUp/SignUp'
 
 function App() {
 
