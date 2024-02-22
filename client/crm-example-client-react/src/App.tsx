@@ -6,6 +6,7 @@ import '@fontsource/roboto/700.css'
 
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SignUp } from './pages/SignUp/SignUp'
+import { SignIn } from './pages/SignIn/SignIn'
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
       <Routes>
         <Route>
           {/* <Route index element={<Home />} /> */}
-          {/* <Route path='/sign-in' element={<SignIn />} /> */}
+          <Route path='/sign-in' element={<SignIn />} />
           <Route path='/sign-up' element={<SignUp />} />
 
           {/* Protected */}

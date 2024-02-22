@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
-import { IconButton, InputAdornment, TextField } from '@mui/material'
-import './SignUp.css'
+import { TextField } from '@mui/material'
+import './SignIn.css'
 import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
-import InfoIcon from '@mui/icons-material/Info'
 import { useNavigate } from 'react-router-dom'
 
-export const SignUp = () => {
+export const SignIn = () => {
   const navigate = useNavigate()
 
   const [email, setEmail] = useState<string>('')
@@ -16,10 +15,6 @@ export const SignUp = () => {
   const [password, setPassword] = useState<string>('')
   const [passwordInvalid, setPasswordInvalid] = useState('')
   const [passwordFocused, setPasswordFocused] = useState(false)
-
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [confirmPasswordInvalid, setConfirmPasswordInvalid] = useState('')
-  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false)
 
   // const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -35,21 +30,13 @@ export const SignUp = () => {
     else setPasswordInvalid('')
   }, [password, passwordFocused])
 
-  // Validation - confirm password.
-  useEffect(() => {
-    if (confirmPasswordFocused && password !== confirmPassword) setConfirmPasswordInvalid('Invalid')
-    else setConfirmPasswordInvalid('')
-  }, [password, confirmPassword, confirmPasswordFocused])
-
-
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
     // If the form is invalid, return.
 
     // TODO
-    console.log({ email, password, confirmPassword })
+    console.log({ email, password })
   }
 
   return (
@@ -86,37 +73,12 @@ export const SignUp = () => {
             value={password}
             onChange={e => setPassword(e.target.value)}
             onFocus={() => setPasswordFocused(true)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
           />
 
-          <TextField
-            fullWidth
-            variant='outlined'
-            required={true}
-            type='password'
-            name='confirmPassword'
-            label='Confirm Password'
-            autoComplete='new-password'
-            error={!!confirmPasswordInvalid}
-            helperText={confirmPasswordInvalid || ' '}
-            value={confirmPassword}
-            onFocus={() => setConfirmPasswordFocused(true)}
-            onChange={e => setConfirmPassword(e.target.value)}
-          />
-
-          <Button variant='contained' className='w-full' type='submit'>Sign Up</Button>
+          <Button variant='contained' className='w-full' type='submit'>Sign In</Button>
         </form >
 
-        <Button variant='outlined' onClick={() => navigate('/sign-in')}>Or Sign In</Button>
-
+        <Button variant='outlined' onClick={() => navigate('/sign-up')}>Or Sign Up</Button>
       </div >
     </>
   )
