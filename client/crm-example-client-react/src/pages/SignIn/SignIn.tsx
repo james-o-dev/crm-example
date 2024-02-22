@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import { TextField } from '@mui/material'
 import './SignIn.css'
-import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
+import { EMAIL_REGEXP } from '../../lib/constants'
 import { useNavigate } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
@@ -59,7 +59,7 @@ export const SignIn = () => {
           <Controller
             name='password'
             control={control}
-            rules={{ required: true, pattern: PASSWORD_REGEXP }}
+            rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 fullWidth
