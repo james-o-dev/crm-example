@@ -7,7 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { IBadResponse } from '../../lib/api'
 import { signIn } from '../../services/auth.service'
-import { MuiErrorDialog } from '../../components/MuiDialog/MuiDialog'
+import { IMuiDialogConfig, MuiErrorDialog } from '../../components/MuiDialog/MuiDialog'
 
 type Inputs = {
   email: string
@@ -31,11 +31,14 @@ export const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [dialogOpened, setDialogOpened] = useState(false)
-  const [dialogContent, setDialogContent] = useState<string[] | undefined>([])
+  const [dialogConfig, setDialogConfig] = useState<IMuiDialogConfig>({})
 
   const displayErrorDialog = (content?: string[] | undefined) => {
+      setDialogConfig({
+        content,
+        onClose: () => setDialogOpened(false),
+      })
     setDialogOpened(true)
-    setDialogContent(content)
   }
 
   /**
@@ -115,7 +118,7 @@ export const SignIn = () => {
         <Button variant='outlined' onClick={() => navigate('/sign-up')}>Or Sign Up</Button>
       </div >
 
-      <MuiErrorDialog open={dialogOpened} content={dialogContent} onClose={() => setDialogOpened(false)} />
+      <MuiErrorDialog open={dialogOpened} config={dialogConfig} />
     </>
   )
 }
