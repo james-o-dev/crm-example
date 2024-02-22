@@ -7,7 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { IBadResponse } from '../../lib/api'
 import { signIn } from '../../services/auth.service'
-import { MuiDialog, MuiDialogActions } from '../../components/MuiDialog/MuiDialog'
+import { MuiErrorDialog } from '../../components/MuiDialog/MuiDialog'
 
 type Inputs = {
   email: string
@@ -31,11 +31,9 @@ export const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [dialogOpened, setDialogOpened] = useState(false)
-  const [dialogTitle] = useState('Error')
-  const [dialogContent, setDialogContent] = useState<string[]>([])
-  const [dialogActions] = useState<MuiDialogActions[]>([{ text: 'Dismiss' }])
+  const [dialogContent, setDialogContent] = useState<string[] | undefined>([])
 
-  const displayErrorDialog = (content: string[]) => {
+  const displayErrorDialog = (content?: string[] | undefined) => {
     setDialogOpened(true)
     setDialogContent(content)
   }
@@ -60,7 +58,7 @@ export const SignIn = () => {
         const { message } = await error.json() as IBadResponse
         displayErrorDialog([message])
       } else {
-        displayErrorDialog(['An error has occurred. Please try again later.'])
+        displayErrorDialog()
       }
     } finally {
       setIsSubmitting(false)
@@ -117,7 +115,7 @@ export const SignIn = () => {
         <Button variant='outlined' onClick={() => navigate('/sign-up')}>Or Sign Up</Button>
       </div >
 
-      <MuiDialog open={dialogOpened} title={dialogTitle} content={dialogContent} onClose={() => setDialogOpened(false)} actions={dialogActions} />
+      <MuiErrorDialog open={dialogOpened} content={dialogContent} onClose={() => setDialogOpened(false)} />
     </>
   )
 }

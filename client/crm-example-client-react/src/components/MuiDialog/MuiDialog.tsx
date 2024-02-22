@@ -43,3 +43,27 @@ export const MuiDialog = ({ title, content, actions, open, onClose }: MuiDialogP
     </Dialog>
   )
 }
+
+interface MuiErrorDialogProps {
+  content?: string[]
+  open: boolean
+  onClose: () => void
+}
+
+/**
+ * Uses `MuiDialog` to open a generic dialog to display errors.
+ * * Same title
+ * * Same action
+ * * Default content if it was not provided
+ */
+export const MuiErrorDialog = ({ content, open, onClose }: MuiErrorDialogProps) => {
+  return (
+    <MuiDialog
+      open={open}
+      title='Error'
+      content={content || ['An error has occurred. Please try again later.']}
+      actions={[{ text: 'Dismiss' }]}
+      onClose={onClose}
+    />
+  )
+}
