@@ -92,7 +92,7 @@ export const SignUp = () => {
           <Controller
             name='confirmPassword'
             control={control}
-            rules={{ required: true, pattern: PASSWORD_REGEXP, validate: (value) => value === watch('confirmPassword') || 'Passwords do not match' }}
+            rules={{ required: true, pattern: PASSWORD_REGEXP, validate: (value) => value === watch('password') || 'Passwords do not match' }}
             render={({ field }) => (
               <TextField
                 fullWidth
