@@ -8,7 +8,7 @@ export interface IMuiDialogActions {
 
 export interface IMuiDialogConfig {
   title?: string
-  content?: string[]
+  content?: string[] | undefined
   actions?: IMuiDialogActions[]
 
   /**
@@ -53,7 +53,7 @@ export const MuiDialog = ({ config, open }: MuiDialogProps) => {
  */
 export const MuiErrorDialog = ({ config, open }: MuiDialogProps) => {
   config.title = 'Error'
-  config.content = config.content || ['An error has occurred. Please try again later.']
+  config.content = Array.isArray(config.content) && config.content.length ? config.content : ['An error has occurred. Please try again later.']
   config.actions = [{ text: 'Dismiss' }]
 
   return <MuiDialog open={open} config={config} />

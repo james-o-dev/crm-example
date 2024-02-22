@@ -1,14 +1,14 @@
 import Button from '@mui/material/Button'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import './SignUp.css'
-import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
+import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE } from '../../lib/constants'
 import InfoIcon from '@mui/icons-material/Info'
 import { useNavigate } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { signUp } from '../../services/auth.service'
 import { IBadResponse } from '../../lib/api'
 import { useState } from 'react'
-import { IMuiDialogConfig, MuiErrorDialog } from '../../components/MuiDialog/MuiDialog'
+import { IMuiDialogConfig, MuiDialog, MuiErrorDialog } from '../../components/MuiDialog/MuiDialog'
 
 interface Inputs {
   email: string
@@ -37,7 +37,16 @@ export const SignUp = () => {
   const [errorDialogOpen, setErrorDialogOpen] = useState(false)
   const [errorDialogConfig, setErrorDialogConfig] = useState<IMuiDialogConfig>({})
 
-  const displayErrorDialog = (content?: string[]) => {
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
+  const [passwordDialogConfig, setPasswordDialogConfig] = useState<IMuiDialogConfig>({})
+
+  /**
+   * Display dialog on an API error.
+   *
+   * @param {string[]} content Error message
+   */
+  const displayErrorDialog = (message?: string) => {
+    const content = message ? [message] : undefined
     setErrorDialogConfig({
       content,
       onClose: () => setErrorDialogOpen(false),
@@ -63,15 +72,26 @@ export const SignUp = () => {
     } catch (error) {
       if (error instanceof Response) {
         const { message } = await error.json() as IBadResponse
-        // TODO
-        displayErrorDialog([message])
+        displayErrorDialog(message)
       } else {
-        // TODO
         displayErrorDialog()
       }
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  /**
+   * Opens the password info dialog.
+   */
+  const handlePasswordDialog = () => {
+    setPasswordDialogConfig({
+      title: 'Password',
+      content: [PASSWORD_REGEXP_MESSAGE],
+      actions: [{ text: 'OK' }],
+      onClose: () => setPasswordDialogOpen(false),
+    })
+    setPasswordDialogOpen(true)
   }
 
   return (
@@ -117,7 +137,7 @@ export const SignUp = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
-                      <IconButton>
+                      <IconButton onClick={handlePasswordDialog}>
                         <InfoIcon />
                       </IconButton>
                     </InputAdornment>
@@ -153,6 +173,7 @@ export const SignUp = () => {
       </div >
 
       <MuiErrorDialog open={errorDialogOpen} config={errorDialogConfig} />
+      <MuiDialog open={passwordDialogOpen} config={passwordDialogConfig} />
     </>
   )
 }
