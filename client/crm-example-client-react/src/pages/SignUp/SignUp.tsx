@@ -5,8 +5,11 @@ import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../lib/constants'
 import InfoIcon from '@mui/icons-material/Info'
 import { useNavigate } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { signUp } from '../../services/auth.service'
+import { IBadResponse } from '../../lib/api'
+import { useState } from 'react'
 
-type Inputs = {
+interface Inputs {
   email: string
   password: string
   confirmPassword: string
@@ -17,6 +20,7 @@ export const SignUp = () => {
 
   const {
     control,
+    // reset,
     handleSubmit,
     watch,
     formState: { errors, isValid },
@@ -28,12 +32,35 @@ export const SignUp = () => {
     },
   })
 
-  // const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  /**
+   * Submit the form to sign up
+   *
+   * @param {Inputs} formValue
+   */
+  const onSubmit: SubmitHandler<Inputs> = async (formValue: Inputs) => {
+    if (isSubmitting || !isValid) return
 
-    // TODO
-    console.log(data)
+    setIsSubmitting(true)
+    try {
+      await signUp(formValue.email, formValue.password, formValue.confirmPassword)
+
+      alert('Successful') // TODO Replace with dialog
+      // TODO Redirect
+
+    } catch (error) {
+      if (error instanceof Response) {
+        const { message } = await error.json() as IBadResponse
+        // TODO
+        alert(message) // TODO Replace with dialog
+      } else {
+        // TODO
+        alert('Failed') // TODO Replace with dialog
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -107,7 +134,7 @@ export const SignUp = () => {
               />)}
           />
 
-          <Button variant='contained' className='w-full' type='submit' disabled={!isValid}>Sign Up</Button>
+          <Button variant='contained' className='w-full' type='submit' disabled={!isValid || isSubmitting}>Sign Up</Button>
         </form >
 
         <Button variant='outlined' onClick={() => navigate('/sign-in')}>Or Sign In</Button>

@@ -4,6 +4,9 @@ import './SignIn.css'
 import { EMAIL_REGEXP } from '../../lib/constants'
 import { useNavigate } from 'react-router-dom'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { IBadResponse } from '../../lib/api'
+import { signIn } from '../../services/auth.service'
 
 type Inputs = {
   email: string
@@ -24,11 +27,35 @@ export const SignIn = () => {
     },
   })
 
-  // const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    // TODO
-    console.log(data)
+  /**
+   * Submit the form to sign up
+   *
+   * @param {Inputs} formValue
+   */
+  const onSubmit: SubmitHandler<Inputs> = async (formValue: Inputs) => {
+    if (isSubmitting || !isValid) return
+
+    setIsSubmitting(true)
+    try {
+      await signIn(formValue.email, formValue.password)
+
+      alert('Successful') // TODO Replace with dialog
+      // TODO Redirect
+
+    } catch (error) {
+      if (error instanceof Response) {
+        const { message } = await error.json() as IBadResponse
+        // TODO
+        alert(message) // TODO Replace with dialog
+      } else {
+        // TODO
+        alert('Failed') // TODO Replace with dialog
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -75,7 +102,7 @@ export const SignIn = () => {
             )}
           />
 
-          <Button variant='contained' className='w-full' type='submit' disabled={!isValid}>Sign In</Button>
+          <Button variant='contained' className='w-full' type='submit' disabled={!isValid || isSubmitting}>Sign In</Button>
         </form >
 
         <Button variant='outlined' onClick={() => navigate('/sign-up')}>Or Sign Up</Button>
