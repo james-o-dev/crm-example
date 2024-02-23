@@ -100,7 +100,7 @@ export const makeApiRequest = async (
     return response
   } catch (error) {
 
-    if (error instanceof Response) {
+    if (error instanceof Response && includeCredentials) {
       // If error status is not 401, rethrow the error.
       if (error.status !== 401) throw error
 
@@ -112,7 +112,7 @@ export const makeApiRequest = async (
       // Refresh the token.
       const refreshed = await refreshAccessToken()
       // Could not be refreshed.
-      if (!refreshed) return null
+      if (!refreshed) throw error
 
       // Retry request, new access token should be set now.
       const retriedResponse = await request$()
