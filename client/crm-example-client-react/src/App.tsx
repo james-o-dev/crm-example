@@ -13,6 +13,19 @@ import { useState, useEffect } from 'react'
 import { useApp } from './contexts/AppContext'
 import { isAuthenticated, signOutLocally } from './services/auth.service'
 import { Home } from './pages/Home/Home'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import Drawer from '@mui/material/Drawer'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import HomeIcon from '@mui/icons-material/Home'
+import { AccountCircle, Assignment, Backup, Group, Logout } from '@mui/icons-material'
 
 function App() {
 
@@ -45,7 +58,7 @@ function App() {
 const AuthenticatedArea = () => {
   const [authLoaded, setAuthLoaded] = useState(false)
   const navigate = useNavigate()
-  const { setAuthenticated } = useApp()
+  const { setAuthenticated, drawerOpen, setDrawerOpen } = useApp()
 
   useEffect(() => {
     const request = async () => {
@@ -61,10 +74,59 @@ const AuthenticatedArea = () => {
     request()
   }, [navigate, setAuthenticated])
 
-  return (
-    // TODO App bar.
-    // TODO drawer.
-    authLoaded && <Outlet />
+  const handleLogoClick = () => navigate('/home', { replace: true })
+
+  const listItem = ({ icon, text, onClick }: { icon: JSX.Element, text: string, onClick: () => void }) => (
+    <ListItem disablePadding>
+      <ListItemButton onClick={onClick}>
+        <ListItemIcon>
+          {icon}
+        </ListItemIcon>
+        <ListItemText primary={text} />
+      </ListItemButton>
+    </ListItem>
+  )
+
+  return authLoaded && (
+    <>
+      <AppBar component='nav'>
+        <Toolbar>
+          <IconButton
+            onClick={() => setDrawerOpen(!drawerOpen)}
+            size='large'
+            edge='start'
+            color='inherit'
+            aria-label='menu'
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <span className='cursor-pointer' onClick={handleLogoClick}>CRM Example</span>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        variant='persistent'
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <List>
+          {listItem({ text: 'Home', icon: <HomeIcon />, onClick: () => navigate('/home') })}
+          {listItem({ text: 'Contacts', icon: <Group />, onClick: () => navigate('/todo') })}
+          {listItem({ text: 'Tasks', icon: <Assignment />, onClick: () => navigate('/todo') })}
+          {listItem({ text: 'Import / Export', icon: <Backup />, onClick: () => navigate('/todo') })}
+          <Divider />
+          {listItem({ text: 'Profile', icon: <AccountCircle />, onClick: () => {} })}
+          {listItem({ text: 'Sign Out', icon: <Logout />, onClick: () => signOutLocally(navigate) })}
+        </List>
+
+      </Drawer>
+
+      <Outlet />
+
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <div>test</div>
+    </>
   )
 }
 
