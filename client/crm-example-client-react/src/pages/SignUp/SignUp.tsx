@@ -67,9 +67,7 @@ export const SignUp = () => {
     setIsSubmitting(true)
     try {
       await signUp(formValue.email, formValue.password, formValue.confirmPassword)
-
-      alert('Successful') // TODO Replace with dialog
-      // TODO Redirect
+      navigate('/home')
 
     } catch (error) {
       if (error instanceof Response) {

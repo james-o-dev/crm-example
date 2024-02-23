@@ -60,3 +60,19 @@ export const signOutLocally = (navigateFn?: NavigateFunction) => {
   clearJWTs()
   if (navigateFn) navigateFn('/sign-in')
 }
+
+/**
+ * Fetch the API whether the user is authenticated.
+ */
+export const isAuthenticated = async () => {
+  try {
+    // Initial attempt to verify.
+    const response = await makeApiRequest({ endpoint: '/auth/authenticate', method: 'GET', includeCredentials: true })
+    // No errors, it is verified.
+    if (response!.ok) return true
+    // Had errors or not OK, not verified.
+    return false
+  } catch (error) {
+    return false
+  }
+}

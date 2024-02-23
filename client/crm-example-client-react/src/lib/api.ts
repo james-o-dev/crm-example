@@ -23,10 +23,7 @@ export const refreshAccessToken = async () => {
   try {
     // Note: Do not use the `makeApiRequest()` helper function here, or you will be stuck in an infinite loop!.
     const response = await fetch(`${API_HOST}/auth/refresh`, {
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${refreshToken}`, // Use the refresh token.
-      },
+      headers: getAuthHeader(refreshToken),
     })
 
     // It could not refresh the access token.
@@ -51,27 +48,13 @@ export const refreshAccessToken = async () => {
 }
 
 /**
- * Helper: Get the access token from local storage.
- */
-const getAccessToken = async () => {
-
-  // Get access token.
-  let accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME) || ''
-
-  if (!accessToken) {
-    accessToken = await refreshAccessToken()
-  }
-
-  return accessToken
-}
-
-/**
  * Helper: Add the authentication token to the request headers.
+ *
+ * @param {string} [jwt] - The JWT to use. By default, use the existing access token JWT value.
  */
-const getAuthHeader = async () => {
-  const accessToken = await getAccessToken()
+const getAuthHeader = (jwt = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME)) => {
   return {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${jwt}`,
   }
 }
 
@@ -94,7 +77,7 @@ export const makeApiRequest = async (
   const request$ = async () => {
     let authHeader = {}
     if (includeCredentials) {
-      authHeader = await getAuthHeader()
+      authHeader = getAuthHeader()
     }
     const response = await fetch(API_HOST + endpoint, {
       method,
@@ -113,27 +96,27 @@ export const makeApiRequest = async (
 
   // Make request.
   try {
-    return request$()
+    const response = await request$()
+    return response
   } catch (error) {
 
     if (error instanceof Response) {
-
       // If error status is not 401, rethrow the error.
       if (error.status !== 401) throw error
 
       // Else if it is a 401, then...
-      try {
-        // Clear access JWT and use refresh JWT.
-        localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME)
 
-        // Retry request.
-        // It should attempt to get the refresh JWT when the access JWT does not exist.
-        return request$()
-      } catch (error) {
-        // If this fails, sign out of app and clear JWTs.
+      // Clear access JWT and use refresh JWT.
+      localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME)
 
-        return null
-      }
+      // Refresh the token.
+      const refreshed = await refreshAccessToken()
+      // Could not be refreshed.
+      if (!refreshed) return null
+
+      // Retry request, new access token should be set now.
+      const retriedResponse = await request$()
+      return retriedResponse
     }
 
     throw error

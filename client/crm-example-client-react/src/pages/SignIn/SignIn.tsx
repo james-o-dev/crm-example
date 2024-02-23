@@ -52,9 +52,7 @@ export const SignIn = () => {
     setIsSubmitting(true)
     try {
       await signIn(formValue.email, formValue.password)
-
-      // TODO Redirect
-      alert('TODO Sign in successful. Please redirect.')
+      navigate('/home')
 
     } catch (error) {
       if (error instanceof Response) {
