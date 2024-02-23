@@ -26,7 +26,7 @@ function App() {
         <Route path='/sign-up' element={<SignUp />} />
 
         {/* Protected */}
-        <Route element={<ProtectedRoute />}>
+        <Route element={<AuthenticatedArea />}>
           <Route path='/home' element={<Home />} />
         </Route>
 
@@ -42,7 +42,7 @@ function App() {
  * * If not authenticated, sign out locally and redirect to the sign-in page.
  * * Shared elements that are only displayed if authenticated (i.e. top bar, side drawer) should be contained within.
  */
-const ProtectedRoute = () => {
+const AuthenticatedArea = () => {
   const [authLoaded, setAuthLoaded] = useState(false)
   const navigate = useNavigate()
   const { setAuthenticated } = useApp()
