@@ -7,14 +7,18 @@ import '@fontsource/roboto/700.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SignUp } from './pages/SignUp/SignUp'
 import { SignIn } from './pages/SignIn/SignIn'
+import CssBaseline from '@mui/material/CssBaseline'
+import { Home } from './pages/Home/Home'
 
 function App() {
 
   return (
     <>
+      <CssBaseline />
+
       <Routes>
         <Route>
-          {/* <Route index element={<Home />} /> */}
+          <Route path='/home' element={<Home />} />
           <Route path='/sign-in' element={<SignIn />} />
           <Route path='/sign-up' element={<SignUp />} />
 
@@ -22,7 +26,7 @@ function App() {
 
 
           {/* Default/root */}
-          <Route path='*' element={<Navigate to='/sign-up' replace />} />
+          <Route path='*' element={<Navigate to='/home' replace />} />
         </Route>
       </Routes>
     </>
