@@ -1,5 +1,7 @@
 import Button from '@mui/material/Button'
-import { IconButton, InputAdornment, TextField } from '@mui/material'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
 import './SignUp.css'
 import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE } from '../../lib/constants'
 import InfoIcon from '@mui/icons-material/Info'

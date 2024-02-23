@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import { TextField } from '@mui/material'
+import TextField from '@mui/material/TextField'
 import './SignIn.css'
 import { EMAIL_REGEXP } from '../../lib/constants'
 import { useNavigate } from 'react-router-dom'
