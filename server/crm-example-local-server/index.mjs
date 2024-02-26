@@ -12,6 +12,7 @@ import { dashboardDataEndpoint } from './services/dashboard.mjs'
 import { exportContactsJsonEndpoint, importContactsJsonEndpoint } from './services/import-export.mjs'
 import { getNotificationsCountEndpoint, getNotificationsDetailEndpoint } from './services/notifications.mjs'
 import { cleanupTestRecords } from './services/test.mjs'
+import { authAccessToken, authRefreshToken } from './middleware/auth.middleware.mjs'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -32,83 +33,83 @@ app.post('/auth/sign-up', (req, res) => controllerHandler(req, res, signUpEndpoi
 app.post('/auth/sign-in', (req, res) => controllerHandler(req, res, signInEndpoint(req.body)))
 
 // Authenticate.
-app.get('/auth/authenticate', (req, res) => controllerHandler(req, res, isAuthenticatedEndpoint(req.headers)))
+app.get('/auth/authenticate', authAccessToken, (req, res) => controllerHandler(req, res, isAuthenticatedEndpoint()))
 
 // Refresh access token.
-app.get('/auth/refresh', (req, res) => controllerHandler(req, res, refreshAccessToken(req.headers)))
+app.get('/auth/refresh', authRefreshToken, (req, res) => controllerHandler(req, res, refreshAccessToken(req.user)))
 
 // Change password.
-app.put('/auth/change-password', (req, res) => controllerHandler(req, res, changePasswordEndpoint(req.headers, req.body)))
+app.put('/auth/change-password', authAccessToken, (req, res) => controllerHandler(req, res, changePasswordEndpoint(req.user, req.body)))
 
-app.get('/auth/sign-out-everywhere', (req, res) => controllerHandler(req, res, signOutEverywhereEndpoint(req.headers)))
+app.get('/auth/sign-out-everywhere', authAccessToken, (req, res) => controllerHandler(req, res, signOutEverywhereEndpoint(req.user)))
 
 // Contacts routes.
 
 // Get contacts.
-app.get('/contacts', (req, res) => controllerHandler(req, res, getContactsEndpoint(req.headers, req.query)))
+app.get('/contacts', authAccessToken, (req, res) => controllerHandler(req, res, getContactsEndpoint(req.user, req.query)))
 
 // Get single contact.
-app.get('/contact', (req, res) => controllerHandler(req, res, getContactEndpoint(req.headers, req.query)))
+app.get('/contact', authAccessToken, (req, res) => controllerHandler(req, res, getContactEndpoint(req.user, req.query)))
 
 // New contact.
-app.post('/contact', (req, res) => controllerHandler(req, res, newContactEndpoint(req.headers, req.body)))
+app.post('/contact', authAccessToken, (req, res) => controllerHandler(req, res, newContactEndpoint(req.user, req.body)))
 
 // Update contact.
-app.put('/contact', (req, res) => controllerHandler(req, res, updateContactEndpoint(req.headers, req.body)))
+app.put('/contact', authAccessToken, (req, res) => controllerHandler(req, res, updateContactEndpoint(req.user, req.body)))
 
 // Archive/restore contact.
-app.put('/contact/archived', (req, res) => controllerHandler(req, res, updateContactArchiveStatusEndpoint(req.headers, req.body)))
+app.put('/contact/archived', authAccessToken, (req, res) => controllerHandler(req, res, updateContactArchiveStatusEndpoint(req.user, req.body)))
 
 // User profile.
 
 // Get username.
-app.get('/user/username', (req, res) => controllerHandler(req, res, getUsername(req.headers)))
+app.get('/user/username', authAccessToken, (req, res) => controllerHandler(req, res, getUsername(req.user)))
 
 // Set username.
-app.put('/user/username', (req, res) => controllerHandler(req, res, setUsername(req.headers, req.body)))
+app.put('/user/username', authAccessToken, (req, res) => controllerHandler(req, res, setUsername(req.user, req.body)))
 
 // Tasks.
 
 // Get tasks.
-app.get('/tasks', (req, res) => controllerHandler(req, res, getTasksEndpoint(req.headers, req.query)))
+app.get('/tasks', authAccessToken, (req, res) => controllerHandler(req, res, getTasksEndpoint(req.user, req.query)))
 
 // Create new task.
-app.post('/task', (req, res) => controllerHandler(req, res, createTaskEndpoint(req.headers, req.body)))
+app.post('/task', authAccessToken, (req, res) => controllerHandler(req, res, createTaskEndpoint(req.user, req.body)))
 
 // Get a task.
-app.get('/task', (req, res) => controllerHandler(req, res, getTaskEndpoint(req.headers, req.query)))
+app.get('/task', authAccessToken, (req, res) => controllerHandler(req, res, getTaskEndpoint(req.user, req.query)))
 
 // Update task.
-app.put('/task', (req, res) => controllerHandler(req, res, updateTaskEndpoint(req.headers, req.body)))
+app.put('/task', authAccessToken, (req, res) => controllerHandler(req, res, updateTaskEndpoint(req.user, req.body)))
 
 // Delete task.
-app.delete('/task', (req, res) => controllerHandler(req, res, deleteTaskEndpoint(req.headers, req.query)))
+app.delete('/task', authAccessToken, (req, res) => controllerHandler(req, res, deleteTaskEndpoint(req.user, req.query)))
 
 // Search.
 
 // Do search.
-app.get('/search', (req, res) => controllerHandler(req, res, searchEndpoint(req.headers, req.query)))
+app.get('/search', authAccessToken, (req, res) => controllerHandler(req, res, searchEndpoint(req.user, req.query)))
 
 // Dashboard / home.
 
 // Get dashboard data.
-app.get('/dashboard', (req, res) => controllerHandler(req, res, dashboardDataEndpoint(req.headers)))
+app.get('/dashboard', authAccessToken, (req, res) => controllerHandler(req, res, dashboardDataEndpoint(req.user)))
 
 // Import / export.
 
 // Export contacts.
-app.get('/export/contacts/json', (req, res) => controllerHandler(req, res, exportContactsJsonEndpoint(req.headers)))
+app.get('/export/contacts/json', authAccessToken, (req, res) => controllerHandler(req, res, exportContactsJsonEndpoint(req.user)))
 
 // Import contacts.
-app.post('/import/contacts/json', (req, res) => controllerHandler(req, res, importContactsJsonEndpoint(req.headers, req.body)))
+app.post('/import/contacts/json', authAccessToken, (req, res) => controllerHandler(req, res, importContactsJsonEndpoint(req.user, req.body)))
 
 // Notifications.
 
 // Get notifications count.
-app.get('/notifications/count', (req, res) => controllerHandler(req, res, getNotificationsCountEndpoint(req.headers)))
+app.get('/notifications/count', authAccessToken, (req, res) => controllerHandler(req, res, getNotificationsCountEndpoint(req.user)))
 
 // Get notifications detail.
-app.get('/notifications/detail', (req, res) => controllerHandler(req, res, getNotificationsDetailEndpoint(req.headers)))
+app.get('/notifications/detail', authAccessToken, (req, res) => controllerHandler(req, res, getNotificationsDetailEndpoint(req.user)))
 
 // Cleanup test records.
 app.get('/test/cleanup', (req, res) => controllerHandler(req, res, cleanupTestRecords()))

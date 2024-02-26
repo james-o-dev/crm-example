@@ -1,4 +1,3 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { successfulResponse } from '../lib/common.mjs'
 import { getDb } from '../lib/db/db-postgres.mjs'
 
@@ -25,10 +24,10 @@ const getTaskSql = (countOnly = false) => {
  * * Displayed as a number badge on top of  the  top-bar notification icon.
  * * Including: Tasks
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const getNotificationsCountEndpoint = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const getNotificationsCountEndpoint = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
 
@@ -47,10 +46,10 @@ export const getNotificationsCountEndpoint = async (reqHeaders) => {
  * * Displayed in the notifications table
  * * Including: Tasks
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const getNotificationsDetailEndpoint = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const getNotificationsDetailEndpoint = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
 

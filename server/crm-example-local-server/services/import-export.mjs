@@ -1,4 +1,3 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { successfulResponse, validationErrorResponse } from '../lib/common.mjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 
@@ -6,10 +5,10 @@ import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
  * Export the user's contacts as a JSON string.
  * * Ideally it would be uploaded to a file storage service separately and then a short-lived URL to it will be returned.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const exportContactsJsonEndpoint = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const exportContactsJsonEndpoint = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
 
@@ -31,11 +30,11 @@ export const exportContactsJsonEndpoint = async (reqHeaders) => {
  * Import contacts from a JSON file
  * * Ideally: File is uploaded to a file storage service separately and the server async reads it and creates the contacts. After it is done importing it would email to the user.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} payload
  */
-export const importContactsJsonEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const importContactsJsonEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   const contacts = JSON.parse(reqBody.json)
 

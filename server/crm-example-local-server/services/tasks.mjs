@@ -1,4 +1,3 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.mjs'
 import { getDb } from '../lib/db/db-postgres.mjs'
 
@@ -7,11 +6,11 @@ import { getDb } from '../lib/db/db-postgres.mjs'
  * Get tasks belonging to the user
  * * Optional filter to specific contact.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery
  */
-export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const getTasksEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   // Get query params.
   const contactId = reqQuery.contact_id || null
@@ -44,11 +43,11 @@ export const getTasksEndpoint = async (reqHeaders, reqQuery) => {
 /**
  * Create a new task.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  */
-export const createTaskEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const createTaskEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
@@ -87,11 +86,11 @@ export const createTaskEndpoint = async (reqHeaders, reqBody) => {
 /**
  * Get an existing task.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery
  */
-export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const getTaskEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   // Request body validation.
   if (!reqQuery.task_id || !isUUIDv4(reqQuery.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })
@@ -122,11 +121,11 @@ export const getTaskEndpoint = async (reqHeaders, reqQuery) => {
 /**
  * Update an existing task.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery
  */
-export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const updateTaskEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   // Request body validation.
   if (!reqBody) throw validationErrorResponse({ message: 'Missing request body.' })
@@ -164,11 +163,11 @@ export const updateTaskEndpoint = async (reqHeaders, reqBody) => {
 /**
  * Delete an existing task.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery
  */
-export const deleteTaskEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const deleteTaskEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   // Request body validation.
   if (!reqQuery.task_id || !isUUIDv4(reqQuery.task_id)) throw validationErrorResponse({ message: 'Invalid Task ID.' })

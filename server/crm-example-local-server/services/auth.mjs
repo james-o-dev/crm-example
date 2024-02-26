@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 import { successfulResponse, unauthorizedError, validationErrorResponse } from '../lib/common.mjs'
-import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, extractAuthHeaderToken, getJwtPayload, getUserId, signAccessToken, signRefreshToken, verifyRefreshToken } from '../lib/auth.common.mjs'
+import { EMAIL_REGEXP, PASSWORD_REGEXP, PASSWORD_REGEXP_MESSAGE, getJwtPayload, signAccessToken, signRefreshToken } from '../lib/auth.common.mjs'
 
 /**
  * Get the current timestamp that is compatible with the 'iat' value of a JWT.
@@ -98,29 +98,18 @@ export const signInEndpoint = async (requestBody) => {
 
 /**
  * Authenticate user endpoint
- *
- * @param {*} reqHeaders
+ * * Authentication already done in middleware; Only return a message.
  */
-export const isAuthenticatedEndpoint = async (reqHeaders) => {
-  try {
-    await getUserId(reqHeaders)
-    return successfulResponse({ message: 'Authenticated.' })
-  } catch (error) {
-    throw unauthorizedError()
-  }
-}
+export const isAuthenticatedEndpoint = async () => successfulResponse({ message: 'Authenticated.' })
 
 /**
  * Refresh the access token
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const refreshAccessToken = async (reqHeaders) => {
+export const refreshAccessToken = async (user) => {
   try {
-    const refreshTokenHeader = extractAuthHeaderToken(reqHeaders)
-    const { user_id, email } = await verifyRefreshToken(refreshTokenHeader)
-
-    const jwtPayload = getJwtPayload(user_id, email)
+    const jwtPayload = getJwtPayload(user.user_id, user.email)
     const accessToken = await signAccessToken(jwtPayload)
     return successfulResponse({ accessToken })
   } catch (error) {
@@ -132,11 +121,11 @@ export const refreshAccessToken = async (reqHeaders) => {
  * Endpoint to change the password.
  * * When successful, it will also invalid existing JWTs.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  */
-export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const changePasswordEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   if (!reqBody) throw validationErrorResponse({ message: 'Request body was not provided.' })
 
@@ -180,10 +169,10 @@ export const changePasswordEndpoint = async (reqHeaders, reqBody) => {
 /**
  * Sign out of all devices - invalidates existing JWTs.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const signOutEverywhereEndpoint = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const signOutEverywhereEndpoint = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
   const result = await db.oneOrNone('UPDATE users SET iat = $2 WHERE user_id = $1 RETURNING user_id', [userId, getIatNow()])

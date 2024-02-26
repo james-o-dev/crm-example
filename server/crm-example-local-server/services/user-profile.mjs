@@ -1,14 +1,13 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { successfulResponse, validationErrorResponse } from '../lib/common.mjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 
 /**
  * Get the user's username.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const getUsername = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const getUsername = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
   const user = await db.oneOrNone('SELECT username FROM users WHERE user_id = $1', [userId])
@@ -19,11 +18,11 @@ export const getUsername = async (reqHeaders) => {
 /**
  * Set the user's username.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  */
-export const setUsername = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const setUsername = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   const { username } = reqBody
   const normalUsername = (username || '').trim()

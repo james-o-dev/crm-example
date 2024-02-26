@@ -1,5 +1,4 @@
 import { SignJWT, jwtVerify } from 'jose'
-import { unauthorizedError } from './common.mjs'
 import { getDb } from './db/db-postgres.mjs'
 
 // These environment variables are required. Stop the server if they are not set.
@@ -107,31 +106,6 @@ export const signAccessToken = async (payload) => signToken(payload, ACCESS_TOKE
 
 export const verifyRefreshToken = async (refreshToken) => verifyToken(refreshToken, REFRESH_TOKEN_SECRET)
 export const signRefreshToken = async (payload) => signToken(payload, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRY)
-
-/**
- * Return the verified access token, from the request header
- *
- * @param {*} reqHeaders
- */
-const getAccessTokenFromHeaders = (reqHeaders) => {
-  const accessToken = extractAuthHeaderToken(reqHeaders)
-  return verifyAccessToken(accessToken)
-}
-
-/**
- * Handles user authentication and ultimately returns the user_id if the access token is authentic.
- * * Throws an error if the access token is not authentic.
- * * Throws an error if the access token is not found.
- *
- * @param {*} reqHeaders
- */
-export const getUserId = async (reqHeaders) => {
-  const accessToken = await getAccessTokenFromHeaders(reqHeaders)
-  if (!accessToken) throw unauthorizedError()
-  const userId = accessToken.user_id
-  if (!userId) throw unauthorizedError()
-  return userId
-}
 
 /**
  * Return the object used as the payload for JWT tokens.

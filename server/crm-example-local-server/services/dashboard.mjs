@@ -1,14 +1,13 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { successfulResponse } from '../lib/common.mjs'
 import { getDb } from '../lib/db/db-postgres.mjs'
 
 /**
  * Get data for the dashboard / home.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  */
-export const dashboardDataEndpoint = async (reqHeaders) => {
-  const userId = await getUserId(reqHeaders)
+export const dashboardDataEndpoint = async (reqUser) => {
+  const userId = reqUser.user_id
 
   const db = getDb()
 

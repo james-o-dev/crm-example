@@ -1,16 +1,15 @@
-import { EMAIL_REGEXP, getUserId } from '../lib/auth.common.mjs'
+import { EMAIL_REGEXP } from '../lib/auth.common.mjs'
 import { isUUIDv4, successfulResponse, validationErrorResponse } from '../lib/common.mjs'
 import { getDb, isUniqueConstraintError } from '../lib/db/db-postgres.mjs'
 
 /**
  * Add new contact endpoint.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  */
-export const newContactEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
-
+export const newContactEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
   if (!reqBody) throw validationErrorResponse({ message: 'Request body was not provided.' })
 
   // Destructure required values from request.
@@ -49,11 +48,11 @@ export const newContactEndpoint = async (reqHeaders, reqBody) => {
 /**
  * Get list of contacts for the user.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery
  */
-export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const getContactsEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   // Query params.
   // Get only archived.
@@ -76,8 +75,8 @@ export const getContactsEndpoint = async (reqHeaders, reqQuery) => {
   return successfulResponse({ contacts })
 }
 
-export const getContactEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const getContactEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   // Query params.
   // Contact ID is required.
@@ -103,11 +102,11 @@ export const getContactEndpoint = async (reqHeaders, reqQuery) => {
 /**
  * Updates a user's contact.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  */
-export const updateContactEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const updateContactEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   // Destructure required values from request.
   const { contact_id: contactId, name, email } = reqBody
@@ -151,12 +150,12 @@ export const updateContactEndpoint = async (reqHeaders, reqBody) => {
 /**
  * Helper: Update the contact 'archived' status.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqBody
  * @param {boolean} archiveStatus
  */
-export const updateContactArchiveStatusEndpoint = async (reqHeaders, reqBody) => {
-  const userId = await getUserId(reqHeaders)
+export const updateContactArchiveStatusEndpoint = async (reqUser, reqBody) => {
+  const userId = reqUser.user_id
 
   const contactId = reqBody.contact_id
   if (!contactId) throw validationErrorResponse({ message: 'Contact ID was not provided.' })

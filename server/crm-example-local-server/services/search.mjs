@@ -1,15 +1,14 @@
-import { getUserId } from '../lib/auth.common.mjs'
 import { successfulResponse } from '../lib/common.mjs'
 import { getDb } from '../lib/db/db-postgres.mjs'
 
 /**
  * Search records belonging to the user.
  *
- * @param {*} reqHeaders
+ * @param {*} reqUser
  * @param {*} reqQuery Ensure the 'q' value is URI-encoded. e.g. `?q=encodeURIComponent(search)`
  */
-export const searchEndpoint = async (reqHeaders, reqQuery) => {
-  const userId = await getUserId(reqHeaders)
+export const searchEndpoint = async (reqUser, reqQuery) => {
+  const userId = reqUser.user_id
 
   const q = decodeURIComponent(reqQuery.q)
 
